@@ -1,42 +1,27 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* globals.css */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
+/* 1. box-sizing 통일 */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  padding: 0;
+}
+
+/* 2. 기본 여백 제거 */
+html, body {
   margin: 0;
+  padding: 0;
 }
 
+/* 3. 기본 폰트만 지정 */
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #111;
+  background: #fff;
+}
+
+/* 4. 링크 기본 스타일 제거 (색/굵기는 각 컴포넌트에서) */
 a {
-  color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+  color: inherit;
 }
