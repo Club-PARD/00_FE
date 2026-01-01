@@ -1,0 +1,95 @@
+.page {
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* 카드 위에 로그인 글자 */
+  .title {
+    margin-bottom: 28px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #6A3DF6;
+    font-family: "Gmarket Sans";
+  }
+  
+  /* 로그인 카드 스타일 */
+  .card {
+    width: 506px;
+    height: 333px;
+    max-width: calc(100vw - 32px);
+    padding: 44px 24px;
+    border-radius: 32px;
+    border: 1px solid var(--Color-Gray-07, #BFBFBF);
+    background: var(--Color-white, #FFF);
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* 정책참여가 쉬워지는 곳 모라 문장 스타일 */
+  .quote {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 14px;
+  }
+  
+  /* 구글 계정으로 로그인 후 ~~~ 문장 스타일  */
+  .desc {
+    color: var(--Color-Gray-05, #767676);
+    text-align: center;
+    font-family: "Noto Sans KR";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+
+  /*구글 로그인*/
+  .googleBtn {
+    width: 288px;
+    height: 40px;
+    padding: 8px 12px;
+    border-radius: 100px;
+    border: none;
+    background: #f2f2f2;
+  
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+    font-family: "Roboto", sans-serif;
+  
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  
+    margin-top: 45px;
+    cursor: pointer;
+  }
+  
+  
+  /* 구글 버튼 호버 효과 */
+  .googleBtn:hover {
+    background: #ececec;
+  }
+
+  /* 구글 아이콘 */
+  .googleIcon {
+    width: 18px;
+    height: 18px;
+    background-image: url("/google.png");
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+    margin-left: 40px;
+  }
+  

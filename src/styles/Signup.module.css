@@ -1,0 +1,117 @@
+.page {
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .title {
+    margin-bottom: 28px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #6a3df6;
+    font-family: "Gmarket Sans";
+  }
+  
+  .card {
+    width: 506px;
+    height: 333px;
+    max-width: calc(100vw - 32px);
+    padding: 44px 24px;
+    border-radius: 32px;
+    border: 1px solid #bfbfbf;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .quote {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 18px;
+  }
+  
+  .form {
+    width: 288px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    gap: 8px;
+  }
+  
+  .inputWrap {
+    position: relative;
+    width: 288px;
+  }
+  
+  /* 닉네임 입력 */
+  .input {
+    width: 100%;
+    height: 36px;
+    padding: 4px 36px 4px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--Color-Gray-07, #BFBFBF);
+    background: #fff;
+    font-family: "Noto Sans KR";
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .inputError {
+    border: 1.5px solid #f60909;
+  }
+  
+  .errorIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: url("/error.svg") no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+  }
+  
+  /* 에러 텍스트 */
+  .errorText {
+    color: #f60909;
+    font-family: "Noto Sans KR";
+    font-size: 10px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: left;
+    margin-top: -4px;
+    margin-bottom: -4px;
+  }
+
+  .submitBtn {
+    width: 288px;
+    height: 36px;
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: none;
+    font-family: "Noto Sans KR";
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #bfbfbf;
+    color: #ffffff;
+  }
+  
+  .submitDisabled {
+    background: #bfbfbf;
+    color: #ffffff;
+    cursor: not-allowed;
+  }
+  
+  .submitActive {
+    background: #6a3df6;
+    color: #ffffff;
+  }
+  
