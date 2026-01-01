@@ -1,4 +1,3 @@
-import { signIn } from "next-auth/react";
 import styles from "@/styles/Login.module.css";
 
 export default function LoginPage() {
@@ -20,7 +19,9 @@ export default function LoginPage() {
         <button
           className={styles.googleBtn}
           type="button"
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={() => {
+            window.location.href = "/api/login";
+          }}
         >
           <span className={styles.googleIcon} aria-hidden />
           Google 계정으로 로그인
