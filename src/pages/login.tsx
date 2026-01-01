@@ -20,7 +20,7 @@ export default function LoginPage() {
           className={styles.googleBtn}
           type="button"
           onClick={() => {
-            window.location.href = "/api/login";
+            window.location.href = "/api/login"; //login.ts로 GET을 보냄, 
           }}
         >
           <span className={styles.googleIcon} aria-hidden />
@@ -28,5 +28,6 @@ export default function LoginPage() {
         </button>
       </section>
     </main>
-  );
+  ); 
 }
+
