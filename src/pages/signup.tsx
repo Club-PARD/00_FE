@@ -1,37 +1,65 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
-
-const DUPLICATE_NAMES = new Set(["고길동"]);
+import { useRouter } from "next/router";
 
 export default function SignupPage() {
-  const [name, setName] = useState(""); // 사용자가 입력하는 닉네임
-  const [touched, setTouched] = useState(false); // 사용자가 한 번이라도 입력창을 건드렸는지
-  const [submitting, setSubmitting] = useState(false); // 회원가입 요청 중인지
-  const [submitError, setSubmitError] = useState(""); // 서버 요청 실패시 보여줄 에러 메시지
+  const router = useRouter();
 
-  const trimmed = useMemo(() => name.trim(), [name]); // 앞뒤 공백 제거한 닉네임
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState(""); // 구글 로그인으로 받은 이메일을 표시만 할 예정
+  const [touched, setTouched] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const isDuplicate = useMemo(() => {
-    if (!touched) return false;
-    if (!trimmed) return false;
-    return DUPLICATE_NAMES.has(trimmed);
-  }, [touched, trimmed]);
+  const [checking, setChecking] = useState(false); // 중복체크 중 상태
+  const [isDuplicate, setIsDuplicate] = useState(false); // 서버 결과로 결정
 
-  // 회원가입 버튼 눌러도 되는지(조건 충족하는지)
+  // /signup?email=xxx 로 들어오는 이메일을 읽어서 상태에 저장
+  useEffect(() => {
+    const q = router.query.email;
+    const emailFromQuery = typeof q === "string" ? q : "";
+    if (emailFromQuery) setEmail(emailFromQuery);
+  }, [router.query.email]);
+
+  const trimmed = useMemo(() => name.trim(), [name]);
+  const trimmedEmail = useMemo(() => email.trim(), [email]);
+
   const canSubmit = useMemo(
-    () => !!trimmed && !isDuplicate && !submitting,
-    [trimmed, isDuplicate, submitting]
+    () => !!trimmed && !!trimmedEmail && !isDuplicate && !submitting && !checking,
+    [trimmed, trimmedEmail, isDuplicate, submitting, checking]
   );
 
-  // 입력창 변경 이벤트 핸들러 -> 입력값 변경 시 닉네임 업뎃함
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     if (!touched) setTouched(true);
     if (submitError) setSubmitError("");
   };
 
-  // 회원가입 폼 제출 이벤트 핸들러(유효하지 않으면 서버 요청 안함)
+  // 닉네임 중복체크 (명세서: GET /user/check/{id}, 200=중복X, 302=중복O)
+  const checkDuplicate = async (nickname: string) => {
+    if (!nickname) return;
+    try {
+      setChecking(true);
+      const r = await axios.get(
+        `/api/user/check/${encodeURIComponent(nickname)}`,
+        { validateStatus: () => true }
+      );
+
+      if (r.status === 302) setIsDuplicate(true);
+      else if (r.status === 200) setIsDuplicate(false);
+      else setIsDuplicate(false);
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const onBlurName = async () => {
+    setTouched(true);
+    if (!trimmed) return;
+    await checkDuplicate(trimmed);
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched(true);
@@ -40,15 +68,15 @@ export default function SignupPage() {
     try {
       setSubmitting(true);
       setSubmitError("");
-      
+
       // 서버에 회원가입 요청
       await axios.post("/api/signup", {
         name: trimmed,
+        email: trimmedEmail,
         age: 0,
         status: 0,
       });
 
-      window.location.href = "/"; // 회원가입 성공 시 메인 페이지로 이동
     } catch {
       setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
@@ -60,16 +88,30 @@ export default function SignupPage() {
     <div className={styles.page}>
       <h1 className={styles.title}>회원가입</h1>
 
-      <section className={styles.card} aria-label="회원가입 카드">
-        <p className={styles.quote}>“당신은 누구인가요?”</p>
+      <section aria-label="회원가입 카드">
+
 
         <form className={styles.form} onSubmit={onSubmit}>
+
+          {/* 구글 로그인으로 받은 이메일을 표시*/}
+          <div className={styles.text}>이메일</div>
+          <div className={styles.inputWrap}>
+            <input
+              className={styles.input}
+              value={trimmedEmail}
+              readOnly
+              disabled
+              aria-label="이메일 표시"
+            />
+          </div>
+
+          <div className={styles.text}>닉네임</div>
           <div className={styles.inputWrap}>
             <input
               className={`${styles.input} ${isDuplicate ? styles.inputError : ""}`}
               value={name}
               onChange={onChange}
-              onBlur={() => setTouched(true)}
+              onBlur={onBlurName} // blur 시 서버 중복체크
               placeholder="닉네임을 입력하세요."
               aria-label="닉네임 입력"
             />
