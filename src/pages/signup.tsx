@@ -15,7 +15,7 @@ export default function SignupPage() {
   const [checking, setChecking] = useState(false); // 중복체크 중 상태
   const [isDuplicate, setIsDuplicate] = useState(false); // 서버 결과로 결정
 
-  // /signup?email=xxx 로 들어오는 이메일을 읽어서 상태에 저장
+  //signup?email=xxx 로 들어오는 이메일을 읽어서 상태에 저장
   useEffect(() => {
     const q = router.query.email;
     const emailFromQuery = typeof q === "string" ? q : "";
@@ -75,7 +75,10 @@ export default function SignupPage() {
         email: trimmedEmail,
         age: 0,
         status: 0,
-      });
+      },
+      { validateStatus: (s) => (s >= 200 && s < 400) }
+    );
+    router.replace("/");
 
     } catch {
       setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
@@ -89,8 +92,6 @@ export default function SignupPage() {
       <h1 className={styles.title}>회원가입</h1>
 
       <section aria-label="회원가입 카드">
-
-
         <form className={styles.form} onSubmit={onSubmit}>
 
           {/* 구글 로그인으로 받은 이메일을 표시*/}
