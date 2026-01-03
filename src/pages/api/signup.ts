@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         cookie: req.headers.cookie || "", //쿠키가 있으면 쿠키를, 없으면 빈 문자열을 서버로 보냄
       },
       withCredentials: true,
-      maxRedirects: 0,
+      maxRedirects: 0, 
       validateStatus: () => true,
     });
 

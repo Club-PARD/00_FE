@@ -9,22 +9,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
     res.status(405).end();
     return;
   }
 
-  const id = typeof req.query.id === "string" ? req.query.id : "";
-  if (!id) {
-    res.status(400).send("Missing id");
-    return;
-  }
-
   try {
-    const r = await axios.get(`${base}/petition/news/${id}`, {
-      headers: { cookie: req.headers.cookie ?? "" },
+    const r = await axios.post(`${base}/petition/likes`, req.body, {
+      headers: {
+        "content-type": "application/json",
+        cookie: req.headers.cookie ?? "",
+      },
       validateStatus: () => true,
     });
 

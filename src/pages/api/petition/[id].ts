@@ -9,7 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  if (req.method !== "GET") {
+  // GET만 받을거임(GET/petition/{id}) 청원 상세 정보(정책, news링크 제외) 
+  if (req.method !== "GET") {        
     res.setHeader("Allow", "GET");
     res.status(405).end();
     return;

@@ -20,7 +20,8 @@ export default function LoginPage() {
           className={styles.googleBtn}
           type="button"
           onClick={() => {
-            window.location.href = "/api/login"; //login.ts로 GET을 보냄, 
+            const origin = window.location.origin;
+            window.location.href = `/api/login?origin=${encodeURIComponent(origin)}`;
           }}
         >
           <span className={styles.googleIcon} aria-hidden />

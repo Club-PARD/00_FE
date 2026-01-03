@@ -8,5 +8,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  res.redirect(302, `${serverBase}/oauth2/authorization/google`); //redeirect: 브라우저 이동
-}
+  const origin = req.headers.origin;
+  res.redirect(
+    302, 
+    `${serverBase}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(origin ?? "")}`
+  ); 
+} 

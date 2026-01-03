@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.redirect(302, "/signup");
       return;
     }
-
+  
     // 그 외의 경우에는 에러로 간주
     res.status(r.status).send(r.data ?? "Auth callback failed");
   } catch {

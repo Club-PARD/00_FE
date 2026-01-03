@@ -9,9 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
+  if (req.method !== "DELETE") {
+    res.setHeader("Allow", "DELETE");
     res.status(405).end();
     return;
   }
@@ -23,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const r = await axios.get(`${base}/petition/news/${id}`, {
+    const r = await axios.delete(`${base}/petition/comment/${id}`, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });

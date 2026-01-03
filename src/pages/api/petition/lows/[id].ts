@@ -9,7 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     res.status(405).end();
@@ -23,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const r = await axios.get(`${base}/petition/news/${id}`, {
+    const r = await axios.get(`${base}/petition/laws/${id}`, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });
