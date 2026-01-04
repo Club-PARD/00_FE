@@ -1,14 +1,13 @@
-import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-
-import Header from "@/components/Header"; // 헤더 불러오기
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/authStore";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Header /> {/* 페이지 내용(Component) 위에 헤더를 배치함 */}
-      <Component {...pageProps} />
-      
-    </>
-  );
+  const fetchMe = useAuthStore((s) => s.fetchMe);
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  return <Component {...pageProps} />;
 }

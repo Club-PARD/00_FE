@@ -3,29 +3,20 @@ import axios from "axios";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const base = process.env.SERVER_BASE_URL;
-
-  if (!base) {
-    res.status(500).send("SERVER_BASE_URL is not set");
-    return;
-  }
+  if (!base) return res.status(500).send("SERVER_BASE_URL is not set");
 
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    res.status(405).end();
-    return;
+    return res.status(405).end();
   }
 
   try {
     const r = await axios.post(`${base}/petition/comment`, req.body, {
-      headers: {
-        "content-type": "application/json",
-        cookie: req.headers.cookie ?? "",
-      },
+      headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });
-
-    res.status(r.status).json(r.data);
+    return res.status(r.status).json(r.data);
   } catch (e: any) {
-    res.status(500).json({ message: e?.message ?? "proxy error" });
+    return res.status(500).json({ message: e?.message ?? "proxy error" });
   }
 }

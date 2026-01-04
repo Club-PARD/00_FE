@@ -15,9 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const id = typeof req.query.id === "string" ? req.query.id : "";
-  if (!id) {
-    res.status(400).send("Missing id");
+  const idRaw = typeof req.query.id === "string" ? req.query.id : "";
+  const id = Number(idRaw);
+
+  if (!idRaw || Number.isNaN(id)) {
+    res.status(400).send("Invalid id");
     return;
   }
 

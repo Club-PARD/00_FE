@@ -4,27 +4,25 @@ import axios from "axios";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const serverBase = process.env.SERVER_BASE_URL;
 
-  const idRaw = typeof req.query.id === "string" ? req.query.id : "";
-  const idNum = Number(idRaw);
-
   if (!serverBase) {
     res.status(500).send("SERVER_BASE_URL is not set");
     return;
   }
 
-  if (!idRaw || Number.isNaN(idNum)) {
-    res.status(400).send("Invalid id");
+  if (req.method !== "GET") {
+    res.status(405).send("Method Not Allowed");
     return;
   }
 
   try {
-    const r = await axios.get(`${serverBase}/user/check/${idNum}`, {
-      maxRedirects: 0,
+    const r = await axios.get(`${serverBase}/user/me`, {
+      headers: { cookie: req.headers.cookie || "" },
+      withCredentials: true,
       validateStatus: () => true,
     });
 
-    res.status(r.status).end();
+    res.status(r.status).json(r.data ?? null);
   } catch {
-    res.status(500).send("Nickname check error");
+    res.status(500).send("me error");
   }
 }

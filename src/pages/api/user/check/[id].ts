@@ -10,21 +10,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method !== "GET") {
-    res.status(405).send("Method Not Allowed");
+    res.setHeader("Allow", "GET");
+    res.status(405).end();
     return;
   }
 
-  const id = typeof req.query.id === "string" ? req.query.id : "";
-  if (!id) {
-    res.status(400).send("Missing id");
+  const idRaw = typeof req.query.id === "string" ? req.query.id : "";
+  const idNum = Number(idRaw);
+
+  if (!idRaw || Number.isNaN(idNum)) {
+    res.status(400).send("Invalid id");
     return;
   }
 
   try {
-    const r = await axios.get(`${serverBase}/user/check/${encodeURIComponent(id)}`, {
-      headers: {
-        cookie: req.headers.cookie || "",
-      },
+    const r = await axios.get(`${serverBase}/user/check/${idNum}`, {
+      headers: { cookie: req.headers.cookie || "" },
       withCredentials: true,
       maxRedirects: 0,
       validateStatus: () => true,

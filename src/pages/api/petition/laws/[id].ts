@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!idRaw || Number.isNaN(id)) return res.status(400).send("Invalid id");
 
   try {
-    const r = await axios.get(`${base}/petition/${id}`, {
+    const r = await axios.get(`${base}/petition/laws/${id}`, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });

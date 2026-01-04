@@ -3,33 +3,24 @@ import axios from "axios";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const base = process.env.SERVER_BASE_URL;
-
-  if (!base) {
-    res.status(500).send("SERVER_BASE_URL is not set");
-    return;
-  }
-
+  if (!base) return res.status(500).send("SERVER_BASE_URL is not set");
 
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
-    res.status(405).end();
-    return;
+    return res.status(405).end();
   }
 
-  const id = typeof req.query.id === "string" ? req.query.id : "";
-  if (!id) {
-    res.status(400).send("Missing id");
-    return;
-  }
+  const idRaw = typeof req.query.id === "string" ? req.query.id : "";
+  const id = Number(idRaw);
+  if (!idRaw || Number.isNaN(id)) return res.status(400).send("Invalid id");
 
   try {
     const r = await axios.get(`${base}/petition/news/${id}`, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });
-
-    res.status(r.status).json(r.data);
+    return res.status(r.status).json(r.data);
   } catch (e: any) {
-    res.status(500).json({ message: e?.message ?? "proxy error" });
+    return res.status(500).json({ message: e?.message ?? "proxy error" });
   }
 }

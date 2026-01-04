@@ -9,26 +9,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
     res.status(405).end();
     return;
   }
 
-  const id = typeof req.query.id === "string" ? req.query.id : "";
-  if (!id) {
-    res.status(400).send("Missing id");
-    return;
-  }
-
   try {
-    const r = await axios.get(`${base}/petition/laws/${id}`, {
+    const r = await axios.post(`${base}/auth/google/logout`, null, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });
 
-    res.status(r.status).json(r.data);
-  } catch (e: any) {
-    res.status(500).json({ message: e?.message ?? "proxy error" });
+    const setCookie = r.headers["set-cookie"];
+    if (setCookie) res.setHeader("Set-Cookie", setCookie);
+
+    res.status(200).end();
+  } catch {
+    res.status(500).send("logout error");
   }
 }

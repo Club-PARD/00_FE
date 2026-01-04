@@ -23,6 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       maxRedirects: 0,
       validateStatus: () => true, // 300, 302도 에러로 던지지 말고 응답으로 받기 위해
     });
+    console.log("BACKEND STATUS:", r.status);
+    console.log("BACKEND LOCATION:", r.headers?.location);
+    console.log("BACKEND SET-COOKIE:", r.headers["set-cookie"]);// 콜백 확인용
 
     // 서버가 Set-Cookie를 줬으면 그 쿠키를 그대로 브라우저 응답에 실음 -> 서버, 브라우저 모두 로그인 상태 유지
     const setCookie = r.headers["set-cookie"];
@@ -45,4 +48,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch {
     res.status(500).send("Auth callback error");
   }
+  
 }
