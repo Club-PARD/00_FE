@@ -1,3 +1,5 @@
+// 회원가입 페이지
+
 import { useMemo, useState, useEffect } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
@@ -22,6 +24,20 @@ export default function SignupPage() {
     if (emailFromQuery) setEmail(emailFromQuery);
   }, [router.query.email]);
 
+    // 쿼리로 이메일이 안 넘어온 경우, 로그인된 유저 정보에서 이메일 보충
+    useEffect(() => {
+      if (email) return;
+  
+      axios
+        .get("/api/me", { validateStatus: () => true })
+        .then((r) => {
+          if (r.status === 200 && r.data?.email) {
+            setEmail(String(r.data.email));
+          }
+        })
+        .catch(() => {});
+    }, [email]);
+  
   const trimmed = useMemo(() => name.trim(), [name]);
   const trimmedEmail = useMemo(() => email.trim(), [email]);
 
@@ -54,6 +70,7 @@ export default function SignupPage() {
     }
   };
 
+  // 닉네임 입력란 블러 시 중복체크
   const onBlurName = async () => {
     setTouched(true);
     if (!trimmed) return;

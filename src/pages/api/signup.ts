@@ -1,3 +1,5 @@
+// 신규 유저가 회원가입 폼을 제출하면, 그 데이터를 서버한테 전달하고 로그인 쿠키를 브라우저에 심어서 회원가입=로그인 완료 상태로 만듬
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
@@ -16,13 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // 백엔드에 회원가입 요청 전달, req.body에는 name, email, age, status
     const r = await axios.post(`${serverBase}/user/signUp`, req.body, { //req.body: { name, age, status }
       headers: {
         cookie: req.headers.cookie || "", //쿠키가 있으면 쿠키를, 없으면 빈 문자열을 서버로 보냄
       },
       withCredentials: true,
       maxRedirects: 0, 
-      validateStatus: () => true,
+      validateStatus: () => true, // 4xx/3xx여도 axios가 throw 안 하고 응답으로 받을거임
     });
 
     // 백엔드가 Set-Cookie를 줬으면 그 쿠키를 그대로 브라우저 응답에 실음

@@ -1,3 +1,5 @@
+// 상세페이지 대충 만든거임
+
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import api from "@/lib/axios";

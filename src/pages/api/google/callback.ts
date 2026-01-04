@@ -1,3 +1,5 @@
+// 구글 로그인 완료 후, 백엔드 인증 결과를 받아서 쿠키를 브라우저에 전달하고 기존 유저 / 신규 유저를 분기 처리하는 콜백 API임
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 

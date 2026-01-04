@@ -1,3 +1,5 @@
+// 회원가입 시 입력한 닉네임이 이미 사용중인지 확인하는 API 핸들러
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
@@ -15,24 +17,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
+  // URL 파라미터에서 닉네임 id 추출 및 검증 -> 실제로 id는 닉네임 문자열
   const idRaw = typeof req.query.id === "string" ? req.query.id : "";
-  const idNum = Number(idRaw);
-
-  if (!idRaw || Number.isNaN(idNum)) {
+  if (!idRaw) {
     res.status(400).send("Invalid id");
     return;
   }
-
+  
   try {
-    const r = await axios.get(`${serverBase}/user/check/${idNum}`, {
-      headers: { cookie: req.headers.cookie || "" },
-      withCredentials: true,
+    const r = await axios.get(`${serverBase}/user/check/${encodeURIComponent(idRaw)}`, {
       maxRedirects: 0,
       validateStatus: () => true,
     });
 
-    res.status(r.status).json(r.data ?? {});
-  } catch {
-    res.status(500).send("Check error");
+    res.status(r.status).end();
+  } catch (e: any) {
+    res.status(500).send(e?.message ?? "Nickname check error");
   }
 }

@@ -1,3 +1,5 @@
+// 특정 청원과 관련된 뉴스 목록을 가져오는 API 핸들러
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
@@ -5,6 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const base = process.env.SERVER_BASE_URL;
   if (!base) return res.status(500).send("SERVER_BASE_URL is not set");
 
+  // GET 메서드만 허용
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).end();
@@ -15,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!idRaw || Number.isNaN(id)) return res.status(400).send("Invalid id");
 
   try {
+    // 백엔드한테 뉴스데이터 요청, 쿠키 포함
     const r = await axios.get(`${base}/petition/news/${id}`, {
       headers: { cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
