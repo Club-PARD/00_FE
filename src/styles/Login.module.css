@@ -84,9 +84,9 @@
 
   /* 구글 아이콘 */
   .googleIcon {
-    width: 18px;
-    height: 18px;
-    background-image: url("/google.png");
+    width: 40px;
+    height: 40px;
+    background-image: url("/google.svg");
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
