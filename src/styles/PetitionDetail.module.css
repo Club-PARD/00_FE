@@ -1,364 +1,139 @@
-.page {
-    min-height: 100vh;
-    background: #ffffff;
-  }
-  
-  .container {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 28px 20px 60px;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 28px;
-    align-items: start;
-  }
-  
-  .main {
-    min-width: 0;
-  }
-  
-  .sidebar {
-    position: sticky;
-    top: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .state {
-    padding: 28px 20px;
-    max-width: 1160px;
-    margin: 0 auto;
-    color: #111827;
-    font-size: 16px;
-  }
-  
-  .head {
-    padding-bottom: 14px;
-    border-bottom: 1px solid #eef2f7;
-  }
-  
-  .title {
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    color: #0f172a;
-    margin: 0;
-  }
-  
-  .metaRow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 12px;
-    color: #475569;
-    font-size: 14px;
-  }
-  
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding: 0 10px;
-    border-radius: 999px;
-    background: #f1f5ff;
-    color: #4f46e5;
-    font-weight: 700;
-    font-size: 12px;
-  }
-  
-  .dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 999px;
-    background: #cbd5e1;
-  }
-  
-  .metaItem {
-    font-weight: 600;
-  }
-  
-  .section {
-    padding-top: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #eef2f7;
-  }
-  
-  .sectionHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  
-  .sectionTitle {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: #0f172a;
-  }
-  
-  .paragraph {
-    margin: 10px 0 0;
-    color: #334155;
-    line-height: 1.85;
-    font-size: 15px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  
-  .split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  
-  .card {
-    border: 1px solid #e6ebf2;
-    border-radius: 14px;
-    padding: 14px;
-    background: #ffffff;
-  }
-  
-  .cardTitle {
-    font-size: 14px;
-    font-weight: 800;
-    color: #0f172a;
-  }
-  
-  .cardBody {
-    margin-top: 8px;
-    color: #334155;
-    line-height: 1.75;
-    font-size: 14px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  
-  .list {
-    margin-top: 12px;
-    display: grid;
-    gap: 10px;
-  }
-  
-  .listItem {
-    border: 1px solid #e6ebf2;
-    border-radius: 14px;
-    padding: 14px;
-  }
-  
-  .listTitle {
-    font-weight: 800;
-    color: #0f172a;
-    font-size: 14px;
-  }
-  
-  .listBody {
-    margin-top: 8px;
-    color: #334155;
-    line-height: 1.7;
-    font-size: 14px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  
-  .links {
-    margin-top: 12px;
-    display: grid;
-    gap: 10px;
-  }
-  
-  .link {
-    display: block;
-    padding: 12px 14px;
-    border: 1px solid #e6ebf2;
-    border-radius: 14px;
-    color: #4338ca;
-    text-decoration: none;
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .link:hover {
-    background: #f8fafc;
-  }
-  
-  .empty {
-    margin-top: 12px;
-    color: #64748b;
-    font-size: 14px;
-  }
-  
-  .sideCard {
-    border: 1px solid #e6ebf2;
-    border-radius: 16px;
-    padding: 16px;
-    background: #ffffff;
-  }
-  
-  .sideLabel {
-    font-size: 13px;
-    font-weight: 900;
-    color: #0f172a;
-  }
-  
-  .sideTop {
-    display: grid;
-    gap: 10px;
-  }
-  
-  .sideMeta {
-    display: grid;
-    gap: 10px;
-    margin-top: 4px;
-  }
-  
-  .sideMetaRow {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
-  }
-  
-  .sideKey {
-    color: #64748b;
-    font-weight: 700;
-    font-size: 12px;
-  }
-  
-  .sideVal {
-    color: #0f172a;
-    font-weight: 800;
-    font-size: 12px;
-    text-align: right;
-  }
-  
-  .aiBox {
-    margin-top: 10px;
-    padding: 12px 12px;
-    border-radius: 14px;
-    background: #f8fafc;
-    color: #334155;
-    line-height: 1.75;
-    font-size: 13px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  
-  .agreeRow {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  
-  .agreeNumber {
-    font-size: 22px;
-    font-weight: 900;
-    color: #4f46e5;
-  }
-  
-  .agreeLabel {
-    font-size: 12px;
-    font-weight: 800;
-    color: #64748b;
-  }
-  
-  .likeRow {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
-  }
-  
-  .likeItem {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 12px;
-    border: 1px solid #e6ebf2;
-    border-radius: 14px;
-    background: #ffffff;
-  }
-  
-  .likeKey {
-    color: #64748b;
-    font-weight: 800;
-    font-size: 12px;
-  }
-  
-  .likeVal {
-    color: #0f172a;
-    font-weight: 900;
-    font-size: 12px;
-  }
-  
-  .primaryBtn {
-    margin-top: 12px;
-    width: 100%;
-    height: 44px;
-    border: 0;
-    border-radius: 14px;
-    background: #4f46e5;
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .primaryBtn:hover {
-    filter: brightness(0.95);
-  }
-  
-  .btnRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .ghostBtn {
-    height: 40px;
-    border-radius: 14px;
-    border: 1px solid #e6ebf2;
-    background: #ffffff;
-    color: #0f172a;
-    font-weight: 900;
-    cursor: pointer;
-  }
-  
-  .ghostBtn:hover {
-    background: #f8fafc;
-  }
-  
-  .backBtn {
-    height: 44px;
-    border-radius: 14px;
-    border: 1px solid #e6ebf2;
-    background: #ffffff;
-    color: #0f172a;
-    font-weight: 900;
-    cursor: pointer;
-  }
-  
-  .backBtn:hover {
-    background: #f8fafc;
-  }
-  
-  @media (max-width: 980px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    .sidebar {
-      position: static;
-    }
-    .split {
-      grid-template-columns: 1fr;
-    }
-  }
-  
+.stateBox {
+  padding: 18px;
+  border: 1px solid #eef0f4;
+  border-radius: 14px;
+  background: #fafafa;
+  color: #374151;
+}
+
+.likeRow {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 6px;
+}
+
+.likeBtn,
+.likeBtnOn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #eef0f4;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  color: #374151;
+}
+
+.likeBtnOn {
+  border-color: #4f46e5;
+  color: #4f46e5;
+}
+
+.emptyText {
+  color: #9ca3af;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listItem {
+  border: 1px solid #eef0f4;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+}
+
+.listTitle {
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.listBody {
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.linkItem {
+  display: block;
+  border: 1px solid #eef0f4;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+  color: #4f46e5;
+  font-weight: 800;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.commentBox {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.commentInput {
+  flex: 1;
+  min-height: 92px;
+  border: 1px solid #eef0f4;
+  border-radius: 14px;
+  padding: 12px;
+  outline: none;
+  resize: vertical;
+  font-size: 13px;
+}
+
+.commentSubmit {
+  width: 90px;
+  border: 0;
+  border-radius: 14px;
+  background: #5b3df5;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.commentItem {
+  border: 1px solid #eef0f4;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+}
+
+.commentTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.commentName {
+  font-weight: 900;
+  color: #111827;
+}
+
+.commentDelete {
+  border: 0;
+  background: transparent;
+  color: #ef4444;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.commentBody {
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.6;
+}

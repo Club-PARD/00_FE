@@ -10,10 +10,11 @@
   /* 카드 위에 로그인 글자 */
   .title {
     margin-bottom: 28px;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 800;
     color: #6A3DF6;
     font-family: "Gmarket Sans";
+    margin-bottom: 77px;
   }
   
   /* 로그인 카드 스타일 */
