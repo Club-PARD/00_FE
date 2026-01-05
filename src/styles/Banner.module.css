@@ -1,0 +1,59 @@
+/* 전체 배너 영역 (회색 배경으로) */
+.bannerWrapper{
+  margin-top: 72px;
+
+  width: 100%;
+  height: 480px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative; 
+  overflow: hidden;
+}
+
+/* Swiper 컨테이너 (슬라이드 틀) */
+.swiperContainer{
+  width: 100%;
+  height: 480px;
+}
+
+/* 개별 슬라이드 틀*/
+.slide{
+  width: 996px;
+  height: 100%;
+
+  border-radius: 20px;
+  overflow: hidden;
+
+  /* 활성화되지 않은 슬라이드(양 옆) 흐리게*/
+  opacity: 0.5;
+  transition: opacity 0.3s;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 활성화된 슬라이드 선명하게 -> 가운데 슬라이드만 선명하게 하는 거*/
+.slide[class*="swiper-slide-active"] {
+  opacity: 1;
+}
+
+.linkBlock {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative; /* Image fill을 위해 필수 */
+
+  /* 더블 클릭했을 때 파랗게 되는거 방지*/
+  user-select: none;
+  -webkit-user-select: none; /* 크롬, 사파리 호환 */
+  -moz-user-select: none;    /* 파이어폭스 호환 */
+  -ms-user-select: none;     /* 구형 엣지/IE 호환 */
+  -webkit-user-drag: none; /* css로 확실히 한번 더 처리*/
+}
+
+.slide:not([class*="swiper-slide-active"]) .linkBlock {
+  pointer-events: none; /* 클릭 방지 (링크 작동 X) */
+  cursor: pointer;      /* 마우스 커서는 여전히 손가락 모양 */
+}

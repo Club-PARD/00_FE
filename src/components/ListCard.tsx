@@ -1,0 +1,144 @@
+// ListCard는 국회 안건(Congress,국민 동의 청원),  생활안건(청원24)에서 쓰이는 공통 카드
+
+import Link from "next/link";
+import Image from "next/image";
+import styles from "@/styles/Listcard.module.css";
+
+// 데이터 타입 정의
+export type CongressCardItem = {
+  id: string;
+  title: string;
+  category: string;
+  allows: number;
+  startDate: string;
+  endDate: string;
+};
+
+// 카테고리별 색상 매핑
+const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
+  "정치, 선거, 국회운영": { bg: "#e7f0ff", text: "#6990CF" },
+  "수사, 법무, 사법제도": { bg: "#e7f0ff", text: "#6990CF" },
+  "재정, 세제, 금융, 예산": { bg: "#e7f0ff", text: "#6990CF" },
+  "소비자, 공정거래": { bg: "#fff4e6", text: "#daa25b" },
+  교육: { bg: "#efe7ff", text: "#9071cd" },
+  "과학기술, 정보통신": { bg: "#efe7ff", text: "#9071cd" },
+  "외교, 통일, 국방, 안보": { bg: "#efe7ff", text: "#9071cd" },
+  "재난, 안전, 환경": { bg: "#fff9e8", text: "#cda430" },
+  "행정, 지방자치": { bg: "#f8ffe8", text: "#79B495" },
+  "문화, 체육, 관광, 언론": { bg: "#fff9e8", text: "#cda430" },
+  "농업, 임업, 수산업, 축산업": { bg: "#fff4e6", text: "#daa25b" },
+  "산업, 통상": { bg: "#f8ffe8", text: "#79B495" },
+  보건의료: { bg: "#ffe8ee", text: "#c77288" },
+  "복지, 보훈": { bg: "#ffe8ee", text: "#c77288" },
+  "국토, 해양, 교통": { bg: "#f8ffe8", text: "#79B495" },
+  "인권, 성평등, 노동": { bg: "#ffe8ee", text: "#c77288" },
+  "저출산, 고령화, 아동, 청소년, 가족": { bg: "#ffe8ee", text: "#c77288" },
+  기타: { bg: "#f1f1f1", text: "#767676" },
+};
+
+// 숫자 포맷 (1,000)
+function formatNumber(n: number) {
+  return n.toLocaleString("ko-KR");
+}
+
+// 날짜 파싱 보조=> "YYYY.MM.DD", "YYYY-MM-DD" 형태를 일정하게 수정하는 것
+function parseDate(dateStr: string) {
+  const normalized = dateStr.trim().replace(/\./g, "-"); // . -> -
+  const d = new Date(normalized + "T00:00:00");
+  return d;
+}
+
+// D-Day 계산
+function calcDday(endDate: string) {
+  const end = parseDate(endDate);
+  const today = new Date();
+
+  if (isNaN(end.getTime())) return null;
+
+  end.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const diffMs = end.getTime() - today.getTime();
+  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+}
+
+type Props = {
+  item: CongressCardItem;
+  href?: string;
+
+  forceCategoryGray?: boolean;
+};
+
+export default function CongressCard({ item, href, forceCategoryGray }: Props) {
+  // 카테고리 키 / -> ,
+  const categoryKey = item.category.replace(/\//g, ", ");
+
+  // 카테고리 스타일 가져오기
+  const catStyle = forceCategoryGray
+    ? { bg: "#f1f1f1", text: "#767676" }
+    : CATEGORY_STYLES[categoryKey] ?? { bg: "#f1f1f1", text: "#767676" };
+  const formattedCategory = item.category.replace(/\//g, " · ");
+
+  // D-Day 계산 및 스타일
+  const dday = calcDday(item.endDate);
+  const isUrgent = dday !== null && dday >= 0 && dday <= 7;
+
+  // 링크 주소
+  const detailHref = href ?? `/petitions/${item.id}`;
+
+  return (
+    <article className={styles.cardWrapper}>
+      {/* 헤더: D-Day & 북마크 */}
+      <div className={styles.headerRow}>
+        <span
+          className={`${styles.ddayBadge} ${isUrgent ? styles.ddayRed : ""}`}
+        >
+          {dday === null ? "-" : dday >= 0 ? `D-${dday}` : `마감`}
+        </span>
+        <button
+          className={styles.bookmarkBtn}
+          type="button"
+          aria-label="북마크"
+        >
+          <Image src="/bookMark.svg" alt="" width={24} height={24} />
+        </button>
+      </div>
+
+      <div className={styles.infoGroup}>
+        <div className={styles.date}>{item.startDate}</div>
+        <h3 className={styles.title}>{item.title}</h3>
+      </div>
+
+      {/* 카테고리 뱃지 */}
+      <div className={styles.categoryWrapper}>
+        <span
+          className={styles.categoryBadge}
+          style={{ backgroundColor: catStyle.bg, color: catStyle.text }}
+        >
+          {formattedCategory}
+        </span>
+      </div>
+
+      {/* --- 하단 바 (동의자 수) --- */}
+      <Link href={detailHref} className={styles.bottomBar}>
+        <div className={styles.agreeInfo}>
+          {/* 체크 아이콘 (보라색) */}
+          <div className={styles.checkIcon}>
+            <Image src="/agree_purple.svg" alt="동의" width={24} height={24} />
+          </div>
+          <span>{formatNumber(item.allows)}명</span>
+        </div>
+
+        {/* 오른쪽 화살표 */}
+        <div className={styles.arrowIcon}>
+          <Image
+            src="/right_arrow_gray.svg"
+            alt="이동"
+            width={16}
+            height={16}
+          />
+        </div>
+      </Link>
+    </article>
+  );
+}
