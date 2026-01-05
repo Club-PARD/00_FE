@@ -23,11 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.setHeader("Set-Cookie", patched);
     }
 
-    if (r.status === 302 && r.headers.location) {
-      res.redirect(302, r.headers.location);
-      return;
-    }
-
     res.redirect(302, "/");
   } catch {
     res.redirect(302, "/login");
