@@ -1,206 +1,209 @@
 /* =========================
    스티키 래퍼
    ========================= */
-   .sticky {
-    position: sticky;      /* 스크롤 시 고정 */
-    top: 120px;            /* 상단에서 120px 떨어진 지점부터 고정 */
-  }
-  
-  /* =========================
+.sticky {
+  position: sticky; /* 스크롤 시 고정 */
+  top: 120px; /* 상단에서 120px 떨어진 지점부터 고정 */
+}
+
+/* =========================
      미니 카드 전체 컨테이너
      ========================= */
-  .card {
-    width: 384px;          /* 우측 사이드바 고정 폭 */
-    background: #fff;      /* 카드 배경 */
-    border: 1px solid var(--Color-Gray-07, #bfbfbf);
-    border-radius: 16px 16px 58px 58px; 
-    box-shadow: 0 0 10px 0 rgba(17, 17, 17, 0.15); /* 카드 떠있는 느낌 */
-  }
-  
-  /* 카드 내부 패딩 */
-  .inner {
-    padding: 32px 32px 24px 32px;
-  }
-  
-  /* =========================
+.card {
+  width: 384px; /* 우측 사이드바 고정 폭 */
+  background: #fff; /* 카드 배경 */
+  border: 1px solid var(--Color-Gray-07, #bfbfbf);
+  border-radius: 16px 16px 58px 58px;
+  box-shadow: 0 0 10px 0 rgba(17, 17, 17, 0.15); /* 카드 떠있는 느낌 */
+}
+
+/* 카드 내부 패딩 */
+.inner {
+  padding: 32px 32px 24px 32px;
+}
+
+/* =========================
      상단 카테고리 배지
      ========================= */
-     .badge {
-        display: inline-flex;         /* 내용 크기만큼만 차지 */
-        align-items: center;          /* 세로 중앙 정렬 */
-        height: 28px;                 /* 배지 높이 */
-        padding: 0 12px;              /* 좌우 여백 */
-        border-radius: 4px;           /* 둥근 배지 */
-        font-family: "Noto Sans KR";
-        background: var(--color-card, #E7F0FF);          /* 연한 파랑 배경 */
-        color: #6990CF;               /* 파랑 텍스트 */
-        font-weight: 800;             /* 굵은 글씨 */
-        font-size: 14px;
-        width: fit-content;           /* 글자 길이만큼만 */
-      }
-  
-  /* =========================
+.badge {
+  display: inline-flex; /* 내용 크기만큼만 차지 */
+  align-items: center; /* 세로 중앙 정렬 */
+  height: 28px; /* 배지 높이 */
+  padding: 0 12px; /* 좌우 여백 */
+  border-radius: 4px; /* 둥근 배지 */
+  font-family: "Noto Sans KR";
+  background: var(--color-card, #e7f0ff); /* 연한 파랑 배경 */
+  color: #6990cf; /* 파랑 텍스트 */
+  font-weight: 800; /* 굵은 글씨 */
+  font-size: 14px;
+  width: fit-content; /* 글자 길이만큼만 */
+}
+
+/* =========================
      청원 제목
      ========================= */
-  .title {
-    margin-top: 14px;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: #111;
-    font-family: "Noto Sans KR";
-  }
-  
-  /* 구분선 */
-  .divider {
-    margin-top: 48px;
-    margin-bottom: 48px;
-    margin-left: 30px;
-    width: 260px;
-    height: 1px;
-    background: var(--Color-Gray-07, #BFBFBF);
-  }
-  
-  /* =========================
+.title {
+  margin-top: 14px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #111;
+  font-family: "Noto Sans KR";
+}
+
+/* 구분선 */
+.divider {
+  margin-top: 48px;
+  margin-bottom: 48px;
+  margin-left: 30px;
+  width: 260px;
+  height: 1px;
+  background: var(--Color-Gray-07, #bfbfbf);
+}
+
+/* =========================
      메타 정보 리스트
      ========================= */
-  .metaList {
-    margin-top: 48px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  
-  /* 메타 한 줄 (아이콘 + 텍스트) */
-  .metaItem {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  /* 메타 아이콘 배경 박스 */
-  .metaIconBox {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--Color-Gray-07, #bfbfbf);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;        /* 크기 고정 */
-  }
-  
-  /* 메타 아이콘 이미지 */
-  .metaIcon {
-    width: 26px;
-    height: 26px;
-    display: block;
-    opacity: 0.9;
-  }
-  
-  /* 메타 라벨 (동의기간, 처리결과 등) */
-  .metaLabel {
-    font-size: 12px;
-    font-weight: 700;
-    color: #777;
-    font-family: "Noto Sans KR";
-    margin-bottom: 4px;
-  }
-  
-  /* 메타 값 */
-  .metaValue {
-    font-size: 14px;
-    font-weight: 900;
-    color: #111;
-    font-family: "Noto Sans KR";
-  }
-  
-  /* 강조 메타 값 (보라색) */
-  .metaValueHighlight {
-    color: #6a4dff;
-  }
-  
-  /* =========================
+.metaList {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 메타 한 줄 (아이콘 + 텍스트) */
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 메타 아이콘 배경 박스 */
+.metaIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--Color-Gray-07, #bfbfbf);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto; /* 크기 고정 */
+}
+
+/* 메타 아이콘 이미지 */
+.metaIcon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  opacity: 0.9;
+}
+
+/* 메타 라벨 (동의기간, 처리결과 등) */
+.metaLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #777;
+  font-family: "Noto Sans KR";
+  margin-bottom: 4px;
+}
+
+/* 메타 값 */
+.metaValue {
+  font-size: 14px;
+  font-weight: 900;
+  color: #111;
+  font-family: "Noto Sans KR";
+}
+
+/* 강조 메타 값 (보라색) */
+.metaValueHighlight {
+  color: #6a4dff;
+}
+
+/* =========================
      동의 수 / 퍼센트
      ========================= */
-  .statsRow {
-    margin-top: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  
-  /* 사람 아이콘 + 인원 수 */
-  .people {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  /* 사람 아이콘 */
-  .peopleIcon {
-    width: 32px;
-    height: 32px;
-    display: block;
-  }
-  
-  /* 동의 인원 텍스트 */
-  .peopleText {
-    font-size: 20px;
-    font-weight: 600;
-    color: #6a4dff;
-    font-family: "Noto Sans KR";
-  }
-  
-  /* 퍼센트 텍스트 */
-  .percent {
-    font-size: 20px;
-    font-weight: 900;
-    color: #6a4dff;
-    font-family: "Noto Sans KR";
-  }
-  
-  /* =========================
+.statsRow {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 사람 아이콘 + 인원 수 */
+.people {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 사람 아이콘 */
+.peopleIcon {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+/* 동의 인원 텍스트 */
+.peopleText {
+  font-size: 20px;
+  font-weight: 600;
+  color: #6a4dff;
+  font-family: "Noto Sans KR";
+}
+
+/* 퍼센트 텍스트 */
+.percent {
+  font-size: 20px;
+  font-weight: 900;
+  color: #6a4dff;
+  font-family: "Noto Sans KR";
+}
+
+/* =========================
      진행률 바
      ========================= */
-  .progressTrack {
-    margin-top: 10px;
-    width: 100%;
-    height: 10px;
-    border-radius: 999px;
-    background: #f0f0f0;
-    border: 1px solid #d8d8d8;
-    overflow: hidden;
-  }
-  
-  /* 실제 채워지는 바 */
-  .progressFill {
-    height: 100%;
-    border-radius: 999px;
-    background: #c9f23a;
-  }
-  
-  /* =========================
+.progressTrack {
+  margin-top: 10px;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  border: 1px solid #d8d8d8;
+  overflow: hidden;
+}
+
+/* 실제 채워지는 바 */
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: #c9f23a;
+}
+
+/* =========================
      바로가기 버튼
      ========================= */
-  .cta {
-    margin-top: 32px;
-    width: 100%;
-    height: 67px;
-    border-radius: 100px;
-    border: none;
-    background: var(--Color-Brand-brand-primary-Base, #6A3DF6);
-    color: #fff;
-    font-size: 24px;
-    font-weight: 700;
-    font-family: "Noto Sans KR";
-    cursor: pointer;
-  }
-  
-  /* 버튼 클릭 효과 */
-  .cta:active {
-    transform: translateY(1px);
-  }
-  
+.cta {
+  margin-top: 32px;
+  width: 100%;
+  height: 67px;
+  border-radius: 100px;
+  border: none;
+  background: var(--Color-Brand-brand-primary-Base, #6a3df6);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Noto Sans KR";
+  cursor: pointer;
+}
+
+/* 버튼 클릭 효과 */
+.cta:active {
+  transform: translateY(1px);
+}
+
+.cta:hover {
+  background: #5f37dd;
+}
