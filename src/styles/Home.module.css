@@ -75,6 +75,7 @@ html, body{
   text-decoration: none;
 
   margin-top: 11px;
+  transform: translateX(-14px);
 }
 
 /*  더보기: hover  */
@@ -90,6 +91,7 @@ html, body{
   height: 16px;
 
   margin-top: 1px; /* 위치 미세 조정 */
+  
 }
 
 /*기본 상태: 검은색 화살표는 숨김 */

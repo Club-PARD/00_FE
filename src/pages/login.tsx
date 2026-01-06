@@ -1,35 +1,62 @@
+import { useEffect } from "react";
+import Image from "next/image";
 import styles from "@/styles/Login.module.css";
 
 export default function LoginPage() {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>로그인</h1>
+      <section className={styles.inner}>
+        <div className={styles.card}>
+          <div className={styles.head}>
+            <h1 className={styles.title}>
+              관심은 있는데,
+              <br />
+              <span className={styles.line2}>
+                <span className={styles.highlight}>어디서 시작</span>할지
+                모르겠다면
+              </span>
+            </h1>
+          </div>
 
-      <section className={styles.card}>
-        <p className={styles.quote}>“ 정책 참여가 쉬워지는 곳, 모라! ”</p>
+          <div className={styles.googleGroup}>
+            <p className={styles.desc}>
+              Google 계정으로 로그인 후
+              <br />
+              어떤 정책이 있는지 둘러볼까요?
+            </p>
 
-        <p className={styles.desc}>
-          Google 계정으로 로그인 후
-          <br />
-          어떤 정책이 있는지 둘러볼까요?
-        </p>
+            <button
+              className={styles.googleBtn}
+              type="button"
+              onClick={() => {
+                const base = process.env.NEXT_PUBLIC_API_URL;
+                if (!base) return;
 
-        <button
-          className={styles.googleBtn}
-          type="button"
-          onClick={() => {
-            const base = process.env.NEXT_PUBLIC_API_URL;
-            if (!base) return;
-
-            const origin = window.location.origin;
-            window.location.href = `${base}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(
-              origin
-            )}`;
-          }}
-        >
-          <span className={styles.googleIcon} aria-hidden />
-          Google 계정으로 로그인
-        </button>
+                const origin = window.location.origin;
+                window.location.href = `${base}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(
+                  origin
+                )}`;
+              }}
+            >
+              <Image
+                src="/google_logo.svg"
+                alt=""
+                width={40}
+                height={40}
+                className={styles.googleIcon}
+              />
+              Google 계정으로 로그인
+            </button>
+          </div>
+        </div>
       </section>
     </main>
   );
