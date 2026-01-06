@@ -1,27 +1,41 @@
 /* globals.css */
 
-/* 1. box-sizing 통일 */
+/* box-sizing 통일 */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* 2. 기본 여백 제거 */
+/* 기본 여백 제거 */
 html, body {
   margin: 0;
   padding: 0;
+
+  background: #F5F5F5;
 }
 
-/* 3. 기본 폰트만 지정 */
+/* 기본 폰트만 지정 */
 body {
-  font-family: "Noto Sans KR", sans-serif;
   color: #111;
   background: #fff;
 }
 
-/* 4. 링크 기본 스타일 제거 (색/굵기는 각 컴포넌트에서) */
+/* 링크 기본 스타일 제거 (색/굵기는 각 컴포넌트에서) */
 a {
   text-decoration: none;
   color: inherit;
+}
+
+/* 폼 요소에서 폰트 상속받도록 */
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+/* src/styles/globals.css */
+@font-face {
+  font-family: 'GmarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
 }

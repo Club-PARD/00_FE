@@ -1,12 +1,18 @@
+html, body{
+  background: #F5F5F5;
+}
 
-/* --- 배너 --- */
+
+/* --------- 배너 --------- */
 .banner{
   height: 544px;
   background: #e6e6e6;
   position: relative;
+
+  margin-top: 72px;
 }
 
-/* 배너: 좌우 여백 + 하단 여백 */
+/* --- 배너: 좌우 여백 + 하단 여백 --- */
 .bannerInner {
   height: 100%;
   max-width: 1440px;
@@ -24,41 +30,101 @@
   position: relative;
 }
 
-
-/* --- 진행중인 청원 버튼 --- */
-.cta {
-  position: absolute;
-  left: 50%;
-  bottom: 68px;             
-  transform: translateX(-50%);
-
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 15px 24px;
-  border: none;
-  border-radius: 16px;
-
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1;
-  white-space: nowrap;
-
-  background: #6A3DF6;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* 이미지 때문에 생기는 마우스 이벤트 문제 처리*/
-.cta img {
-  pointer-events: none;
-}
-
+/* ---------------------------- 본문 부분(카드 뉴스) ---------------------------- */
 
 .main {
   max-width: 1440px;
+
   margin: 0 auto;
-  padding: 40px clamp(16px, 5vw, 120px);
+  padding: 60px clamp(24px, 6vw, 120px) 100px;
+  /* 반응형으로 최소 24px, 충분히 크면 최대 120px까지 늘어남*/
+  
   box-sizing: border-box;
+}
+
+/* --------- 섹션 공통 스타일 --------- */
+.section {
+  margin-bottom: 80px; /* 섹션 간의 간격 */
+}
+
+/* --------- 섹션 헤더 (제목 + 더보기) --------- */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 양 끝으로 배치 */
+  margin-bottom: 28px; /* 헤더와 카드 사이 간격 */
+}
+
+/* --- 섹션 제목 --- */
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  margin: 0; /* h2 기본 마진 제거 */
+}
+
+/* --- 섹션 더보기 --- */
+.moreLink {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #767676; /* 회색 */
+  text-decoration: none;
+
+  margin-top: 11px;
+}
+
+/*  더보기: hover  */
+.moreLink:hover {
+  color: #111; /* 호버 시 진하게 */
+}
+/* 화살표 아이콘 */
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+
+  margin-top: 1px; /* 위치 미세 조정 */
+}
+
+/*기본 상태: 검은색 화살표는 숨김 */
+.iconBlack {
+  display: none;
+}
+/* Hover => 회색 숨기고, 검은색 보여주기 */
+.moreLink:hover .iconGray {
+  display: none;
+}
+.moreLink:hover .iconBlack {
+  display: block;
+}
+
+
+/* --------- 카드 그리드  --------- */
+.cardGrid {
+  display: grid;
+  
+  /* 화면 4등분 */
+  grid-template-columns: repeat(4, 1fr); 
+  
+  /* 카드 사이의 간격 */
+  gap: 16px; 
+}
+
+/* 반응형: 4->2->1 */
+@media (max-width: 1024px) {
+  .cardGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2열로 */
+    gap: 24px; 
+  }
+}
+@media (max-width: 768px) {
+  .cardGrid {
+    grid-template-columns: 1fr; /* 1열로 */
+  }
 }

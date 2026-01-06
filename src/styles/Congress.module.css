@@ -1,0 +1,393 @@
+html, body{
+  background: #F5F5F5;
+}
+
+/* 페이지 전체 컨테이너*/
+.container {
+  width: 100%;
+  max-width: 1440px; 
+
+  margin: 0 auto;
+  padding: 0 20px; /* 모바일 대응용 여백 */
+
+  padding-left: 74px;
+  padding-right: 80px;
+
+  padding-top: 40px;
+  padding-bottom: 100px;
+  
+  box-sizing: border-box;
+}
+
+
+/* ---------- 제목 영역 ---------- */
+.titleSection {
+  margin-top: 80px; /* 헤더랑 간격 */
+  margin-bottom: 70px; /* 필터랑 간격 */
+}
+.pageTitle {
+  margin: 0;
+
+  /* Gmarket Sans 폰트 적용 (글로벌에 정의된 이름 사용) */
+  font-family: 'GmarketSans', sans-serif; 
+  font-size: 64px;
+  font-weight: 700; 
+  color: #6A3DF6;
+  
+  line-height: 1.2;
+}
+
+/* ---------- 필터 영역 (진행/완료, 최신/카테고리, 검색바 ---------- */
+.filterRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  margin-bottom: 64px; /* 카드 리스트와의 간격 */
+
+  flex-wrap: wrap; /* 좁아지면 다음 줄로 내려가게*/
+  gap: 16px;
+}
+
+/* ----- 왼쪽 필터 그룹  ----- */
+.filterLeftGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 버튼 사이 간격 */
+}
+
+/* 버튼 글자 세로로 쪼개지는 거 방지 */
+.statusBtn,
+.dropdownBtn {
+  white-space: nowrap;
+}
+
+/* 버튼이 너무 눌려서 폭이 줄어드는 것 방지 */
+.statusBtn,
+.dropdownWrapper {
+  flex-shrink: 0;
+}
+
+/* 진행중/ 완료된 공통*/
+.statusBtn {
+  display: flex;
+
+  height: 36px;
+  
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 100px; 
+
+  cursor: pointer;
+}
+/* 선택됐을 때 */
+.statusBtnActive {
+  background-color: #6a3df6;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+
+  padding: 12px 14px;
+
+}
+/* 선택 안됐을 때*/
+.statusBtnInactive {
+  background-color: #e5e5e5;
+  color: #767676;
+  font-size: 16px;
+  font-weight: 500;
+
+  padding: 0 14px;
+
+}
+
+/* 드롭다운 버튼 */
+.dropdownBtn {
+  height: 36px;
+  
+  position: relative;
+  box-sizing: border-box;
+  
+  border: 1.5px solid #bfbfbf;
+  border-radius: 100px;
+
+  background-color: #fff;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  
+  padding: 0 12px 0 14px;
+  gap: 8px;
+  
+  text-align: center;
+  font-size: 16px;
+  color: #767676;
+  font-weight: 500;
+  
+  cursor: pointer;
+}
+
+/* 드롭다운 전체 감싸는 툴*/
+.dropdownWrapper {
+  position: relative; /* 자식인 메뉴가 이 기준으로 배치됨 */
+  display: inline-block;
+}
+
+/* 드롭다운 메뉴 박스*/
+.sortDropdown {
+  position: absolute;
+  top: calc(100% + 8px); /* 버튼에서 8px 아래 */
+  left: 50%;
+  transform: translateX(-50%); /* 가운데 정렬 */
+  
+  width: 100px; 
+  z-index: 9999; /* 다른 요소보다 위에 뜨게 */
+  
+  background-color: #fff;
+
+  border: 1px solid #bfbfbf;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(17, 17, 17, 0.15);
+  box-sizing: border-box;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  padding: 12px 0;
+  gap: 12px;
+}
+
+/* 메뉴 항목 텍스트 (.div2 참고) */
+.sortOption {
+  width: 100%;
+
+  font-size: 14px;
+  color: #1e1e1e;
+
+  cursor: pointer;
+
+  white-space: nowrap; 
+
+  text-align: center;
+}
+
+.sortOption:hover {
+  font-weight: 700; /* 호버 시 강조 (임시) */
+}
+
+/* 구분선*/
+.sortDivider {
+  width: 100%;
+  height: 1px;
+  background-color: #bfbfbf;
+  opacity: 0.5; /* 너무 진하면 연하게 */
+}
+
+/* (나중에) 드롭 아이콘 */
+.iconUp {
+  /* 이미지 크기 강제 고정 */
+  width: 20px !important;
+  height: 20px !important;
+  
+  /* Flex 아이템 크기 수축 방지 */
+  flex-shrink: 0; 
+  
+  /* 혹시 모를 여백 제거 */
+  margin: 0;
+  display: block;
+}
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* 카테고리 드롭다운 박스*/
+.categoryDropdown {
+  position: absolute;
+  top: calc(100% + 8px); 
+  left: 0; /* 카테고리 버튼 기준으로 왼쪽 정렬*/
+  
+  /* 너비가 넓으므로 콘텐츠에 맞춤 */
+  width: max-content; 
+  min-width: 844px; 
+  z-index: 9999;
+  
+  background-color: #fff;
+  border: 1px solid #bfbfbf;
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 10px rgba(17, 17, 17, 0.15);
+  box-sizing: border-box;
+  
+  padding: 32px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px; /* 그리드와 버튼 사이 간격 */
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  
+  column-gap: 24px; /* 가로 간격 */
+  row-gap: 16px;    /* 세로 간격 */
+  
+  width: 100%;
+}
+
+/* 개별 아이템 */
+.categoryItem {
+  display: flex;
+  align-items: center;
+  
+  font-size: 14px;
+  color: #1e1e1e;
+
+  gap: 8px;
+
+  cursor: pointer;
+}
+.categoryItem:hover {
+  opacity: 0.8;
+}
+
+/* 체크박스 아이콘 */
+.checkboxIcon {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* 선택된 텍스트 강조 */
+.activeText {
+  color: #6a3df6;
+}
+
+/* 검색 바 */
+.searchWrapper{
+  width: 300px;
+  min-width: 300px; /* 줄어들었을 때 안망가지게*/
+}
+
+/* 적용하기/ 초기화 버튼 */
+.categoryFooter {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; 
+  gap: 20px;
+}
+
+/* 적용하기 버튼 */
+.applyBtn {
+  width: 84px;
+  height: 36px;
+  padding: 4px 14px;
+  
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  font-size: 14px; 
+  font-weight: 400;
+  color: #505050;
+  
+  cursor: pointer;
+}
+
+.resetBtn {
+  height: 36px;
+  padding: 4px 14px;
+
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 400;
+  color: #505050;
+
+  cursor: pointer;
+  
+}
+
+.resetIcon{
+  transform: translateY(1px);
+}
+
+/* 검색 창*/
+.searchBar{
+  width: 100%;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #fff;
+
+  border-radius: 32px;
+  border: 1px solid #bfbfbf;
+  box-sizing: border-box;
+
+  padding: 4px 8px;
+  gap: 8px;
+
+  font-size: 14px;
+  color: #767676;
+
+  position: relative;
+}
+
+/* 입력 필드 */
+.searchInput {
+  border: none;       
+  outline: none;     
+  background: transparent; 
+  
+  width: 100%;
+  height: 100%;
+  
+  font-size: 14px;
+  color: #111; 
+  
+  text-align: left;
+}
+
+/* 플레이스홀더(안내 문구) 색상 */
+.searchInput::placeholder {
+  color: #767676;
+  font-weight: 400;
+}
+
+.searchIcon {
+  display: flex;
+  align-items: center;
+  transform: translateY(1px);
+  transform: translateX(3px);
+
+  flex-shrink: 0;
+}
+
+
+

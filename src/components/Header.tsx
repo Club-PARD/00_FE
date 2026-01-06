@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation"; // 현재 경로 확인용
 import styles from "@/styles/Header.module.css";
 import { useAuthStore } from "@/store/authStore";
 import axios from "axios";
 
+<<<<<<< HEAD
 type HeaderProps = {
   bannerHeight?: number;
 };
@@ -34,6 +36,10 @@ export default function Header({ bannerHeight = 544 }: HeaderProps) {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [bannerHeight]);
+=======
+export default function Header() {
+  const pathname = usePathname(); // 현재 주소 가져오기
+>>>>>>> origin/main
 
   const onLogout = async () => {
     await axios.post("/api/logout", null, { validateStatus: () => true });
@@ -41,6 +47,7 @@ export default function Header({ bannerHeight = 544 }: HeaderProps) {
   };
 
   return (
+<<<<<<< HEAD
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
         <div className={styles.left}>
@@ -52,13 +59,49 @@ export default function Header({ bannerHeight = 544 }: HeaderProps) {
         <nav className={styles.nav}>
           <Link href="/category" className={styles.navItem}>
             카테고리
+=======
+    
+    <header className={styles.header}>
+
+      <div className={styles.inner}>
+
+        {/* 왼쪽: 로고  */}
+        <div className={styles.left}>
+          <Link href="/" aria-label="로고 및 홈으로 이동"
+          >
+            <Image
+              src="/logo.svg"
+              alt="mora logo"
+              width={137}
+              height={37}
+              priority
+              className={styles.logoImage}
+            />
           </Link>
-          <Link href="/petitions" className={styles.navItem}>
-            청원 현황
+        </div>
+
+        {/* !! 가운데: 메뉴 !! */}
+        <nav className={styles.nav} aria-label="내비게이션바">
+          <Link href="/congress" className={`${styles.navItem} ${
+              pathname === "/congress" ? styles.active : ""
+            }`}>
+            국회안건
+>>>>>>> origin/main
+          </Link>
+          <Link href="/life" className={`${styles.navItem} ${
+              pathname === "/life" ? styles.active : ""
+            }`}>
+            생활안건
+          </Link>
+          <Link href="/more" className={`${styles.navItem} ${
+              pathname === "/more" ? styles.active : ""
+            }`}>
+            몰아보기
           </Link>
         </nav>
 
         <div className={styles.rights}>
+<<<<<<< HEAD
           <div className={styles.search}>
             <span className={styles.searchInner}>
               <Image src="/search_gray.svg" alt="돋보기" width={16} height={16} />
@@ -69,6 +112,8 @@ export default function Header({ bannerHeight = 544 }: HeaderProps) {
               />
             </span>
           </div>
+=======
+>>>>>>> origin/main
 
           {loading ? null : user ? (
             <button onClick={onLogout} className={styles.loginBtn}>

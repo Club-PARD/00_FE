@@ -18,7 +18,7 @@ export default function LoginPage() {
           className={styles.googleBtn}
           type="button"
           onClick={() => {
-            const base = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+            const base = process.env.NEXT_PUBLIC_API_URL;
             if (!base) return;
 
             const origin = window.location.origin;
