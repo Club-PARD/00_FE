@@ -151,6 +151,11 @@
   color: #ffffff;
 }
 
+.submitActive:hover {
+  background: #5F37DD;
+  color: #ffffff;
+}
+
 /* 이메일, 닉네임 텍스트(박스위에있는거) */
 .text {
   color: #111;

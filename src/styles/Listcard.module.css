@@ -189,6 +189,10 @@
   color: #6a3df6; 
 }
 
+.bottomBar:hover {
+  border-color: #5F37DD;
+}
+
 /* 동의자 수, 화살표 아이콘*/
 .checkIcon, .arrowIcon {
   width: 24px;
