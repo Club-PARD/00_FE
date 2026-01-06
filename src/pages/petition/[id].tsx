@@ -69,6 +69,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
+import ProsConsSection from "@/components/ProsConsSection";
 import DetailHeroCard from "@/components/DetailHeroCard";
 import Header from "@/components/Header";
 import AISummaryCard from "@/components/AISummaryCard";
@@ -272,6 +273,8 @@ export default function PetitionDetailPage() {
               <AISummaryCard text={aiText} />
 
               <PetitionOverview text={overviewText} />
+              <ProsConsSection positiveText={detail.positiveEx} negativeText={detail.negativeEx} />
+
 
               <div style={{ height: 900 }} />
             </div>
