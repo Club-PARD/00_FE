@@ -156,7 +156,10 @@ export default function CongressPage() {
 
   // 선택 초기화 (드롭다운 안에서만 초기화)
   const handleResetTempCategories = () => {
-    setTempCategories([]);
+    setTempCategories([]); // 체크 표시도 즉시 해제
+    setSelectedCategories([]); // 서버 필터도 즉시 해제
+    setIsCategoryOpen(false); // 드롭다운 닫기
+    setCurrentPage(1); // 1페이지로
   };
 
   // 서버 응답 -> ListCard용 변환
