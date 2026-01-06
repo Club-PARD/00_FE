@@ -2,6 +2,7 @@
    카드 전체 컨테이너
    ========================= */
 .card {
+  margin-top: 48px;
   width: 1200px; /* 부모 기준 가로 100% */
   min-height: 593px;
   background: #fff; /* 카드 배경 흰색 */
