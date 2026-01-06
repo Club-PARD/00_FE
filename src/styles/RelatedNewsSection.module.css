@@ -1,0 +1,58 @@
+.card {
+    margin-left: -22px;
+    margin-top: 64px;
+    background: #fff;
+
+    border-radius: 16px;
+    padding: 18px;
+  }
+  
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  
+  .title {
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #111;
+  }
+  
+  .sub {
+    font-size: 13px;
+    font-weight: 700;
+    color: #777;
+  }
+  
+  .empty {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    padding: 6px 0;
+  }
+  
+  .list {
+    margin: 0;
+    padding-left: 18px;
+  }
+  
+  .item {
+    margin-bottom: 10px;
+  }
+  
+  .link {
+    font-weight: 900;
+    text-decoration: underline;
+    color: #111;
+  }
+  
+  .meta {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+  }
+  

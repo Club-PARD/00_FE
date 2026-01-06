@@ -1,0 +1,62 @@
+.wrap {
+    display: flex;
+    justify-content: center;
+    padding: 44px 0 52px;
+  }
+  
+  .bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    height: 72px;
+    padding: 0 22px;
+    border: 1px solid #d9d9d9;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+  
+  .btn {
+    width: 150px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    height: 56px;
+    padding: 0 22px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 100px;
+    font-weight: 900;
+    font-size: 22px;
+    color: #6f6f6f;
+  }
+  
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .count {
+    font-weight: 900;
+  }
+  
+  .icon {
+    font-size: 26px;
+    line-height: 1;
+  }
+  
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: #d9d9d9;
+  }
+  
+  .activeGood {
+    color: #19a861;
+  }
+  
+  .activeBad {
+    color: #555;
+  }
+  

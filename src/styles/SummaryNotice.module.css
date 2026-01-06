@@ -1,0 +1,20 @@
+.wrap {
+    margin-top: 22px;
+    padding-bottom: 60px;
+  }
+  
+  .divider {
+    height: 1px;
+    background: #e6e6e6;
+    margin: 0 0 18px;
+  }
+  
+  .text {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.9;
+    color: #777;
+    margin: 0;
+  }
+  

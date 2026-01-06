@@ -1,4 +1,5 @@
 .card {
+    margin-top: 148px;
     width: 100%;
   }
   
@@ -15,7 +16,7 @@
     height: 34px;
     padding: 0 14px;
     border-radius: 10px;
-    background: #7db59a;
+    background: #79B495;
     color: #fff;
     font-size: 16px;
     font-weight: 900;
@@ -39,7 +40,7 @@
   .itemTitle {
     font-size: 18px;
     font-weight: 900;
-    color: #4f53ff;
+    color: #79B495;
     font-family: "Noto Sans KR";
     margin-bottom: 12px;
   }

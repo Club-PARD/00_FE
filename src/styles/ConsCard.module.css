@@ -1,5 +1,5 @@
 .card {
-    
+    margin-top: 148px;
     width: 100%;
   }
   
@@ -27,7 +27,7 @@
   .rule {
     height: 4px;
     flex: 1;
-    background: #c36b7d;
+    background: #C77288;
     border-radius: 999px;
   }
   
@@ -40,7 +40,7 @@
   .itemTitle {
     font-size: 18px;
     font-weight: 900;
-    color: #4f53ff;
+    color: #C77288;
     font-family: "Noto Sans KR";
     margin-bottom: 12px;
   }

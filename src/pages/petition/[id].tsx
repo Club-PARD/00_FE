@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
+import RelatedNewsSection from "@/components/RelatedNewsSection";
 import ProsConsSection from "@/components/ProsConsSection";
 import DetailHeroCard from "@/components/DetailHeroCard";
 import Header from "@/components/Header";
 import AISummaryCard from "@/components/AISummaryCard";
 import DetailMiniCard from "@/components/DetailMiniCard";
 import PetitionOverview from "@/components/PetitionOverview";
+import SummaryNotice from "@/components/SummaryNotice";
+import LikeDislikeBar from "@/components/LikeDislikeBar";
 
 import styles from "@/styles/PetitionDetail.module.css";
 
@@ -38,10 +41,21 @@ type PetitionDetailResponse = {
   petitionUrl?: string;
 };
 
+type NewsItem = {
+  title: string;
+  url: string;
+  source?: string;
+  date?: string;
+};
+
+type LawItem = {
+  title: string;
+  summary: string;
+};
+
 function formatDotDate(iso?: string) {
   if (!iso) return "-";
-  const s = iso.slice(0, 10);
-  return s.replaceAll("-", ".");
+  return iso.slice(0, 10).replaceAll("-", ".");
 }
 
 function statusLabel(status?: number) {
@@ -55,20 +69,47 @@ function safeString(v: unknown, fallback = "-") {
   return fallback;
 }
 
-const MOCK_DETAIL: PetitionDetailResponse = {
-  title: "편파, 조작, 왜곡, 불공정 방송, 민주당의 나팔수 MBC 폐방 요청에 관한 청원",
-  category: "문화 체육 관광 언론",
-  voteStartDate: "2025-03-17",
-  voteEndDate: "2025-04-16",
-  result: "본회의불부의",
-  status: 2,
-  allows: 175552,
-  petitionSummary:
-    "MBC가 공영방송으로서 지켜야 할 '중립 의무'를 어기고 특정 정치 세력 편만 들고 있으니, 이에 방송국 문을 닫게(허가 취소) 해달라는 요구입니다.",
-  content:
-    "대한민국 방송법은 방송의 자유와 독립을 보장함과 동시에 언론의 공공 책임과 공정성을 엄격히 규정하고 있습니다.\n\n방송은 특정 정당이나 이념의 도구가 되어서는 안 되며, 국민 전체의 이익을 위해 균형 잡힌 정보를 제공해야 할 의무가 있습니다.\n\n현재 특정 방송사의 보도 내용이 객관성과 공정성을 상실하고 사실을 왜곡하여 사회적 갈등을 심화시키고 있다는 주장이 제기되면서, 해당 방송사에 대한 법적 책임과 방송 유지 여부에 대한 논의가 진행되었습니다.",
-  petitionUrl: "https://example.com",
-};
+function safeNumber(v: unknown, fallback = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function computePercent(allows?: number) {
+  const n = safeNumber(allows, 0);
+  const target = 50000;
+  const p = Math.floor((n / target) * 100);
+  return Math.max(0, Math.min(100, p));
+}
+
+function normalizeNews(data: any): NewsItem[] {
+  const arr = Array.isArray(data) ? data : [];
+  return arr
+    .map((it: any, idx: number) => {
+      const url = safeString(it?.url, "");
+      if (!url) return null;
+      return {
+        title: safeString(it?.title, `관련 기사 ${idx + 1}`),
+        url,
+        source: it?.source,
+        date: it?.date,
+      };
+    })
+    .filter(Boolean) as NewsItem[];
+}
+
+function normalizeLaws(data: any): LawItem[] {
+  const arr = Array.isArray(data) ? data : [];
+  return arr
+    .map((it: any) => {
+      const title = safeString(it?.title, "");
+      if (!title) return null;
+      return {
+        title,
+        summary: safeString(it?.summary, ""),
+      };
+    })
+    .filter(Boolean) as LawItem[];
+}
 
 export default function PetitionDetailPage() {
   const router = useRouter();
@@ -83,39 +124,119 @@ export default function PetitionDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [detail, setDetail] = useState<PetitionDetailResponse | null>(null);
 
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [newsError, setNewsError] = useState<string | null>(null);
+
+  const [laws, setLaws] = useState<LawItem[]>([]);
+  const [lawsError, setLawsError] = useState<string | null>(null);
+
+  const [goodLocal, setGoodLocal] = useState(0);
+  const [badLocal, setBadLocal] = useState(0);
+
   useEffect(() => {
     if (!petitionId) return;
-    setLoading(false);
+
+    let alive = true;
+    setLoading(true);
     setError(null);
-    setDetail(MOCK_DETAIL);
+    setNews([]);
+    setNewsError(null);
+    setLaws([]);
+    setLawsError(null);
+
+    Promise.all([
+      fetch(`/api/petition/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json();
+        if (!r.ok) throw new Error(d?.message || "상세 조회 실패");
+        return d as PetitionDetailResponse;
+      }),
+      fetch(`/api/petition/news/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json();
+        if (!r.ok) throw new Error("뉴스 조회 실패");
+        return d;
+      }),
+      fetch(`/api/petition/laws/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json();
+        if (!r.ok) throw new Error("정책 조회 실패");
+        return d;
+      }),
+    ])
+      .then(([detailData, newsData, lawsData]) => {
+        if (!alive) return;
+        setDetail(detailData);
+        setNews(normalizeNews(newsData));
+        setLaws(normalizeLaws(lawsData));
+        setGoodLocal(safeNumber(detailData.good, 0));
+        setBadLocal(safeNumber(detailData.bad, 0));
+      })
+      .catch((e: any) => {
+        if (!alive) return;
+        const msg = String(e?.message || "");
+        if (msg.includes("뉴스")) {
+          setNewsError(e.message);
+          return;
+        }
+        if (msg.includes("정책")) {
+          setLawsError(e.message);
+          return;
+        }
+        setError(e.message);
+        setDetail(null);
+      })
+      .finally(() => {
+        if (!alive) return;
+        setLoading(false);
+      });
+
+    return () => {
+      alive = false;
+    };
   }, [petitionId]);
 
   const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
   const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
 
-  const agreeCount = useMemo(() => {
-    const n = Number(detail?.allows);
-    return Number.isFinite(n) ? n : 0;
-  }, [detail?.allows]);
-
-  const percent = useMemo(() => 100, []);
+  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
+  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
   const heroMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
+    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(
+      detail?.voteEndDate
+    )}`;
+
     return [
       { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "과학기술정보방송통신위원회") },
+      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "-") },
       { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
       { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
-      { iconSrc: "/proicons_send.svg", label: "위원회회부일", value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "2025.03.31" },
-      { iconSrc: "/proicons_script.svg", label: "처리결과", value: safeString(detail?.result, "-"), valueHighlight: true },
+      {
+        iconSrc: "/proicons_send.svg",
+        label: "위원회회부일",
+        value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-",
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
     ];
   }, [detail, badge]);
 
   const miniMeta = useMemo(() => {
     return [
-      { iconSrc: "/proicons_calendar.svg", label: "마감날짜", value: formatDotDate(detail?.voteEndDate), valueHighlight: true },
-      { iconSrc: "/proicons_script.svg", label: "처리결과", value: safeString(detail?.result, "-"), valueHighlight: true },
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "마감날짜",
+        value: formatDotDate(detail?.voteEndDate),
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
     ];
   }, [detail]);
 
@@ -124,10 +245,10 @@ export default function PetitionDetailPage() {
     [detail?.petitionSummary]
   );
 
-  const overviewText = useMemo(() => {
-    const t = detail?.content || detail?.positiveEx || detail?.negativeEx || "";
-    return safeString(t, "개요 정보가 아직 없어요.");
-  }, [detail]);
+  const overviewText = useMemo(
+    () => safeString(detail?.content, "개요 정보가 아직 없어요."),
+    [detail?.content]
+  );
 
   const onClickGo = useMemo(() => {
     const url = detail?.petitionUrl || detail?.url;
@@ -135,13 +256,23 @@ export default function PetitionDetailPage() {
     return () => window.open(url, "_blank", "noreferrer");
   }, [detail?.petitionUrl, detail?.url]);
 
+  const prosItems = useMemo(() => {
+    const s = safeString(detail?.positiveEx, "");
+    return s ? [{ title: "긍정적 영향", desc: s }] : [];
+  }, [detail?.positiveEx]);
+
+  const consItems = useMemo(() => {
+    const s = safeString(detail?.negativeEx, "");
+    return s ? [{ title: "부정적 영향", desc: s }] : [];
+  }, [detail?.negativeEx]);
+
+  const showProsCons = prosItems.length > 0 || consItems.length > 0;
+
   if (!petitionId) {
     return (
       <main className={styles.page}>
         <Header />
-        <div className={styles.fallbackWrap}>
-          <div className={styles.container}>잘못된 id</div>
-        </div>
+        <div className={styles.container}>잘못된 id</div>
       </main>
     );
   }
@@ -150,9 +281,7 @@ export default function PetitionDetailPage() {
     return (
       <main className={styles.page}>
         <Header />
-        <div className={styles.fallbackWrap}>
-          <div className={styles.container}>로딩중...</div>
-        </div>
+        <div className={styles.container}>로딩중...</div>
       </main>
     );
   }
@@ -161,9 +290,7 @@ export default function PetitionDetailPage() {
     return (
       <main className={styles.page}>
         <Header />
-        <div className={styles.fallbackWrap}>
-          <div className={styles.container}>{error ?? "데이터 없음"}</div>
-        </div>
+        <div className={styles.container}>{error ?? "데이터 없음"}</div>
       </main>
     );
   }
@@ -171,7 +298,6 @@ export default function PetitionDetailPage() {
   return (
     <main className={styles.page}>
       <Header />
-
       <div className={styles.bgLayer} />
 
       <div className={styles.contentWrap}>
@@ -191,45 +317,52 @@ export default function PetitionDetailPage() {
             <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
 
-              <PetitionOverview text={overviewText} />
+              <PetitionOverview text={overviewText}>
+                {lawsError ? (
+                  <div style={{ marginTop: 16, color: "#666", fontWeight: 700 }}>
+                    {lawsError}
+                  </div>
+                ) : laws.length === 0 ? null : (
+                  <div style={{ marginTop: 18 }}>
+                    <div style={{ fontSize: 16, fontWeight: 900, marginBottom: 10 }}>
+                      관련 정책
+                    </div>
 
-              <ProsConsSection
-                pros={[
-                  {
-                    title: "‘팩트 체크’ 스트레스 감소",
-                    desc:
-                      "자극적인 낚시성 기사나 가짜 뉴스가 줄어듭니다. 공정성 기준이 엄격해지면 뉴스 자체가 담백해지기 때문에, 청년들이 일일이 진위 여부를 의심하지 않아도 믿고 볼 수 있는 고퀄리티 정보가 많아집니다.",
-                  },
-                  {
-                    title: "소모적인 ‘키보드 배틀’ 완화",
-                    desc:
-                      "감정적인 선동이나 편 가르기식 보도가 줄어들면 사회적 갈등도 낮아집니다. 커뮤니티나 댓글창에서 벌어지는 소모적인 싸움이 줄어들고, 훨씬 차분한 분위기에서 이슈를 바라볼 수 있게 됩니다.",
-                  },
-                  {
-                    title: "합리적인 ‘내 생각’ 정립 가능",
-                    desc:
-                      "편향되지 않은 중립적인 정보를 접하면서, 외부의 선동에 휘둘리지 않고 스스로 판단할 수 있는 힘이 길러집니다. 취업, 경제, 주거 등 예민한 사회 이슈에 대해 객관적인 근거를 바탕으로 본인만의 주관을 세울 수 있습니다.",
-                  },
-                ]}
-                cons={[
-                  {
-                    title: "할 말 못하는 ‘고구마’ 언론",
-                    desc:
-                      "강력한 징계가 무서워 언론이 몸을 사릴 수 있습니다. 권력에 대한 시원한 비판이나 날카로운 폭로가 줄어들면서, 언론 본연의 ‘사이다’ 같은 감시 기능도 약해질 우려가 있습니다.",
-                  },
-                  {
-                    title: "뉴스판 ‘노잼’ 화 (개성 상실)",
-                    desc:
-                      "모든 매체가 공정성 틀에만 갇히면, 각 채널만의 독특한 시각이나 개성 있는 분석이 사라집니다. 결국 어디를 틀어도 똑같은 목소리만 들리는 ‘무색무취’한 뉴스 환경이 될 수 있습니다.",
-                  },
-                  {
-                    title: "‘내 취향’의 정보 선택권 제한",
-                    desc:
-                      "세상에는 다양한 가치관이 존재하는데, 엄격한 규제로 인해 매체들이 줄어들면 결국 다양한 관점을 비교해 볼 기회 자체가 사라집니다. ‘내가 보고 싶은 관점을 선택할 권리’가 침해받는 셈입니다.",
-                  },
-                ]}
-                prosTags={["정보 객관성 확보", "사회적 갈등 완화"]}
-                consTags={["비판 기능 위축", "매체 다양성 감소"]}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {laws.map((x, i) => (
+                        <div
+                          key={`${x.title}-${i}`}
+                          style={{
+                            border: "1px solid #E6E6E6",
+                            borderRadius: 12,
+                            padding: 14,
+                            background: "#fff",
+                          }}
+                        >
+                          <div style={{ fontWeight: 900, marginBottom: 6 }}>{x.title}</div>
+                          {x.summary ? (
+                            <div style={{ color: "#555", lineHeight: 1.7 }}>{x.summary}</div>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </PetitionOverview>
+
+              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
+
+              <RelatedNewsSection items={news} error={newsError} />
+              <SummaryNotice />
+
+              <LikeDislikeBar
+                petitionId={petitionId}
+                good={goodLocal}
+                bad={badLocal}
+                onChangeCounts={(g, b) => {
+                  setGoodLocal(g);
+                  setBadLocal(b);
+                }}
               />
 
               <div className={styles.spacer} />
