@@ -133,3 +133,10 @@
 
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
+
+.profileBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
