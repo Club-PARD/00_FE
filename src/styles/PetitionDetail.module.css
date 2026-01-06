@@ -1,0 +1,56 @@
+.page {
+    min-height: 100vh;
+    background: #fff;
+    position: relative;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .fallbackWrap {
+    padding: 60px 20px;
+    background: #f5f6f8;
+  }
+  
+  .bgLayer {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    height: 520px;
+    background: #f5f6f8;
+    z-index: 0;
+  }
+  
+  .contentWrap {
+    position: relative;
+    z-index: 1;
+    padding: 60px 20px 160px;
+  }
+  
+  .grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 792px 384px;
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: -10px;
+  }
+  
+  .rightCol {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+  
+  .spacer {
+    height: 900px;
+  }
+  
