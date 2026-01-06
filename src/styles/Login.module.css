@@ -108,7 +108,7 @@
   justify-content: center;
   gap: 10px;
 
-  padding: 8px 12px 8px 2px; 
+  padding: 8px 16px;  
   box-sizing: border-box;
 
   cursor: pointer;
@@ -123,12 +123,12 @@
   .googleIcon {
     width: 40px;
     height: 40px;
-    background-image: url("/google.svg");
+    background-image: url("/google_logo.svg");
 
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
-    margin-right: 10px;
-    margin-left: 40px;
+    
+    margin: 0;
   }
   
