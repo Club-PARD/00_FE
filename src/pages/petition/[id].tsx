@@ -15,7 +15,7 @@ export default function PetitionDetailPage() {
             badge="문화 체육 관광 언론띠"
             title="편파, 조작, 왜곡, 불공정 방송, 민주당의 나팔수 MBC 폐방 요청에 관한 청원"
             meta={[
-              { iconSrc: "/petition_period.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
+              { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
               { iconSrc: "/Group (2).svg", label: "소관위원회", value: "과학기술정보방송통신위원회" },
               { iconSrc: "/proicons_script.svg", label: "처리결과", value: "본회의부의", valueHighlight: true },
               { iconSrc: "/Group (1).svg", label: "상태", value: "본회의불부의" },
@@ -50,7 +50,7 @@ export default function PetitionDetailPage() {
                 badge="문화 체육 관광 언론띠"
                 title="편파, 조작, 왜곡, 불공정 방송, 민주당의 나팔수 MBC 폐방 요청에 관한 청원"
                 meta={[
-                  { iconSrc: "/petition_period.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
+                  { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
                   { iconSrc: "/proicons_script.svg", label: "처리결과", value: "본회의불부의", valueHighlight: true },
                 ]}
                 agreeCount={175552}
