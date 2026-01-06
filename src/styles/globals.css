@@ -18,7 +18,6 @@ html, body {
 /* 기본 폰트만 지정 */
 body {
   color: #111;
-  background: #fff;
 }
 
 /* 링크 기본 스타일 제거 (색/굵기는 각 컴포넌트에서) */
