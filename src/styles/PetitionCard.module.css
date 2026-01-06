@@ -157,7 +157,8 @@
 }
 
 .bottomLink:hover {
-  opacity: 0.9;
+  
+  background-color: #5F37DD;
 }
 
 /* 동의자 수 (흰색) */

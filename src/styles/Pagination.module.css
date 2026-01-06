@@ -49,10 +49,20 @@
   transform: translateY(-3px); /* 숫자만 3px 위로 -> 정렬 시킴*/
 }
 
+.pageBtn:hover {
+  color: #5f37dd;
+}
+
+.pageBtn.active:hover {
+  color: #5f37dd;
+}
+
 /* 활성화 됐을 때*/
 .active {
-  color: #6a3df6;
+  color: #6A3DF6;
 }
+
+
 
 /* ... 표시*/
 .ellipsis {
