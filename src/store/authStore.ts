@@ -25,11 +25,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const r = await api.get("/user/me", { validateStatus: () => true });
 
-      if (r.status === 200 && r.data) {
-        set({ user: r.data, loading: false });
-      } else {
-        set({ user: null, loading: false });
-      }
+      if (r.status === 200 && r.data) set({ user: r.data, loading: false });
+      else set({ user: null, loading: false });
     } catch {
       set({ user: null, loading: false });
     }
@@ -37,11 +34,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: async () => {
     try {
-      await api.post("/auth/google/logout", {}, { validateStatus: () => true });
+      await api.post("/auth/google/logout", null, { validateStatus: () => true });
     } finally {
-      set({ user: null });
+      set({ user: null, loading: false });
     }
   },
 
-  clear: () => set({ user: null }),
+  clear: () => set({ user: null, loading: false }),
 }));

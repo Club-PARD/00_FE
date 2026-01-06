@@ -1,8 +1,9 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   experimental: {
-//     allowedDevOrigins: ["http://172.17.213.32:3000"],
-//   },
-// };
+import type { NextConfig } from "next";
 
-// module.exports = nextConfig;
+const nextConfig: NextConfig = {
+  /* config options here */
+  reactCompiler: true,
+  reactStrictMode: true,
+};
+
+export default nextConfig;

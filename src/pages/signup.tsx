@@ -54,6 +54,7 @@ export default function SignupPage() {
 
       const r = await api.get(`/user/check/${encodeURIComponent(nickname)}`, {
         validateStatus: () => true,
+        maxRedirects: 0,
       });
 
       if (r.status === 302) setIsDuplicate(true);
@@ -79,7 +80,7 @@ export default function SignupPage() {
       setSubmitting(true);
       setSubmitError("");
 
-      await api.post(
+      const r = await api.post(
         "/user/signUp",
         {
           name: trimmed,
@@ -87,10 +88,14 @@ export default function SignupPage() {
           age: 0,
           status: 0,
         },
-        { validateStatus: (s) => s >= 200 && s < 400 }
+        { validateStatus: () => true }
       );
 
-      router.replace("/");
+      if (r.status >= 200 && r.status < 400) {
+        router.replace("/");
+      } else {
+        setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
     } catch {
       setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
