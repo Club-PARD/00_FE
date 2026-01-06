@@ -119,6 +119,16 @@
   color: #1f1f1f;
 }
 
-.googleIcon {
-  flex-shrink: 0;
-}
+  /* 구글 아이콘 */
+  .googleIcon {
+    width: 40px;
+    height: 40px;
+    background-image: url("/google.svg");
+
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+    margin-left: 40px;
+  }
+  

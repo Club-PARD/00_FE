@@ -1,7 +1,5 @@
-// 현재 로그인한 유저 정보를 전역 상태로 들고있음 -> user, loading(/api/me 확인 중일 때 UI 깜빡임 방지용)
-
 import { create } from "zustand";
-import axios from "axios";
+import api from "@/lib/axios";
 
 type User = {
   name: string;
@@ -14,6 +12,7 @@ type AuthState = {
   user: User | null;
   loading: boolean;
   fetchMe: () => Promise<void>;
+  logout: () => Promise<void>;
   clear: () => void;
 };
 
@@ -24,22 +23,22 @@ export const useAuthStore = create<AuthState>((set) => ({
   fetchMe: async () => {
     set({ loading: true });
     try {
-      const r = await axios.get("/api/me", { validateStatus: () => true });
-      const data = r.data;
+      const r = await api.get("/user/me", { validateStatus: () => true });
 
-      if (
-        r.status === 200 &&
-        data &&
-        (typeof data.email === "string" || typeof data.name === "string")
-      ) {
-        set({ user: data, loading: false });
-      } else {
-        set({ user: null, loading: false });
-      }
+      if (r.status === 200 && r.data) set({ user: r.data, loading: false });
+      else set({ user: null, loading: false });
     } catch {
       set({ user: null, loading: false });
     }
   },
 
-  clear: () => set({ user: null }),
+  logout: async () => {
+    try {
+      await api.post("/auth/google/logout", null, { validateStatus: () => true });
+    } finally {
+      set({ user: null, loading: false });
+    }
+  },
+
+  clear: () => set({ user: null, loading: false }),
 }));

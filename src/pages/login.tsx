@@ -33,30 +33,22 @@ export default function LoginPage() {
               어떤 정책이 있는지 둘러볼까요?
             </p>
 
-            <button
-              className={styles.googleBtn}
-              type="button"
-              onClick={() => {
-                const base = process.env.NEXT_PUBLIC_API_URL;
-                if (!base) return;
+        <button
+          className={styles.googleBtn}
+          type="button"
+          onClick={() => {
+            const base = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+            if (!base) return;
 
-                const origin = window.location.origin;
-                window.location.href = `${base}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(
-                  origin
-                )}`;
-              }}
-            >
-              <Image
-                src="/google_logo.svg"
-                alt=""
-                width={40}
-                height={40}
-                className={styles.googleIcon}
-              />
-              Google 계정으로 로그인
-            </button>
-          </div>
-        </div>
+            const origin = window.location.origin;
+            window.location.href = `${base}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(
+              origin
+            )}`;
+          }}
+        >
+          <span className={styles.googleIcon} aria-hidden />
+          Google 계정으로 로그인
+        </button>
       </section>
     </main>
   );
