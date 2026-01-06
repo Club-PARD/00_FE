@@ -21,8 +21,8 @@ export default function Header() {
             <Image
               src="/logo.svg"
               alt="mora logo"
-              width={90}
-              height={26}
+              width={137}
+              height={37}
               priority
               className={styles.logoImage}
             />

@@ -16,7 +16,7 @@ export type CongressCardItem = {
 
 // 카테고리별 색상 매핑
 const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
-  "정치, 선거, 국회운영": { bg: "#e7f0ff", text: "#6990CF" },
+  "정치, 선거, 국회운영": { bg: "#e7f0ff", text: "#6990cf" },
   "수사, 법무, 사법제도": { bg: "#e7f0ff", text: "#6990CF" },
   "재정, 세제, 금융, 예산": { bg: "#e7f0ff", text: "#6990CF" },
   "소비자, 공정거래": { bg: "#fff4e6", text: "#daa25b" },
@@ -24,13 +24,13 @@ const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
   "과학기술, 정보통신": { bg: "#efe7ff", text: "#9071cd" },
   "외교, 통일, 국방, 안보": { bg: "#efe7ff", text: "#9071cd" },
   "재난, 안전, 환경": { bg: "#fff9e8", text: "#cda430" },
-  "행정, 지방자치": { bg: "#f8ffe8", text: "#79B495" },
+  "행정, 지방자치": { bg: "#f0fff0", text: "#79B495" },
   "문화, 체육, 관광, 언론": { bg: "#fff9e8", text: "#cda430" },
   "농업, 임업, 수산업, 축산업": { bg: "#fff4e6", text: "#daa25b" },
-  "산업, 통상": { bg: "#f8ffe8", text: "#79B495" },
+  "산업, 통상": { bg: "#f0fff0", text: "#79B495" },
   보건의료: { bg: "#ffe8ee", text: "#c77288" },
   "복지, 보훈": { bg: "#ffe8ee", text: "#c77288" },
-  "국토, 해양, 교통": { bg: "#f8ffe8", text: "#79B495" },
+  "국토, 해양, 교통": { bg: "#f0fff0", text: "#79B495" },
   "인권, 성평등, 노동": { bg: "#ffe8ee", text: "#c77288" },
   "저출산, 고령화, 아동, 청소년, 가족": { bg: "#ffe8ee", text: "#c77288" },
   기타: { bg: "#f1f1f1", text: "#767676" },
@@ -132,10 +132,10 @@ export default function CongressCard({ item, href, forceCategoryGray }: Props) {
         {/* 오른쪽 화살표 */}
         <div className={styles.arrowIcon}>
           <Image
-            src="/right_arrow_gray.svg"
+            src="/right_arrow_black.svg"
             alt="이동"
-            width={16}
-            height={16}
+            width={24}
+            height={24}
           />
         </div>
       </Link>

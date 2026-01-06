@@ -1,3 +1,7 @@
+html, body{
+  background: #F5F5F5;
+}
+
 /* 페이지 전체 컨테이너*/
 .container {
   width: 100%;
@@ -9,7 +13,7 @@
   padding-left: 74px;
   padding-right: 80px;
 
-  padding-top: 80px;
+  padding-top: 40px;
   padding-bottom: 100px;
   
   box-sizing: border-box;
@@ -40,6 +44,9 @@
   align-items: center;
   justify-content: space-between; 
   margin-bottom: 64px; /* 카드 리스트와의 간격 */
+
+  flex-wrap: wrap; /* 좁아지면 다음 줄로 내려가게*/
+  gap: 16px;
 }
 
 /* ----- 왼쪽 필터 그룹  ----- */
@@ -47,6 +54,18 @@
   display: flex;
   align-items: center;
   gap: 16px; /* 버튼 사이 간격 */
+}
+
+/* 버튼 글자 세로로 쪼개지는 거 방지 */
+.statusBtn,
+.dropdownBtn {
+  white-space: nowrap;
+}
+
+/* 버튼이 너무 눌려서 폭이 줄어드는 것 방지 */
+.statusBtn,
+.dropdownWrapper {
+  flex-shrink: 0;
 }
 
 /* 진행중/ 완료된 공통*/
@@ -208,7 +227,7 @@
   
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 32px; /* 그리드와 버튼 사이 간격 */
 }
 
@@ -253,12 +272,22 @@
 /* 검색 바 */
 .searchWrapper{
   width: 300px;
+  min-width: 300px; /* 줄어들었을 때 안망가지게*/
+}
+
+/* 적용하기/ 초기화 버튼 */
+.categoryFooter {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; 
+  gap: 20px;
 }
 
 /* 적용하기 버튼 */
 .applyBtn {
   width: 84px;
-  height: 26px;
+  height: 36px;
+  padding: 4px 14px;
   
   background-color: #fff;
   border: 1px solid #e5e5e5;
@@ -272,10 +301,39 @@
   justify-content: center;
   
   font-size: 14px; 
+  font-weight: 400;
   color: #505050;
   
   cursor: pointer;
-  transition: all 0.2s;
+}
+
+.resetBtn {
+  height: 36px;
+  padding: 4px 14px;
+
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 400;
+  color: #505050;
+
+  cursor: pointer;
+  
+}
+
+.resetIcon{
+  transform: translateY(1px);
 }
 
 /* 검색 창*/
@@ -321,5 +379,15 @@
   color: #767676;
   font-weight: 400;
 }
+
+.searchIcon {
+  display: flex;
+  align-items: center;
+  transform: translateY(1px);
+  transform: translateX(3px);
+
+  flex-shrink: 0;
+}
+
 
 

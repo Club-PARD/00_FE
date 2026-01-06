@@ -11,6 +11,8 @@
 html, body {
   margin: 0;
   padding: 0;
+
+  background: #F5F5F5;
 }
 
 /* 기본 폰트만 지정 */

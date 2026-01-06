@@ -154,6 +154,11 @@ export default function CongressPage() {
     setIsCategoryOpen(false); // 닫기
   };
 
+  // 선택 초기화 (드롭다운 안에서만 초기화)
+  const handleResetTempCategories = () => {
+    setTempCategories([]);
+  };
+
   // 서버 응답 -> ListCard용 변환
   const mapToCardItem = (p: PetitionResponse): CongressCardItem => {
     const raw = p.category ?? "";
@@ -222,6 +227,10 @@ export default function CongressPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [activeStatus, sortOption, selectedCategories, searchKeyword]);
+
+  // Mock 임시
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pagedItems = items.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // 렌더링 하는 부분
   return (
@@ -358,12 +367,31 @@ export default function CongressPage() {
                     )}
                   </div>
 
-                  {/* 적용하기 버튼 */}
-                  <div
-                    className={styles.applyBtn}
-                    onClick={handleApplyCategory}
-                  >
-                    적용하기
+                  <div className={styles.categoryFooter}>
+                    {/* 적용하기 버튼 */}
+                    <button
+                      type="button"
+                      className={styles.applyBtn}
+                      onClick={handleApplyCategory}
+                    >
+                      적용하기
+                    </button>
+
+                    {/* 초기화 버튼 */}
+                    <button
+                      type="button"
+                      className={styles.resetBtn}
+                      onClick={handleResetTempCategories}
+                    >
+                      <Image
+                        src="/return.svg"
+                        alt="초기화"
+                        width={12}
+                        height={12}
+                        className={styles.resetIcon}
+                      />
+                      선택 초기화
+                    </button>
                   </div>
                 </div>
               )}
@@ -409,6 +437,7 @@ export default function CongressPage() {
         >
           {loading && <p>로딩중...</p>}
           {!loading && items.length === 0 && <p>등록된 청원이 없습니다.</p>}
+
           {!loading &&
             items.map((item) => <ListCard key={item.id} item={item} />)}
         </div>

@@ -1,6 +1,6 @@
 /* 전체 배너 영역 (회색 배경으로) */
 .bannerWrapper{
-  margin-top: 72px;
+  margin-top: 74px; /* 원래 72px인데 2px 여유로 줌*/
 
   width: 100%;
   height: 480px;
@@ -11,9 +11,11 @@
 
   position: relative; 
   overflow: hidden;
+
 }
 
 /* Swiper 컨테이너 (슬라이드 틀) */
+/* width 996px, height 480px*/
 .swiperContainer{
   width: 100%;
   height: 480px;
@@ -28,7 +30,7 @@
   overflow: hidden;
 
   /* 활성화되지 않은 슬라이드(양 옆) 흐리게*/
-  opacity: 0.5;
+  opacity: 0.4;
   transition: opacity 0.3s;
 
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

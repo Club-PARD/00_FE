@@ -28,7 +28,7 @@ export type PetitionCardItem = {
 
 // 카테고리 -> 카드 배경색과 매핑 (서버에서 category 문자열을 key로 사용)
 const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
-  "정치, 선거, 국회운영": { bg: "#e7f0ff", text: "#6990CF" },
+  "정치, 선거, 국회운영": { bg: "#e7f0ff", text: "#6990cf" },
   "수사, 법무, 사법제도": { bg: "#e7f0ff", text: "#6990CF" },
   "재정, 세제, 금융, 예산": { bg: "#e7f0ff", text: "#6990CF" },
   "소비자, 공정거래": { bg: "#fff4e6", text: "#daa25b" }, 

@@ -9,7 +9,7 @@
 
   z-index: 1000;
 
-  background: #fff;
+  background: #F5F5F5;
 
 }
 
@@ -22,6 +22,7 @@
 
   /* 이 부분 중요 */
   /* 최소 16px, 화면이 커지면 5vw 씩 늘어나고, 최대 120px에서 멈춤*/
+  /* !!!!!!!!!! 오른쪽에 120px을 남김*/
   padding: 0 clamp(16px, 5vw, 120px);
 
   display: flex;
@@ -48,18 +49,20 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 50px; /* !!!!!!!!!! 카테고리 글자 사이에 50px 씩 */
 
-  margin-left: 136px; /* 로고와 카테고리 글자 사이 간격*/
+  margin-left: 136px; /* !!!!!!!!!! 로고와 카테고리 글자 사이 간격*/
   margin-right: auto;
 }
 
 /* --- 내비게이션 내용 ---*/
 .navItem {
   position: relative;
+
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #111;
+  
   text-decoration: none;
 
   white-space: nowrap;
@@ -70,11 +73,11 @@
 
 /* --- 내비게이션 글자: hover ---*/
 .navItem:hover {
-  color: #6a3df6;
+  color: #6A3DF6;
 }
 
 .active {
-  color: #6a3df6 !important;
+  color: #6A3DF6 !important;
 }
 
 /* Active일 때 밑줄 (lineDiv 역할) */
@@ -82,13 +85,15 @@
   content: "";
   position: absolute;
   
-  bottom: -13.5px; /* 13.5px 아래에 */ 
+  bottom: -13.5px; /* 14px 아래에 */ 
   left: 0;
-  width: 100%;
+  width: 70px;
+
+  left: 50%;
+  transform: translateX(-50%);
   
-  /* border-top: 2px solid #6a3df6; 와 동일한 효과 */
-  height: 2px;
-  background-color: #6a3df6;
+  border-top: 2px solid #6a3df6;
+
 }
 
 

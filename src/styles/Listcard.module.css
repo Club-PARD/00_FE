@@ -20,8 +20,6 @@
   position: relative;
 }
 
-
-
 /* --- 헤더 (D-Day + 북마크) --- */
 .headerRow {
   width: 100%;
@@ -41,8 +39,9 @@
   align-items: center;
   justify-content: center;
   
+  width: 48px;
   height: 24px;
-  padding: 0px 12px;
+  padding: 8px 12px;
   box-sizing: border-box;
   
   border-radius: 100px;
@@ -60,6 +59,7 @@
 
 /* D-7*/
 .ddayRed {
+  width: 48px;
   border-color: #f60909;
   color: #f60909;
 }
@@ -163,7 +163,7 @@
   flex-shrink: 0;
   
   border-radius: 100px;
-  background-color: #e9ecff; 
+  background-color: #eaedff; 
   border: 1px solid #e5e5e5;
   box-sizing: border-box;
   
@@ -198,4 +198,5 @@
   align-items: center;
   flex-shrink: 0;
 }
+
 

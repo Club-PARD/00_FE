@@ -1,9 +1,15 @@
+html, body{
+  background: #F5F5F5;
+}
+
 
 /* --------- 배너 --------- */
 .banner{
   height: 544px;
   background: #e6e6e6;
   position: relative;
+
+  margin-top: 72px;
 }
 
 /* --- 배너: 좌우 여백 + 하단 여백 --- */
@@ -25,10 +31,14 @@
 }
 
 /* ---------------------------- 본문 부분(카드 뉴스) ---------------------------- */
+
 .main {
   max-width: 1440px;
+
   margin: 0 auto;
-  padding: 60px 120px 100px;
+  padding: 60px clamp(24px, 6vw, 120px) 100px;
+  /* 반응형으로 최소 24px, 충분히 크면 최대 120px까지 늘어남*/
+  
   box-sizing: border-box;
 }
 
@@ -42,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between; /* 양 끝으로 배치 */
-  margin-bottom: 24px; /* 헤더와 카드 사이 간격 */
+  margin-bottom: 28px; /* 헤더와 카드 사이 간격 */
 }
 
 /* --- 섹션 제목 --- */
