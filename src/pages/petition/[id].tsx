@@ -398,10 +398,19 @@ export default function PetitionDetailPage() {
   }, [detail]);
 
   const miniMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
     return [
-      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/proicons_script.svg", label: "처리결과", value: safeString(detail?.result, "-"), valueHighlight: true },
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "마감날짜",
+        value: formatDotDate(detail?.voteEndDate),
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
     ];
   }, [detail]);
 

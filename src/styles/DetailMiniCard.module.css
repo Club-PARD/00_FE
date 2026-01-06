@@ -59,7 +59,7 @@
   /* 구분선 */
   .dividerTop {
     margin-top: 32px;
-    margin-bottom: 32px;
+    margin-bottom: -12px;
     margin-left: -10px;
     width: 234px;
     height: 1px;
@@ -67,8 +67,8 @@
   }
   
   .dividerBottom {
-    margin-top: 28px;
-    margin-bottom: 22px;
+    margin-top: 32px;
+    margin-bottom: 32px;
     margin-left: -10px;
     width: 234px;
     height: 1px;
@@ -107,8 +107,8 @@
 
 /* 메타 아이콘 이미지 */
 .metaIcon {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   display: block;
   opacity: 0.9;
 }
@@ -132,7 +132,7 @@
 
 /* 강조 메타 값 (보라색) */
 .metaValueHighlight {
-  color: #6a4dff;
+  color: black;
 }
 
 /* =========================
@@ -155,14 +155,14 @@
 
 /* 사람 아이콘 */
 .peopleIcon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
 /* 동의 인원 텍스트 */
 .peopleText {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #6a4dff;
   font-family: "Noto Sans KR";
@@ -170,7 +170,7 @@
 
 /* 퍼센트 텍스트 */
 .percent {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 900;
   color: #6a4dff;
   font-family: "Noto Sans KR";
@@ -182,7 +182,7 @@
 .progressTrack {
   margin-top: 10px;
   width: 100%;
-  height: 10px;
+  height: 4px;
   border-radius: 999px;
   background: #f0f0f0;
   border: 1px solid #d8d8d8;
@@ -200,9 +200,10 @@
      바로가기 버튼
      ========================= */
 .cta {
-  margin-top: 32px;
-  width: 100%;
-  height: 67px;
+  margin-top: 24px;
+  margin-left: -13px;
+  width: 249px;
+  height: 66px;
   border-radius: 100px;
   border: none;
   background: var(--Color-Brand-brand-primary-Base, #6a3df6);
@@ -210,14 +211,13 @@
   font-size: 24px;
   font-weight: 700;
   font-family: "Noto Sans KR";
-  cursor: pointer;
+  cursor: pointer; 
 }
 
 /* 버튼 클릭 효과 */
 .cta:active {
   transform: translateY(1px);
-}
-
+} 
 .cta:hover {
   background: #5f37dd;
 }
