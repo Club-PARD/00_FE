@@ -8,15 +8,14 @@ type User = {
   status: number;
 };
 
-type AuthState = {
+type State = {
   user: User | null;
   loading: boolean;
   fetchMe: () => Promise<void>;
-  logout: () => Promise<void>;
   clear: () => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<State>((set) => ({
   user: null,
   loading: true,
 
@@ -24,18 +23,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const r = await api.get("/user/me", { validateStatus: () => true });
-
       if (r.status === 200 && r.data) set({ user: r.data, loading: false });
       else set({ user: null, loading: false });
     } catch {
-      set({ user: null, loading: false });
-    }
-  },
-
-  logout: async () => {
-    try {
-      await api.post("/auth/google/logout", null, { validateStatus: () => true });
-    } finally {
       set({ user: null, loading: false });
     }
   },

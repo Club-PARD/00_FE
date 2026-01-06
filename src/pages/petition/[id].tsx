@@ -27,6 +27,7 @@ type PetitionDetailResponse = {
 
   result?: string;
 
+  petitionNeeds?: string; 
   petitionSummary?: string;
   content?: string;
 
@@ -40,6 +41,7 @@ type PetitionDetailResponse = {
   url?: string;
   petitionUrl?: string;
 };
+
 
 type NewsItem = {
   title: string;
@@ -245,10 +247,11 @@ export default function PetitionDetailPage() {
     [detail?.petitionSummary]
   );
 
-  const overviewText = useMemo(
-    () => safeString(detail?.content, "개요 정보가 아직 없어요."),
-    [detail?.content]
-  );
+  const overviewText = useMemo(() => {
+    const t = detail?.petitionNeeds || detail?.content || "";
+    return safeString(t, "개요 정보가 아직 없어요.");
+  }, [detail?.petitionNeeds, detail?.content]);
+  
 
   const onClickGo = useMemo(() => {
     const url = detail?.petitionUrl || detail?.url;
