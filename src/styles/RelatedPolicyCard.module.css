@@ -1,0 +1,46 @@
+.section {
+    margin-top: 36px;
+  }
+  
+  .heading {
+    font-size: 22px;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 10px;
+  }
+  
+  .empty {
+    font-size: 14px;
+    font-weight: 500;
+    color: #777;
+  }
+  
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  /* 🔹 법안 제목 (보라색 링크 느낌) */
+  .title {
+    font-size: 15px;
+    font-weight: 900;
+    color: #6a5cff; /* mora 포인트 보라 */
+    line-height: 1.6;
+  }
+  
+  /* 🔹 법안 본문 (검은색 설명) */
+  .body {
+    font-size: 14px;
+    font-weight: 500;
+    color: #111;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  

@@ -1,18 +1,23 @@
-import { ReactNode } from "react";
 import styles from "@/styles/PetitionOverview.module.css";
 
-type PetitionOverviewProps = {
-  title?: string;
+type Props = {
   text: string;
-  children?: ReactNode;
 };
 
-export default function PetitionOverview({ title = "개요", text, children }: PetitionOverviewProps) {
+export default function PetitionOverview({ text }: Props) {
+  if (!text) return null;
+
+  const [title, ...rest] = text.split("\n");
+  const body = rest.join("\n").trim();
+
   return (
-    <section className={styles.wrapper}>
-      <h2 className={styles.title}>{title}</h2>
-      <p className={styles.text}>{text}</p>
-      {children}
+    <section className={styles.section}>
+      <h2 className={styles.heading}>개요</h2>
+
+      <div className={styles.box}>
+        <div className={styles.question}>{title}</div>
+        {body && <div className={styles.body}>{body}</div>}
+      </div>
     </section>
   );
 }

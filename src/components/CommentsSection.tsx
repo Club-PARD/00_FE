@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
 import styles from "@/styles/CommentsSection.module.css";
+import axios from "axios";
 
 type CommentItem = {
   id: number;
@@ -38,8 +38,6 @@ function normalizeComments(data: any): CommentItem[] {
 }
 
 export default function CommentsSection({ petitionId, isAuthed }: Props) {
-  const router = useRouter();
-
   const [items, setItems] = useState<CommentItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +45,6 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
   const [posting, setPosting] = useState(false);
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
   const [toast, setToast] = useState(false);
 
   const count = useMemo(() => items.length, [items.length]);
@@ -61,15 +58,13 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     if (!petitionId) return;
     setLoading(true);
     try {
-      const r = await fetch(`/api/petition/comment/${petitionId}`, {
-        credentials: "include",
+      const r = await axios.get(`/api/petition/comment/${petitionId}`, {
+        validateStatus: () => true,
+        withCredentials: true,
       });
-      const d = await r.json().catch(() => null);
-      if (!r.ok) {
-        setItems([]);
-        return;
-      }
-      setItems(normalizeComments(d));
+
+      if (r.status >= 200 && r.status < 300) setItems(normalizeComments(r.data));
+      else setItems([]);
     } finally {
       setLoading(false);
     }
@@ -94,17 +89,24 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setDraft("");
 
     try {
-      const r = await fetch(`/api/petition/comment`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: petitionId, body }),
-      });
+      const r = await axios.post(
+        `/api/petition/comment`,
+        { id: petitionId, body },
+        { validateStatus: () => true, withCredentials: true }
+      );
 
-      if (!r.ok) throw new Error();
+      if (r.status === 401 || r.status === 402) {
+        showLoginToast();
+        setDraft(body);
+        return;
+      }
+
+      if (r.status < 200 || r.status >= 300) {
+        setDraft(body);
+        return;
+      }
+
       await fetchComments();
-    } catch {
-      setDraft(body);
     } finally {
       setPosting(false);
     }
@@ -121,11 +123,18 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setOpenMenuId(null);
 
     try {
-      const r = await fetch(`/api/petition/comment/${commentId}`, {
-        method: "DELETE",
-        credentials: "include",
+      const r = await axios.delete(`/api/petition/comment/${commentId}`, {
+        validateStatus: () => true,
+        withCredentials: true,
       });
-      if (!r.ok) throw new Error();
+
+      if (r.status === 401 || r.status === 402) {
+        showLoginToast();
+        setItems(prev);
+        return;
+      }
+
+      if (r.status < 200 || r.status >= 300) setItems(prev);
     } catch {
       setItems(prev);
     }
@@ -142,7 +151,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         <div className={styles.inputCol}>
           <input
             className={styles.input}
-            placeholder="댓글 다는 중 ㅋ"
+            placeholder="댓글 아직 안써짐"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
@@ -155,8 +164,6 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
       </div>
 
       <div className={styles.list}>
-        {loading ? null : null}
-
         {items.map((c) => (
           <div key={c.id} className={styles.item}>
             <div className={styles.avatar} />

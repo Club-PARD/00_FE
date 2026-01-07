@@ -1,58 +1,142 @@
-import { useEffect, useState } from "react";
-import styles from "@/styles/LikeDislikeBar.module.css";
-import api from "@/lib/axios"; // 👈 [핵심] 우리가 만든 Axios 인스턴스 import
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 
-type Props = {
-  petitionId: number;
-  good: number;
-  bad: number;
-  onChangeCounts?: (nextGood: number, nextBad: number) => void;
+import ProsConsSection from "@/components/ProsConsSection";
+import DetailHeroCard from "@/components/DetailHeroCard";
+import Header from "@/components/Header";
+import AISummaryCard from "@/components/AISummaryCard";
+import DetailMiniCard from "@/components/DetailMiniCard";
+import PetitionOverview from "@/components/PetitionOverview";
+import SummaryNotice from "@/components/SummaryNotice";
+import LikeDislikeBar from "@/components/LikeDislikeBar";
+import RelatedPolicyCard from "@/components/RelatedPolicyCard";
+import CommentsSection from "@/components/CommentsSection";
+
+import styles from "@/styles/PetitionDetail.module.css";
+import { useAuthStore } from "@/store/authStore";
+
+type PetitionDetailResponse = {
+  title?: string;
+  category?: string;
+  type?: number;
+  status?: number;
+  voteStartDate?: string;
+  voteEndDate?: string;
+  committee?: string;
+  committeeDate?: string;
+  result?: string;
+  petitionNeeds?: string;
+  petitionSummary?: string;
+  content?: string;
+  positiveEx?: string;
+  negativeEx?: string;
+  good?: number;
+  bad?: number;
+  allows?: number;
+  url?: string;
+  petitionUrl?: string;
 };
 
-export default function LikeDislikeBar({
-  petitionId,
-  good,
-  bad,
-  onChangeCounts,
-}: Props) {
-  const [loading, setLoading] = useState(false);
-  const [my, setMy] = useState<null | 1 | -1>(null);
+type LawItem = {
+  title: string;
+  summary: string;
+};
 
-  const goodCount = Number.isFinite(Number(good)) ? Number(good) : 0;
-  const badCount = Number.isFinite(Number(bad)) ? Number(bad) : 0;
+function formatDotDate(iso?: string) {
+  if (!iso) return "-";
+  return iso.slice(0, 10).replaceAll("-", ".");
+}
 
-  // ✅ 개수 기준 아이콘 결정
-  const likeIcon = goodCount > 0 ? "/on.svg" : "/off.svg";
-  const dislikeIcon = badCount > 0 ? "/fckon.svg" : "/fckoff.svg";
+function statusLabel(status?: number) {
+  const map: Record<number, string> = { 0: "진행중", 1: "종료", 2: "처리완료" };
+  if (typeof status !== "number") return "-";
+  return map[status] ?? String(status);
+}
+
+function safeString(v: unknown, fallback = "-") {
+  if (typeof v === "string" && v.trim()) return v;
+  return fallback;
+}
+
+function safeNumber(v: unknown, fallback = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function computePercent(allows?: number) {
+  const n = safeNumber(allows, 0);
+  const target = 50000;
+  const p = Math.floor((n / target) * 100);
+  return Math.max(0, Math.min(100, p));
+}
+
+function normalizeLaws(data: any): LawItem[] {
+  const arr = Array.isArray(data) ? data : [];
+  return arr
+    .map((it: any) => {
+      const title = safeString(it?.title, "");
+      if (!title) return null;
+      return {
+        title,
+        summary: safeString(it?.summary, ""),
+      };
+    })
+    .filter(Boolean) as LawItem[];
+}
+
+export default function PetitionDetailPage() {
+  const router = useRouter();
+
+  const petitionId = useMemo(() => {
+    const v = router.query.id;
+    const n = typeof v === "string" ? Number(v) : NaN;
+    return Number.isFinite(n) ? n : null;
+  }, [router.query.id]);
+
+  const token = useAuthStore((s) => s.token);
+  const isAuthed = !!token;
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<PetitionDetailResponse | null>(null);
+
+  const [laws, setLaws] = useState<LawItem[]>([]);
+  const [lawsError, setLawsError] = useState<string | null>(null);
+
+  const [goodLocal, setGoodLocal] = useState(0);
+  const [badLocal, setBadLocal] = useState(0);
 
   useEffect(() => {
     if (!petitionId) return;
 
     let alive = true;
+    setLoading(true);
+    setError(null);
+    setLaws([]);
+    setLawsError(null);
 
-    // 1. [수정] 내 반응 조회 (GET)
-    // fetch -> api.get 변경 (헤더에 토큰 자동 포함됨)
-    api.get(`/petition/likes/${petitionId}`)
-      .then((r) => {
+    Promise.all([
+      axios.get(`/api/petition/${petitionId}`).then((r) => r.data as PetitionDetailResponse),
+      axios.get(`/api/petition/laws/${petitionId}`).then((r) => r.data),
+    ])
+      .then(([detailData, lawsData]) => {
         if (!alive) return;
-        // Axios는 r.data에 본문이 있습니다. (r.json() 아님)
-        // 백엔드가 숫자를 반환하면 1, -1, 0(null) 등이 옴
-        const d = r.data; 
-        
-        // 데이터가 없거나 0이면 null 처리
-        if (!d) {
-          setMy(null);
-          return;
-        }
 
-        const v = Number(d); // 백엔드 응답이 숫자라고 가정 (Integer)
-        if (v === 1 || v === -1) setMy(v as 1 | -1);
-        else setMy(null);
+        setDetail(detailData);
+        setLaws(normalizeLaws(lawsData));
+        setGoodLocal(safeNumber(detailData.good, 0));
+        setBadLocal(safeNumber(detailData.bad, 0));
       })
-      .catch((err) => {
+      .catch((e: any) => {
         if (!alive) return;
-        // 401 에러 등은 조용히 무시 (비로그인 상태일 수 있음)
-        setMy(null);
+        const msg = e.response?.data?.message || e.message || "알 수 없는 오류";
+        setError(msg);
+        setDetail(null);
+      })
+      .finally(() => {
+        if (!alive) return;
+        setLoading(false);
       });
 
     return () => {
@@ -60,85 +144,164 @@ export default function LikeDislikeBar({
     };
   }, [petitionId]);
 
-  const applyLocalCounts = (nextMy: null | 1 | -1) => {
-    let g = goodCount;
-    let b = badCount;
+  const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
+  const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
 
-    if (my === 1) g -= 1;
-    if (my === -1) b -= 1;
+  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
+  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
-    if (nextMy === 1) g += 1;
-    if (nextMy === -1) b += 1;
+  const heroMeta = useMemo(() => {
+    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
 
-    onChangeCounts?.(Math.max(0, g), Math.max(0, b));
-  };
+    return [
+      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
+      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "-") },
+      { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
+      { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
+      {
+        iconSrc: "/proicons_send.svg",
+        label: "위원회회부일",
+        value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-",
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
+    ];
+  }, [detail, badge]);
 
-  const post = async (likes: 1 | -1) => {
-    if (loading) return;
-    setLoading(true);
+  const miniMeta = useMemo(() => {
+    return [
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "마감날짜",
+        value: formatDotDate(detail?.voteEndDate),
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
+    ];
+  }, [detail]);
 
-    const nextMy = my === likes ? null : likes;
-    
-    // UI 먼저 업데이트 (낙관적 업데이트)
-    applyLocalCounts(nextMy);
-    setMy(nextMy);
+  const aiText = useMemo(
+    () => safeString(detail?.petitionSummary, "AI 요약 정보가 아직 없어요."),
+    [detail?.petitionSummary]
+  );
 
-    try {
-      // 2. [수정] 좋아요/싫어요 전송 (POST)
-      // fetch -> api.post 변경
-      await api.post(`/petition/likes`, { 
-        id: petitionId, 
-        likes: likes 
-      });
+  const overviewText = useMemo(() => {
+    const t = detail?.petitionNeeds || detail?.content || "";
+    return safeString(t, "개요 정보가 아직 없어요.");
+  }, [detail?.petitionNeeds, detail?.content]);
 
-      // Axios는 2xx 범위가 아니면 자동으로 에러를 던지므로 r.ok 체크 불필요
-    } catch (error: any) {
-      console.error("좋아요 요청 실패:", error);
-      
-      // 실패 시 UI 원상복구
-      applyLocalCounts(my);
-      setMy(my);
+  const onClickGo = useMemo(() => {
+    const url = detail?.petitionUrl || detail?.url;
+    if (!url) return undefined;
+    return () => window.open(url, "_blank", "noreferrer");
+  }, [detail?.petitionUrl, detail?.url]);
 
-      // 401 에러 (로그인 필요) 처리
-      if (error.response?.status === 401) {
-        if (confirm("로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?")) {
-          window.location.href = "/login";
-        }
-      } else {
-        alert("요청 처리에 실패했습니다.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  const prosItems = useMemo(() => {
+    const s = safeString(detail?.positiveEx, "");
+    return s ? [{ title: "긍정적 영향", desc: s }] : [];
+  }, [detail?.positiveEx]);
+
+  const consItems = useMemo(() => {
+    const s = safeString(detail?.negativeEx, "");
+    return s ? [{ title: "부정적 영향", desc: s }] : [];
+  }, [detail?.negativeEx]);
+
+  const showProsCons = prosItems.length > 0 || consItems.length > 0;
+
+  if (!petitionId) {
+    return (
+      <main className={styles.page}>
+        <Header />
+        <div className={styles.container}>잘못된 id</div>
+      </main>
+    );
+  }
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <Header />
+        <div className={styles.container}>로딩중...</div>
+      </main>
+    );
+  }
+
+  if (error || !detail) {
+    return (
+      <main className={styles.page}>
+        <Header />
+        <div className={styles.container}>{error ?? "데이터 없음"}</div>
+      </main>
+    );
+  }
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.bar}>
-        {/* 👍 좋아요 */}
-        <button
-          type="button"
-          className={`${styles.btn} ${my === 1 ? styles.activeGood : ""}`}
-          onClick={() => post(1)}
-          disabled={loading}
-        >
-          <span className={styles.count}>{goodCount}</span>
-          <img src={likeIcon} alt="좋아요" className={styles.iconImg} />
-        </button>
-  
-        <div className={styles.divider} />
-  
-        {/* 👎 싫어요 */}
-        <button
-          type="button"
-          className={`${styles.btn} ${my === -1 ? styles.activeBad : ""}`}
-          onClick={() => post(-1)}
-          disabled={loading}
-        >
-          <img src={dislikeIcon} alt="싫어요" className={styles.iconImg} />
-          <span className={styles.count}>{badCount}</span>
-        </button>
+    <main className={styles.page}>
+      <Header />
+      <div className={styles.bgLayer} />
+
+      <div className={styles.contentWrap}>
+        <div className={styles.container}>
+          <DetailHeroCard
+            badge={badge}
+            title={title}
+            meta={heroMeta}
+            agreeCount={agreeCount}
+            percent={percent}
+            statusPill="마감"
+            onClickBookmark={() => {}}
+            onClickGo={onClickGo}
+          />
+
+          <div className={styles.grid}>
+            <div className={styles.leftCol}>
+              <AISummaryCard text={aiText} />
+
+              <PetitionOverview text={overviewText} />
+
+              <RelatedPolicyCard policies={laws} error={lawsError} />
+
+              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
+
+              <SummaryNotice />
+
+              <LikeDislikeBar
+                petitionId={petitionId}
+                good={goodLocal}
+                bad={badLocal}
+                onChangeCounts={(g, b) => {
+                  setGoodLocal(g);
+                  setBadLocal(b);
+                }}
+              />
+
+              <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
+
+              <div className={styles.spacer} />
+            </div>
+
+            <aside className={styles.rightCol}>
+              <DetailMiniCard
+                badge={badge}
+                title={title}
+                meta={miniMeta}
+                agreeCount={agreeCount}
+                percent={percent}
+                onClickGo={onClickGo}
+              />
+            </aside>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
