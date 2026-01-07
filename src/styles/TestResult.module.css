@@ -35,7 +35,7 @@
   align-items: center;
 
   gap: 32px;
-  margin-bottom: 60px;
+  margin-bottom: 64px;
 }
 
 /* 결과 이미지 자리 => Image 쓰고 나중에 지우기 !!!!!!!!!!!!11*/
@@ -106,7 +106,7 @@
 .card {
   width: 100%;
 
-  border-radius: 8px;
+  border-radius: 16px;
   background: #fff;
 
   padding: 40px;
@@ -162,6 +162,10 @@
   border: none;
   background: #6A3DF6;
   color: #fff;
+}
+.primaryBtn:hover {
+  background: #5f37dd;
+  
 }
 
 /* 흰색 버튼 */
