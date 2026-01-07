@@ -1,0 +1,177 @@
+/* 바깥쪽 어두운 배경화면*/
+.overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(17, 17, 17, 0.6);
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* 모달 카드*/
+.modal {
+  position: relative;
+
+  box-shadow: 0px 0px 10px rgba(17, 17, 17, 0.15);
+
+  border-radius: 16px;
+  background-color: #fff;
+  border: 1px solid #bfbfbf;
+  box-sizing: border-box;
+
+  width: 384px; 
+  height: 496px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 48px 32px;
+  text-align: center;
+
+  font-size: 12px;
+  color: #111;
+  font-weight: 600;
+  font-family: "Noto Sans KR";
+}
+
+.frameParent {
+  width: 288px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 117px;
+}
+
+.ellipseParent {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* 프로필*/
+.avatar {
+  width: 166px;
+  height: 166px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+}
+
+/* 이미지가 있으면 원형으로 */
+.avatarImg {
+  width: 166px;
+  height: 166px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 닉네임 필드 */
+.field {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.inputWrap {
+  width: 288px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #bfbfbf;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 4px 10px 4px 14px;
+  gap: 20px;
+}
+
+.inputWrapError {
+  border: 1.5px solid #f60909;
+}
+
+.input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #303030;
+  background: transparent;
+}
+
+.errorIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.errorText {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #f60909;
+  text-align: left;
+  font-family: "Noto Sans KR";
+}
+
+/* 버튼 줄 */
+.btnRow {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #505050;
+}
+
+.btnCancel {
+  height: 36px;
+  flex: 1;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 24px;
+  cursor: pointer;
+}
+
+.btnSave {
+  height: 36px;
+  flex: 1;
+  border-radius: 8px;
+  background-color: #6a3df6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 24px;
+  box-sizing: border-box;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.btnSaveDisabled {
+  background-color: #bfbfbf;
+  cursor: not-allowed;
+}
+

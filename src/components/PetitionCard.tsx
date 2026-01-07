@@ -84,12 +84,12 @@ export default function PetitionCard({
   const isUrgent = dday >= 0 && dday <= 7;
   const badgeColorClass = isUrgent ? styles.ddayRed : styles.ddayGray;
 
-  // ✅ 상세 페이지 경로 (단수 petition!)
+  // 상세 페이지 경로 (단수 petition!)
   const detailHref = href ?? `/petition/${item.id}`;
 
   return (
     <article className={styles.cardWrapper}>
-      {/* 상단 흰 카드 영역 (클릭 이동 ❌) */}
+      {/* 상단 흰 카드 영역 (클릭 이동 x) */}
       <div className={styles.whiteCard}>
         <div className={styles.headerRow}>
           <span className={`${styles.ddayBadge} ${badgeColorClass}`}>
@@ -120,7 +120,7 @@ export default function PetitionCard({
         </div>
       </div>
 
-      {/* ✅ 하단 보라색 버튼 (여기만 클릭 시 이동) */}
+      {/* 하단 보라색 버튼 (여기만 클릭 시 이동) */}
       <Link href={detailHref} className={styles.bottomLink}>
         <div className={styles.countArea}>
           <div className={styles.countIcon}>

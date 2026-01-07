@@ -35,6 +35,12 @@
 }
 
 .ddayBadge {
+
+  /* 크기 고정으로*/
+  width: 64px;       
+  height: 24px;         
+  padding: 0; 
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +65,6 @@
 
 /* D-7*/
 .ddayRed {
-  width: 48px;
   border-color: #f60909;
   color: #f60909;
 }
