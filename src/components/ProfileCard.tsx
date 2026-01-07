@@ -1,19 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styles from "@/styles/ProfileCard.module.css";
 
 import EditModal from "@/components/EditModal";
+import { useAuthStore } from "@/store/authStore";
 
 export default function ProfileCard() {
+  const router = useRouter();
+
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const menuWrapRef = useRef<HTMLDivElement | null>(null);
 
-  // 회원 정보 수정 모달창 용
-  const [nickname, setNickname] = useState("홍길동");
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  // 바깥 클릭하면 메뉴 닫기
+  const nickname = user?.name ?? "사용자";
+  const email = user?.email ?? "";
+
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (!menuWrapRef.current) return;
@@ -25,26 +32,28 @@ export default function ProfileCard() {
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
+  const onLogout = () => {
+    logout();
+    setMenuOpen(false);
+    router.push("/");
+  };
+
   return (
     <>
-      {/* 카드 전체 박스 */}
       <section className={styles.card}>
-        {/* 프로필 이미지 */}
         <div className={styles.avatar} />
 
-        {/* 오른쪽 텍스트 영역 전체*/}
         <div className={styles.content}>
-          {/* 상단: 왼쪽(이름) */}
           <div className={styles.nameRow}>
             <span className={styles.name}>{nickname}</span>
             <button
               type="button"
               className={styles.iconBtn}
               aria-label="프로필 수정"
-            ></button>
+              onClick={() => setIsEditOpen(true)}
+            />
           </div>
 
-          {/* 중간: 성향 | 다시하기 링크 */}
           <div className={styles.metaRow}>
             <span className={styles.metaText}>실용중심형</span>
 
@@ -60,11 +69,9 @@ export default function ProfileCard() {
             </Link>
           </div>
 
-          {/* 하단: 이메일 */}
-          <div className={styles.email}>abcdefg@email.com</div>
+          <div className={styles.email}>{email}</div>
         </div>
 
-        {/* 오른쪽: 옵션 버튼 + 토글 */}
         <div className={styles.actions} ref={menuWrapRef}>
           <button
             type="button"
@@ -78,7 +85,6 @@ export default function ProfileCard() {
 
           {menuOpen && (
             <div className={styles.menu}>
-              {/* 수정하기 */}
               <button
                 type="button"
                 className={styles.menuItem}
@@ -91,27 +97,17 @@ export default function ProfileCard() {
                 <span>수정하기</span>
               </button>
 
-              {/* 로그아웃 */}
-              <button
-                type="button"
-                className={styles.menuItem}
-                onClick={() => {
-                  // TODO: 로그아웃 로직
-                  setMenuOpen(false);
-                }}
-              >
+              <button type="button" className={styles.menuItem} onClick={onLogout}>
                 <Image src="/logout.svg" alt="" width={16} height={16} />
                 <span>로그아웃</span>
               </button>
 
               <div className={styles.divider} />
 
-              {/* 회원탈퇴 */}
               <button
                 type="button"
                 className={`${styles.menuItem} ${styles.danger}`}
                 onClick={() => {
-                  // TODO: 회원탈퇴 로직
                   setMenuOpen(false);
                 }}
               >
@@ -123,13 +119,11 @@ export default function ProfileCard() {
         </div>
       </section>
 
-      {/* 모달창 */}
       <EditModal
         isOpen={isEditOpen}
         initialNickname={nickname}
         onClose={() => setIsEditOpen(false)}
-        onSave={(next) => {
-          setNickname(next);
+        onSave={() => {
           setIsEditOpen(false);
         }}
       />
