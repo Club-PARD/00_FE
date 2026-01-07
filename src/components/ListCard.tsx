@@ -84,7 +84,7 @@ export default function CongressCard({ item, href, forceCategoryGray }: Props) {
   const isUrgent = dday !== null && dday >= 0 && dday <= 7;
 
   // 링크 주소
-  const detailHref = href ?? `/petitions/${item.id}`;
+  const detailHref = href ?? `/petition/${item.id}`;
 
   return (
     <article className={styles.cardWrapper}>
@@ -99,6 +99,11 @@ export default function CongressCard({ item, href, forceCategoryGray }: Props) {
           className={styles.bookmarkBtn}
           type="button"
           aria-label="북마크"
+          onClick={(e) => {
+            // 이벤트 버블링 방지
+            e.stopPropagation();
+            console.log("북마크 클릭");
+          }}
         >
           <Image src="/bookMark.svg" alt="" width={24} height={24} />
         </button>
