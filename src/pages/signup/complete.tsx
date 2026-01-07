@@ -40,7 +40,7 @@ const SignupCompletePage: NextPage = () => {
 
           {/* 서브타이틀 */}
           <p className={styles.subtitle}>
-            이제 정책을 바라보는 당신만의 방식을 알아볼 차례예요.
+            이제 정책을 바라보는 당신만의 관점을 알아볼 차례예요.
           </p>
 
           <div className={styles.spaceSubDesc} />
