@@ -10,6 +10,7 @@ interface User {
   email?: string;
   name?: string;
   role?: string;
+  status?: number; // 성향 저장 0 ~ 3
 }
 
 interface AuthState {
@@ -40,6 +41,9 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
           loading: false,
         });
+
+        // 토큰 저장 후 내 정보 즉시 동기화
+        get().fetchMe();
       },
 
       // 로그아웃
@@ -54,28 +58,32 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // OAuth / SSO 등 URL에 token 붙어오는 경우 처리
+      // 토큰 파싱만 (redirect는 하지 않음)
       checkLoginFromUrl: () => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
 
-        if (token) {
-          set({
-            token,
-            isAuthenticated: true,
-          });
-
-          // URL에서 token 제거
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
-
-          // 토큰 세팅 후 내 정보 조회
-          get().fetchMe();
-        } else {
+        if (!token) {
           set({ loading: false });
+          return;
         }
+
+        // 토큰 저장
+        set({
+          token,
+          isAuthenticated: true,
+          loading: false,
+        });
+
+        // URL에서 token 제거
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+
+        // 내 정보 조회
+        get().fetchMe();
       },
 
       // 내 정보 조회
@@ -114,6 +122,18 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         user: state.user,
       }),
+
+      // 새로고침/재접속 시에도 token 있으면 내정보 다시 조회
+        // 로그아웃 전까지 정보 유지
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+
+        if (state.token) {
+          state.fetchMe(); // token 있으면 /user/me 호출해서 user 채움
+        } else {
+          state.loading = false; // token 없으면 로딩 끝
+        }
+      },
     }
   )
 );

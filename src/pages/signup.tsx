@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import styles from "@/styles/Signup.module.css";
 import { useRouter } from "next/router";
-import api from "@/lib/axios"; 
+import api from "@/lib/axios";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -54,10 +54,12 @@ export default function SignupPage() {
     try {
       setChecking(true);
 
-      // ✅ 변경: /user/check/... -> /api/user/check/...
-      const r = await api.get(`/api/user/check/${encodeURIComponent(nickname)}`, {
-        validateStatus: () => true,
-      });
+      const r = await api.get(
+        `/api/user/check/${encodeURIComponent(nickname)}`,
+        {
+          validateStatus: () => true,
+        }
+      );
 
       // 프록시가 status 그대로 내려주므로 여기서 판단 가능
       if (r.status === 302) setIsDuplicate(true);
@@ -79,32 +81,15 @@ export default function SignupPage() {
     setTouched(true);
     if (!canSubmit) return;
 
-    try {
-      setSubmitting(true);
-      setSubmitError("");
+    sessionStorage.setItem(
+      "pendingOnboarding",
+      JSON.stringify({
+        email: trimmedEmail,
+        nickname: trimmed,
+      })
+    );
 
-      // ✅ 변경: /user/signUp -> /api/user/signUp
-      const r = await api.post(
-        "/api/user/signUp",
-        {
-          name: trimmed,
-          email: trimmedEmail,
-          age: 0,
-          status: 0,
-        },
-        { validateStatus: () => true }
-      );
-
-      if (r.status >= 200 && r.status < 400) {
-        router.replace("/");
-      } else {
-        setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
-      }
-    } catch {
-      setSubmitError("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
-    } finally {
-      setSubmitting(false);
-    }
+    router.replace("/signup/complete");
   };
 
   return (
@@ -127,7 +112,9 @@ export default function SignupPage() {
           <div className={styles.text}>닉네임</div>
           <div className={styles.inputWrap}>
             <input
-              className={`${styles.input} ${isDuplicate ? styles.inputError : ""}`}
+              className={`${styles.input} ${
+                isDuplicate ? styles.inputError : ""
+              }`}
               value={name}
               onChange={onChange}
               onBlur={onBlurName}
@@ -138,12 +125,18 @@ export default function SignupPage() {
             {isDuplicate && <span className={styles.errorIcon} aria-hidden />}
           </div>
 
-          {isDuplicate && <p className={styles.errorText}>사용할 수 없는 닉네임입니다.</p>}
-          {!isDuplicate && !!submitError && <p className={styles.errorText}>{submitError}</p>}
+          {isDuplicate && (
+            <p className={styles.errorText}>사용할 수 없는 닉네임입니다.</p>
+          )}
+          {!isDuplicate && !!submitError && (
+            <p className={styles.errorText}>{submitError}</p>
+          )}
 
           <button
             type="submit"
-            className={`${styles.submitBtn} ${canSubmit ? styles.submitActive : styles.submitDisabled}`}
+            className={`${styles.submitBtn} ${
+              canSubmit ? styles.submitActive : styles.submitDisabled
+            }`}
             disabled={!canSubmit}
           >
             회원가입 완료하기

@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,8 +11,27 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import styles from "@/styles/Banner.module.css";
+import { getCardNews, type CardNewsItem } from "@/lib/api/banner";
+
+type BannerViewItem = {
+  id: string;
+  imgSrc: string;
+  alt: string;
+  link: string;
+};
+
+// !!!!!!!!! 매주 여기만 수정하면 되는 배너 이미지 세트 !!!!!!!!!
+// 이미지 같은거 두 개씩 넣어야 함
+const BANNER_IMAGES = [
+  "/banners/banner_01.jpg",
+  "/banners/banner_02.jpg",
+  "/banners/banner_03.jpg",
+  "/banners/banner_04.jpg",
+];
 
 export default function Banner() {
+  const [items, setItems] = useState<BannerViewItem[]>([]);
+
   // 배너 데이터 (이미지 경로, 클릭시 이동할 주소)
 
   /*
@@ -19,44 +39,43 @@ export default function Banner() {
     imgSrc => 보여줄 이미지
     link => 해당 이미지와 관련된 청원으로 이동
   */
-  const banners = [
-    {
-      id: 1,
-      imgSrc: "/banners/banner_01.jpg",
-      alt: "배너",
-      link: "/",
-    },
-    {
-      id: 2,
-      imgSrc: "/banners/banner_02.jpg",
-      alt: "배너",
-      link: "/",
-    },
-    {
-      id: 3,
-      imgSrc: "/banners/banner_03.jpg",
-      alt: "배너",
-      link: "/",
-    },
-    {
-      id: 4,
-      imgSrc: "/banners/banner_01.jpg",
-      alt: "배너",
-      link: "/",
-    },
-    {
-      id: 5,
-      imgSrc: "/banners/banner_02.jpg",
-      alt: "배너",
-      link: "/",
-    },
-    {
-      id: 6,
-      imgSrc: "/banners/banner_03.jpg",
-      alt: "배너",
-      link: "/",
-    },
-  ];
+  useEffect(() => {
+    const fetchBanner = async () => {
+      const UNIQUE = 4; // 링크(카드뉴스) 4개
+      const REPEAT = 2; // 2번 반복 → 총 8개
+
+      // 서버에서 4개만 가져옴 (1,2,3,4) => 인기순으로
+      const list = await getCardNews({ how: 0, limit: UNIQUE });
+
+      // 서버가 4개 미만이면 그만큼만
+      const baseCount = Math.min(list.length, UNIQUE);
+      if (baseCount === 0) {
+        setItems([]);
+        return;
+      }
+
+      // (1,2,3,4)를 REPEAT번 반복해서 (1,2,3,4,1,2,3,4)
+      const mapped: BannerViewItem[] = Array.from(
+        { length: baseCount * REPEAT },
+        (_, idx) => {
+          const baseIdx = idx % baseCount; // 0..baseCount-1 반복
+          const p: CardNewsItem = list[baseIdx];
+          const id = String(p.id);
+
+          return {
+            id: `${id}-${idx}`, // key 중복 방지용(중요)
+            imgSrc: BANNER_IMAGES[baseIdx], // 이미지도 같은 방식으로 반복
+            alt: p.title ?? "배너",
+            link: `/petition/${id}`, // 링크도 반복됨
+          };
+        }
+      );
+
+      setItems(mapped);
+    };
+
+    fetchBanner();
+  }, []);
 
   return (
     <>
@@ -83,7 +102,7 @@ export default function Banner() {
           }}
           className={styles.swiperContainer}
         >
-          {banners.map((banner) => (
+          {items.map((banner) => (
             <SwiperSlide key={banner.id} className={styles.slide}>
               {/* 클릭했을 때 이동하는 링크 */}
               <Link href={banner.link} className={styles.linkBlock}>
@@ -93,8 +112,6 @@ export default function Banner() {
                   fill // 부모 박스 꽉차게
                   style={{ objectFit: "cover" }} // 비율 유지하면서
                   priority // 첫 로딩 속도 향상
-                  
-                  
                   // 이미지 끌려나오는거 방지
                   draggable={false}
                   // 드래그 시작 이벤트 자체를 강제로 취소 (가장 확실한 방법)

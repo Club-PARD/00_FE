@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/authStore";
 
 import Header from "@/components/Header";
 import styles from "@/styles/TestResult.module.css";
@@ -91,12 +93,15 @@ const RESULT_MAP: Record<
     badge: "공존의 가치를 빚어내는 중재자",
     desc: (
       <>
-        당신은 정책이 단순한 효율성을 넘어 <b>'사회적
-        정의와 공정'</b>이라는 가치를 담아야 한다고 믿습니다. 
+        당신은 정책이 단순한 효율성을 넘어 <b>'사회적 정의와 공정'</b>이라는
+        가치를 담아야 한다고 믿습니다.
         <br />
-        성장의 그늘에 <b>가려진 소외계층이나 사각지대</b>를 살피는 일에 깊은 관심을 두며, 우리 사회가 지켜야할 올바른 방향성에 대해 끊임없이 고민합니다.
+        성장의 그늘에 <b>가려진 소외계층이나 사각지대</b>를 살피는 일에 깊은
+        관심을 두며, 우리 사회가 지켜야할 올바른 방향성에 대해 끊임없이
+        고민합니다.
         <br />
-        결과만큼이나 <b>과정의 정당성</b>을 중요하게 생각하는 원칙주의자이기도 합니다.
+        결과만큼이나 <b>과정의 정당성</b>을 중요하게 생각하는 원칙주의자이기도
+        합니다.
       </>
     ),
     card1Title: "정책을 보는 관점",
@@ -105,6 +110,13 @@ const RESULT_MAP: Record<
     card2Body: `높은 공감 능력과 인권 감수성, 눈앞의 이익보다 공동체의 선을 우선시하는 단단한 신념을 갖추고 있습니다.`,
     imageSrc: "/result_D.svg",
   },
+};
+
+const TYPE_TO_STATUS: Record<ChoiceType, number> = {
+  A: 0,
+  B: 1,
+  C: 2,
+  D: 3,
 };
 
 const TestResultPage: NextPage = () => {
@@ -118,12 +130,54 @@ const TestResultPage: NextPage = () => {
   }, [router.query.type]);
 
   // type이 유효하면 RESULT_MAP에서 데이터 가져오기
-       // type이 null이면 data도 null (결과 없음)
+  // type이 null이면 data도 null (결과 없음)
   const data = type ? RESULT_MAP[type] : null;
 
   // 검사 다시하기, 메인 화면으로 이동
   const goRetry = () => router.push("/mypage/test");
-  const goMain = () => router.push("/");
+
+  // 메인으로: 서버에 결과+닉네임 보내고 JWT 받아서 저장한 뒤 이동
+  const goMain = async () => {
+    // 1) type 정규화
+    const t = router.query.type;
+    const type: ChoiceType | null =
+      t === "A" || t === "B" || t === "C" || t === "D" ? t : null;
+
+    // 2) pendingOnboarding 읽기 (signup에서 저장해둔 email/nickname)
+    const raw = sessionStorage.getItem("pendingOnboarding");
+    const pending = raw ? JSON.parse(raw) : null;
+
+    const email = pending?.email ?? "";
+    const nickname = pending?.nickname ?? "";
+
+    // 값 없으면 흐름 깨진 거라 로그인으로
+    if (!email || !nickname || !type) {
+      router.replace("/login");
+      return;
+    }
+
+    // 3) 서버로 보내고 JWT 받기
+    const status = TYPE_TO_STATUS[type]; // A->0, B->1, C->2, D->3
+
+    try {
+      const r = await api.post(
+        "/api/user/signUp",
+        { email, name: nickname, age: 0, status },
+        { validateStatus: () => true }
+      );
+
+      // 성공하면 로그인으로
+      if (r.status >= 200 && r.status < 400) {
+        sessionStorage.removeItem("pendingOnboarding");
+        router.replace("/login");
+        return;
+      }
+
+      console.error("회원가입 실패:", r.status, r.data);
+    } catch (e) {
+      console.error("회원가입 요청 에러:", e);
+    }
+  };
 
   if (!data) {
     // 쿼리 없이 직접 들어온 경우
@@ -144,7 +198,6 @@ const TestResultPage: NextPage = () => {
 
   return (
     <div className={styles.page}>
-
       <main className={styles.main}>
         <section className={styles.resultTop}>
           {/* 이미지*/}
@@ -187,7 +240,7 @@ const TestResultPage: NextPage = () => {
             검사 다시하기
           </button>
           <button className={styles.primaryBtn} onClick={goMain}>
-            메인 화면으로
+            로그인하러 가기
           </button>
         </section>
       </main>

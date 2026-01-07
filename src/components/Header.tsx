@@ -4,6 +4,17 @@ import { usePathname } from "next/navigation";
 import styles from "@/styles/Header.module.css";
 import { useAuthStore } from "@/store/authStore";
 
+// token으로 저장된 내용에 따라서 프로필 들고오기
+const getProfileSrc = (status?: number) => {
+  switch (status) {
+    case 0: return "/profile_0.svg"; // 변화추구형
+    case 1: return "/profile_1.svg"; // 안전중시형
+    case 2: return "/profile_2.svg"; // 실용중심형
+    case 3: return "/profile_3.svg"; // 가치지향형
+    default: return "/profile.svg";
+  }
+};
+
 export default function Header() {
   const pathname = usePathname();
 

@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/authStore";
 
 import Header from "@/components/Header";
 import styles from "@/styles/MypageTest.module.css";
@@ -40,7 +42,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 2,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "정부가 새로운 청년 정책을 추진한다고 할 때 가장 먼저 드는 생각은?",
+    highlight: ["새로운 청년 정책", "가장 먼저 드는 생각"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -53,7 +56,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 3,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "사회 문제가 발생했을 때, 당신이 중요하게 생각하는 해결 방식은?",
+    highlight: ["사회 문제", "해결 방식"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -66,7 +70,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 4,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "정책 논쟁을 볼 때 가장 공감이 가는 말은?",
+    highlight: ["가장 공감"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -79,7 +84,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 5,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "청년 정책이 실패했다고 느껴질 때, 그 이유는?",
+    highlight: ["정책이 실패", "이유"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -92,7 +98,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 6,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "새로운 제도를 도입할 때 가장 우선해야 할 기준은?",
+    highlight: ["새로운 제도", "기준"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -105,7 +112,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 7,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "정책 논쟁을 볼 때 나의 태도는?",
+    highlight: ["정책 논쟁", "나의 태도"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -118,7 +126,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 8,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "당신이 생각하는 ‘좋은 정책’이란?",
+    highlight: ["‘좋은 정책’"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -131,7 +140,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 9,
-    title: "새로운 정책이 제안되었을 때, 당신의 첫 반응은?",
+    title: "'청년 월세 지원 사업'이 예산 부족으로 중단될 위기에 처했다는 뉴스를 보았다. 당신이 가장 먼저 가질 의문은?",
+    highlight: ["예산 부족으로 중단", "의문"],
     options: [
       { text: "지금이 아니면 이런 시도도 못 해볼 것 같다", type: "A" },
       { text: "괜히 건드려서 더 복잡해지는 건 아닐까", type: "B" },
@@ -188,6 +198,7 @@ function renderWithHighlight(text: string, highlight?: string[]) {
 
 const TestPage: NextPage = () => {
   const router = useRouter();
+  const token = useAuthStore((s) => s.token);
 
   // questionId -> optionIndex(0~3)
   const [answers, setAnswers] = useState<Record<number, number>>({});
