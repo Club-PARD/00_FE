@@ -10,7 +10,7 @@ const SignupCompletePage: NextPage = () => {
 
   // 페이지 이동
   const goToTest = () => {
-    router.push("/mypage/test"); // !!!!!! 설문조사 페이지로 이동시키기
+    router.push("/mypage/test");
   };
 
   return (

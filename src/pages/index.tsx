@@ -1,6 +1,8 @@
-// mora/src/pages/index.tsx
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useAuthStore } from "@/store/authStore";
+import styles from "@/styles/Home.module.css";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,13 +10,16 @@ import Header from "@/components/Header";
 import Banner from "@/components/Banner";
 import PetitionCard, { PetitionCardItem } from "@/components/PetitionCard";
 
-import styles from "@/styles/Home.module.css";
 import { getPetitions, PetitionResponse } from "@/lib/api/mainCard";
 
 export default function Home() {
   const [assemblyList, setAssemblyList] = useState<PetitionCardItem[]>([]);
   const [dailyList, setDailyList] = useState<PetitionCardItem[]>([]);
 
+  // 토큰 저장용
+  const router = useRouter();
+
+  // 데이터를 불러오기 함수
   const formatData = (list: PetitionResponse[]): PetitionCardItem[] => {
     if (!Array.isArray(list)) return [];
 
@@ -56,6 +61,30 @@ export default function Home() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // 토큰 저장
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const token = router.query.token;
+    if (typeof token !== "string" || !token) return;
+
+    // 토큰 저장 (fetchMe는 store의 setToken에서 자동 수행)
+    useAuthStore.getState().setToken(token);
+
+    // 내 정보 가져오기
+    useAuthStore.getState().fetchMe();
+
+    // afterSignup이면 설문으로, 아니면 메인 유지
+    // 회원가입 직후 플래그(afterSignup)면 설문으로, 아니면 메인 유지
+    const afterSignup = sessionStorage.getItem("afterSignup") === "1";
+    if (afterSignup) sessionStorage.removeItem("afterSignup");
+
+    // 주소창에서 token 쿼리 제거 + 분기 이동
+    router.replace(afterSignup ? "/signup/complete" : "/", undefined, {
+      shallow: true,
+    });
+  }, [router.isReady, router.query.token]);
 
   return (
     <>
