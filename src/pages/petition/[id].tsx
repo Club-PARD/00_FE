@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -18,6 +18,7 @@ import { useAuthStore } from "@/store/authStore";
 
 type PetitionDetailResponse = {
   title?: string;
+  subTitle?: string; 
   category?: string;
   type?: number;
   status?: number;
@@ -194,16 +195,29 @@ export default function PetitionDetailPage() {
     [detail?.petitionSummary]
   );
 
+  // ✅ [추가] 개요 제목(subTitle)
+  const overviewTitle = useMemo(
+    () => safeString(detail?.subTitle, "개요"),
+    [detail?.subTitle]
+  );
+
   const overviewText = useMemo(() => {
     const t = detail?.petitionNeeds || detail?.content || "";
     return safeString(t, "개요 정보가 아직 없어요.");
   }, [detail?.petitionNeeds, detail?.content]);
 
-  const onClickGo = useMemo(() => {
-    const url = detail?.petitionUrl || detail?.url;
-    if (!url) return undefined;
-    return () => window.open(url, "_blank", "noreferrer");
-  }, [detail?.petitionUrl, detail?.url]);
+  // ✅ url이 없어도 항상 함수는 존재(버튼 항상 동작: 없으면 안내)
+  const onClickGo = useCallback(() => {
+    const raw = (detail?.url || detail?.petitionUrl || "").trim();
+
+    if (!raw) {
+      alert("바로가기 링크가 아직 등록되지 않았어요.");
+      return;
+    }
+
+    const finalUrl = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    window.open(finalUrl, "_blank", "noopener,noreferrer");
+  }, [detail?.url, detail?.petitionUrl]);
 
   const prosItems = useMemo(() => {
     const s = safeString(detail?.positiveEx, "");
@@ -266,7 +280,8 @@ export default function PetitionDetailPage() {
             <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
 
-              <PetitionOverview text={overviewText} />
+              {/* ✅ [수정] subTitle을 개요 제목으로 사용 */}
+              <PetitionOverview title={overviewTitle} text={overviewText} />
 
               <RelatedPolicyCard policies={laws} error={lawsError} />
 
