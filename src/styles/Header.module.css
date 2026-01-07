@@ -82,7 +82,19 @@
 
   min-width: 0;
   flex: 0 1 auto;
-  max-width: 6ch; /* 글자 6개 정도*/
+}
+
+/* 작은 화면일 때*/
+@media (max-width: 480px) {
+  .navItem {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 6ch; /* 6글자 정도 크기로*/
+  }
+
+  .nav {
+    overflow: hidden; /* 유지 */
+  }
 }
 
 /* --- 내비게이션 글자: hover ---*/

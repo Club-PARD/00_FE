@@ -12,7 +12,7 @@ html, body {
   margin: 0;
   padding: 0;
 
-  background: #F5F5F5;
+  background: #F5F5F5 !important;
 }
 
 /* 기본 폰트만 지정 */
@@ -31,10 +31,27 @@ button, input, textarea, select {
   font-family: inherit;
 }
 
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #111;
+}
+
+
+.font-gmarket {
+  font-family: 'GmarketSans', sans-serif;
+}
+
 /* src/styles/globals.css */
 @font-face {
   font-family: 'GmarketSans';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  src: url('/fonts/GmarketSansTTFMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GmarketSans';
+  src: url('/fonts/GmarketSansTTFBold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
