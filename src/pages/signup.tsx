@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import styles from "@/styles/Signup.module.css";
 import { useRouter } from "next/router";
-import api from "@/lib/axios";
+import api from "@/lib/axios"; 
 
 export default function SignupPage() {
   const router = useRouter();
@@ -54,11 +54,12 @@ export default function SignupPage() {
     try {
       setChecking(true);
 
-      const r = await api.get(`/user/check/${encodeURIComponent(nickname)}`, {
+      // ✅ 변경: /user/check/... -> /api/user/check/...
+      const r = await api.get(`/api/user/check/${encodeURIComponent(nickname)}`, {
         validateStatus: () => true,
-        maxRedirects: 0,
       });
 
+      // 프록시가 status 그대로 내려주므로 여기서 판단 가능
       if (r.status === 302) setIsDuplicate(true);
       else if (r.status === 200) setIsDuplicate(false);
       else setIsDuplicate(false);
@@ -82,8 +83,9 @@ export default function SignupPage() {
       setSubmitting(true);
       setSubmitError("");
 
+      // ✅ 변경: /user/signUp -> /api/user/signUp
       const r = await api.post(
-        "/user/signUp",
+        "/api/user/signUp",
         {
           name: trimmed,
           email: trimmedEmail,
