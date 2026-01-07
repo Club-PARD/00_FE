@@ -168,7 +168,12 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     <section className={styles.wrap} onClick={() => setOpenMenuId(null)}>
       {toast && (
         <div className={`${styles.toast} ${toastHide ? styles.toastHide : ""}`}>
-          로그인 후 이용할 수 있는 기능이에요!
+          <img
+            src="/error_white.svg"
+            alt="error"
+            className={styles.toastIcon}
+          />
+          <span>로그인 후 이용할 수 있는 기능이에요!</span>
         </div>
       )}
 

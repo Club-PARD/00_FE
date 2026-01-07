@@ -1,5 +1,4 @@
 .wrap {
-  position: relative;
   margin-top: 36px;
 }
 
@@ -134,31 +133,53 @@
 }
 
 .toast {
-  position: absolute;
-  min-width: 520px;
-  max-width: 720px;
-
-  top: -66px;
+  position: fixed;
+  bottom: 64px;
   left: 50%;
-  
   transform: translateX(-50%);
+  
+  width: min(294px, calc(100% - 32px));
+  height: 44px;
 
+  max-width: 527px;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: inline-flex;
   text-align: center;
-  padding: 14px 18px;
-  border-radius: 999px;
-  background: rgba(88, 72, 141, 0.95);
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+  padding: 0 24px;
+  border-radius: 100px;
+  background: rgba(106, 61, 246, 0.60);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px); /* 사파리용*/
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
   
   color: #fff;
-  font-weight: 900;
-  font-size: 20px;
-  z-index: 10;
+  font-weight: 500;
+  font-size: 14px;
+  z-index: 9999;
 
   opacity: 1;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.toastIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+
+  
 }
 
 .toastHide {
   opacity: 0;
-  transform: translateX(-50%) translateY(-6px); /* 사라질 때 살짝 위로 */
+  transform: translateX(-50%) translateY(8px); /* 사라질 때 살짝 위로 */
   pointer-events: none;
 }
