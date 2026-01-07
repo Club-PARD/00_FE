@@ -18,23 +18,29 @@ import { useAuthStore } from "@/store/authStore";
 
 type PetitionDetailResponse = {
   title?: string;
-  subTitle?: string; 
+  subTitle?: string;
   category?: string;
   type?: number;
   status?: number;
+
   voteStartDate?: string;
   voteEndDate?: string;
-  committee?: string;
-  committeeDate?: string;
+
+  finalDate?: string;
   result?: string;
+  department?: string;
+
   petitionNeeds?: string;
   petitionSummary?: string;
   content?: string;
+
   positiveEx?: string;
   negativeEx?: string;
+
   good?: number;
   bad?: number;
   allows?: number;
+
   url?: string;
   petitionUrl?: string;
 };
@@ -152,17 +158,21 @@ export default function PetitionDetailPage() {
   const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
   const heroMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
+    const period = `${formatDotDate(detail?.finalDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
 
     return [
       { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "-") },
+      {
+        iconSrc: "/Group (2).svg",
+        label: "소관위원회",
+        value: safeString(detail?.department, "-"),
+      },
       { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
       { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
       {
         iconSrc: "/proicons_send.svg",
         label: "위원회회부일",
-        value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-",
+        value: detail?.voteStartDate ? formatDotDate(detail.voteStartDate) : "-",
       },
       {
         iconSrc: "/proicons_script.svg",
@@ -171,7 +181,7 @@ export default function PetitionDetailPage() {
         valueHighlight: true,
       },
     ];
-  }, [detail, badge]);
+  }, [detail?.voteStartDate, detail?.voteEndDate, detail?.department, detail?.status, detail?.finalDate, detail?.result, badge]);
 
   const miniMeta = useMemo(() => {
     return [
@@ -188,25 +198,23 @@ export default function PetitionDetailPage() {
         valueHighlight: true,
       },
     ];
-  }, [detail]);
+  }, [detail?.voteEndDate, detail?.result]);
 
   const aiText = useMemo(
     () => safeString(detail?.petitionSummary, "AI 요약 정보가 아직 없어요."),
     [detail?.petitionSummary]
   );
 
-  // ✅ [추가] 개요 제목(subTitle)
-  const overviewTitle = useMemo(
-    () => safeString(detail?.subTitle, "개요"),
-    [detail?.subTitle]
-  );
+  const overviewTitle = useMemo(() => {
+    const v = detail?.subTitle;
+    return typeof v === "string" && v.trim() ? v : "";
+  }, [detail?.subTitle]);
 
   const overviewText = useMemo(() => {
     const t = detail?.petitionNeeds || detail?.content || "";
     return safeString(t, "개요 정보가 아직 없어요.");
   }, [detail?.petitionNeeds, detail?.content]);
 
-  // ✅ url이 없어도 항상 함수는 존재(버튼 항상 동작: 없으면 안내)
   const onClickGo = useCallback(() => {
     const raw = (detail?.url || detail?.petitionUrl || "").trim();
 
@@ -280,7 +288,6 @@ export default function PetitionDetailPage() {
             <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
 
-              {/* ✅ [수정] subTitle을 개요 제목으로 사용 */}
               <PetitionOverview title={overviewTitle} text={overviewText} />
 
               <RelatedPolicyCard policies={laws} error={lawsError} />
@@ -293,6 +300,7 @@ export default function PetitionDetailPage() {
                 petitionId={petitionId}
                 good={goodLocal}
                 bad={badLocal}
+                isAuthed={isAuthed}
                 onChangeCounts={(g, b) => {
                   setGoodLocal(g);
                   setBadLocal(b);

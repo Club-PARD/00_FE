@@ -1,15 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import styles from "@/styles/DetailHeroCard.module.css";
 
 type MetaItem = {
   iconSrc: string;
   label: string;
-  value: string;
+  value: React.ReactNode;
   valueHighlight?: boolean;
 };
 
 type DetailHeroCardProps = {
-  badge: string; // 청원분야 텍스트(예: "문화 · 체육 · 관광 · 언론")
+  badge: string;
   title: string;
 
   meta: MetaItem[];
@@ -17,9 +17,11 @@ type DetailHeroCardProps = {
   agreeCount: number;
   percent: number;
 
-  statusPill?: string; // "마감"
+  statusPill?: string;
   onClickBookmark?: () => void;
   onClickGo?: () => void;
+
+  initialBookmarked?: boolean;
 };
 
 const DEFAULT_ICON: Record<string, string> = {
@@ -31,6 +33,12 @@ const DEFAULT_ICON: Record<string, string> = {
   처리결과: "/proicons_script.svg",
 };
 
+function hasValue(v: React.ReactNode) {
+  if (v === null || v === undefined) return false;
+  const s = String(v).trim();
+  return s.length > 0 && s !== "undefined" && s !== "null";
+}
+
 export default function DetailHeroCard({
   badge,
   title,
@@ -40,8 +48,10 @@ export default function DetailHeroCard({
   statusPill = "마감",
   onClickBookmark,
   onClickGo,
+  initialBookmarked = false,
 }: DetailHeroCardProps) {
   const value = Math.max(0, Math.min(100, percent));
+  const [bookmarked, setBookmarked] = useState<boolean>(initialBookmarked);
 
   const metaMap = useMemo(() => {
     const m = new Map<string, MetaItem>();
@@ -63,36 +73,73 @@ export default function DetailHeroCard({
       const found = metaMap.get(label);
 
       if (label === "청원분야") {
+        const v = found?.value;
         return {
           iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
           label,
-          value: (found?.value && found.value.trim()) ? found.value : badge || "-",
+          value: hasValue(v) ? v : badge || "-",
           valueHighlight: found?.valueHighlight ?? false,
         };
       }
 
       if (label === "동의기간") {
+        const raw = hasValue(found?.value) ? String(found?.value) : "-";
+        const parts = raw.split("~").map((s) => s.trim());
+
+        const valueNode =
+          parts.length >= 2 ? (
+            <>
+              <span>{parts[0]}</span>
+              <span>{` ~ `}</span>
+              <span className={styles.metaValueHighlight}>{parts[1]}</span>
+            </>
+          ) : (
+            raw
+          );
+
         return {
           iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
           label,
-          value: (found?.value && found.value.trim()) ? found.value : "-",
-          valueHighlight: found?.valueHighlight ?? true,
+          value: valueNode,
+          valueHighlight: false,
         };
       }
 
       if (label === "처리결과") {
+        const v = found?.value;
         return {
           iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
           label,
-          value: (found?.value && found.value.trim()) ? found.value : "-",
+          value: hasValue(v) ? v : "-",
           valueHighlight: found?.valueHighlight ?? true,
         };
       }
 
+      if (label === "위원회회부일") {
+        const v = found?.value;
+        return {
+          iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
+          label,
+          value: hasValue(v) ? v : "-",
+          valueHighlight: found?.valueHighlight ?? false,
+        };
+      }
+
+      if (label === "소관위원회") {
+        const v = found?.value;
+        return {
+          iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
+          label,
+          value: hasValue(v) ? v : "-",
+          valueHighlight: found?.valueHighlight ?? false,
+        };
+      }
+
+      const v = found?.value;
       return {
         iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
         label,
-        value: (found?.value && found.value.trim()) ? found.value : "-",
+        value: hasValue(v) ? v : "-",
         valueHighlight: found?.valueHighlight ?? false,
       };
     });
@@ -107,10 +154,18 @@ export default function DetailHeroCard({
           <button
             type="button"
             className={styles.bookmarkBtn}
-            onClick={onClickBookmark}
+            onClick={() => {
+              setBookmarked((prev) => !prev);
+              onClickBookmark?.();
+            }}
             aria-label="북마크"
+            aria-pressed={bookmarked}
           >
-            <img src="/bookmark.svg" alt="" className={styles.bookmarkIcon} />
+            <img
+              src={bookmarked ? "/bookMark_colored.svg" : "/bookMark.svg"}
+              alt=""
+              className={styles.bookmarkIcon}
+            />
           </button>
         </div>
 

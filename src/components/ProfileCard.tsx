@@ -37,7 +37,7 @@ export default function ProfileCard() {
     setMenuOpen(false);
     router.push("/");
   };
-
+  
   return (
     <>
       <section className={styles.card}>

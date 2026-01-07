@@ -13,7 +13,7 @@ export default function PetitionOverview({ title, text }: Props) {
       <h2 className={styles.heading}>개요</h2>
 
       <div className={styles.box}>
-        {title && <div className={styles.subTitle}>{title}</div>}
+        {title && <div className={styles.question}>{title}</div>}
 
         <div className={styles.body}>{text}</div>
       </div>
