@@ -3,7 +3,13 @@ import api from "@/lib/axios";
 
 type User = {
   name: string;
-  email: string;
+  email: string; 
+  age: number;
+  status: number;
+};
+
+type UpdateUserPayload = {
+  name: string;
   age: number;
   status: number;
 };
