@@ -435,7 +435,7 @@ export default function CongressPage() {
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)", // 한 줄에 4개
             gap: "24px",
-            marginTop: "60px",
+            marginTop: "40px",
           }}
         >
           {loading && <p>로딩중...</p>}

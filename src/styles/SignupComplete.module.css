@@ -1,0 +1,115 @@
+/* 페이지 전체 */
+.page {
+  min-height: 100vh;
+}
+
+/* 중앙 정렬시키는 컨테이너 */
+.centerArea {
+  min-height: calc(100vh - 72px); /* 헤더 높이만큼 제외 */
+
+  display: flex;
+  align-items: center; /* 세로 가운데 */
+  justify-content: center; /* 가로 가운데 */
+
+  padding: 96px 20px 40px; /* 화면 좁아질 때 여백 */
+  box-sizing: border-box;
+}
+
+/* 내용 묶음 */
+.content {
+  width: 457px;
+  max-width: 100%;
+
+  text-align: center;
+  font-family: "Noto Sans KR";
+  color: #303030;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon {
+  display: block;
+  margin: 0;
+}
+
+/* 제목 */
+.title {
+  margin: 0;
+
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.2;
+
+  white-space: nowrap; /* 한 줄 고정 */
+
+  max-width: 100%;
+}
+
+/* 보라색 소제목 */
+.subtitle {
+  width: 457px;
+  height: 15px;
+
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #6a3df6;
+
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* 안내문구 */
+.desc {
+  width: 210px;
+  height: 34px;
+
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 170%;
+
+  white-space: nowrap;
+
+  color: #999;
+}
+
+/* CTA 버튼 */
+.ctaBtn {
+  margin: 0;
+  border: none;
+  border-radius: 16px;
+  background-color: #6a3df6;
+  color: #fff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  padding: 16px 24px;
+  cursor: pointer;
+}
+/* cta 버튼 안 텍스트*/
+.ctaText {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+
+/* ----- 간격 정리 -----*/
+.spaceIconTitle {  /* 아이콘-제목 */
+  height: clamp(36px, 6vw, 69px);
+}
+.spaceTitleSub {  /* 제목- 보라색 소제목*/
+  height: clamp(16px, 3vw, 32px);
+}
+.spaceSubDesc {  /* 소제목- 설명 */
+  height: clamp(32px, 6vw, 65px);
+}
+.spaceDescCta { /* 설명 - 버튼 */
+  height: clamp(48px, 10vw, 103px);
+}

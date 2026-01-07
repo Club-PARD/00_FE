@@ -7,16 +7,14 @@
   width: 100%;
   height: 72px;
 
-  z-index: 1000;
+  z-index: 99999;
 
   background: #fff;
-  border-bottom: 1px solid #E5E5E5;
-
+  border-bottom: 1px solid #e5e5e5;
 }
 
-
 /* --- 양옆 여백을 화면에 따라 자연스럽게 나누는 것 ---*/
-.inner{
+.inner {
   height: 72px;
   max-width: 1440px;
   margin: 0 auto;
@@ -25,11 +23,12 @@
   /* 최소 16px, 화면이 커지면 5vw 씩 늘어나고, 최대 120px에서 멈춤*/
   /* !!!!!!!!!! 오른쪽에 120px을 남김*/
   padding: 0 clamp(16px, 5vw, 120px);
+  gap: clamp(12px, 2vw, 24px);
 
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  
+
   box-sizing: border-box;
 }
 
@@ -45,71 +44,86 @@
   cursor: pointer;
 }
 
-
 /* --- (중간)네비게이션 감싸는 부분 ---*/
 .nav {
   display: flex;
   align-items: center;
-  gap: 50px; /* !!!!!!!!!! 카테고리 글자 사이에 50px 씩 */
 
-  margin-left: 136px; /* !!!!!!!!!! 로고와 카테고리 글자 사이 간격*/
+  /* 메뉴 간격 최대 50까지 증가*/
+  gap: clamp(12px, 3vw, 50px);
+
+  /* 가운데 영역 유동적으로 크기 조절 되게*/
+  flex: 1;
+  min-width: 0;
+
+  overflow: hidden;
+
+  /* 로고 카테고리 글자 사이 간격 -> 유동적으로*/
+  margin-left: clamp(16px, 6vw, 136px); 
+  
   margin-right: auto;
 }
 
 /* --- 내비게이션 내용 ---*/
 .navItem {
   position: relative;
+  display: block; 
+  overflow: hidden;
 
   font-size: 14px;
   font-weight: 700;
   color: #111;
-  
+
   text-decoration: none;
 
   white-space: nowrap;
 
   box-sizing: border-box;
 
+  min-width: 0;
+  flex: 0 1 auto;
+  max-width: 6ch; /* 글자 6개 정도*/
 }
 
 /* --- 내비게이션 글자: hover ---*/
 .navItem:hover {
-  color: #5F37DD;
+  color: #5f37dd;
 }
 
 .active {
-  color: #6A3DF6 !important;
+  color: #6a3df6 !important;
 }
 
 /* Active일 때 밑줄 (lineDiv 역할) */
 .active::after {
   content: "";
   position: absolute;
-  
-  bottom: -13.5px; /* 14px 아래에 */ 
+
+  bottom: -13.5px; /* 14px 아래에 */
   left: 0;
   width: 70px;
 
   left: 50%;
   transform: translateX(-50%);
-  
-  border-top: 2px solid #6A3DF6;
 
+  border-top: 2px solid #6a3df6;
 }
-
 
 /* --- (우측) 감싸는 부분 ---*/
 .rights {
   display: flex;
   align-items: center;
   gap: 24px;
+
+  /* 오른쪽 줄지 않도록 */
+  flex-shrink: 0;
 }
 
 /* --- 로그인 버튼 ---*/
 .loginBtn {
   width: 85px;
   height: 32px;
-  border: 1px solid #6A3DF6;
+  border: 1px solid #6a3df6;
   border-radius: 28px;
 
   display: inline-flex;
@@ -127,8 +141,8 @@
 
 /* --- 로그인 버튼: hover ---*/
 .loginBtn:hover {
-  border-color: #5F37DD;
-  color: #5F37DD;
+  border-color: #5f37dd;
+  color: #5f37dd;
   background: #fff;
 
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
