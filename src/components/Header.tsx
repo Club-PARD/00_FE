@@ -9,7 +9,6 @@ export default function Header() {
 
   const user = useAuthStore((s) => s.user);
   const loading = useAuthStore((s) => s.loading);
-  const logout = useAuthStore((s) => s.logout);
 
   return (
     <header className={styles.header}>
@@ -28,47 +27,42 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* 가운데: 메뉴 */}
+        {/* 가운데: 네비게이션 */}
         <nav className={styles.nav} aria-label="내비게이션바">
           <Link
             href="/congress"
-            className={`${styles.navItem} ${pathname === "/congress" ? styles.active : ""}`}
+            className={`${styles.navItem} ${
+              pathname === "/congress" ? styles.active : ""
+            }`}
           >
             국회안건
           </Link>
           <Link
             href="/life"
-            className={`${styles.navItem} ${pathname === "/life" ? styles.active : ""}`}
+            className={`${styles.navItem} ${
+              pathname === "/life" ? styles.active : ""
+            }`}
           >
             생활안건
           </Link>
           <Link
             href="/more"
-            className={`${styles.navItem} ${pathname === "/more" ? styles.active : ""}`}
+            className={`${styles.navItem} ${
+              pathname === "/more" ? styles.active : ""
+            }`}
           >
             몰아보기
           </Link>
         </nav>
 
-        {/* 오른쪽: 로그인 / 프로필 */}
+        {/* 오른쪽 */}
         <div className={styles.rights}>
           {loading ? null : user ? (
-            <>
-              <Link href="/mypage" className={styles.profileBtn}>
-                <Image src="/profile.svg" alt="프로필" width={32} height={32} />
-              </Link>
-
-              {/* ✅ 로그아웃 버튼 추가 */}
-              <button
-                type="button"
-                className={styles.loginBtn} // 일단 기존 스타일 재사용(간단하게)
-                onClick={logout}
-              >
-                로그아웃
-              </button>
-            </>
+            /* ✅ 기존 로그아웃 버튼 자리 → 마이페이지 아이콘 */
+            <Link href="/mypage" className={styles.profileBtn}>
+              <Image src="/profile.svg" alt="마이페이지" width={32} height={32} />
+            </Link>
           ) : (
-            /* 비로그인 상태 → 로그인 버튼 */
             <Link href="/login" className={styles.loginBtn}>
               로그인
             </Link>

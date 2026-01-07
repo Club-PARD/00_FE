@@ -1,198 +1,58 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import styles from "@/styles/LikeDislikeBar.module.css";
+import api from "@/lib/axios"; // 👈 [핵심] 우리가 만든 Axios 인스턴스 import
 
-import RelatedNewsSection from "@/components/RelatedNewsSection";
-import ProsConsSection from "@/components/ProsConsSection";
-import DetailHeroCard from "@/components/DetailHeroCard";
-import Header from "@/components/Header";
-import AISummaryCard from "@/components/AISummaryCard";
-import DetailMiniCard from "@/components/DetailMiniCard";
-import PetitionOverview from "@/components/PetitionOverview";
-import SummaryNotice from "@/components/SummaryNotice";
-import LikeDislikeBar from "@/components/LikeDislikeBar";
-import CommentsSection from "@/components/CommentsSection";
-
-import { useAuthStore } from "@/store/authStore";
-
-import styles from "@/styles/PetitionDetail.module.css";
-
-type PetitionDetailResponse = {
-  title?: string;
-  category?: string;
-  type?: number;
-  status?: number;
-
-  voteStartDate?: string;
-  voteEndDate?: string;
-
-  committee?: string;
-  committeeDate?: string;
-
-  result?: string;
-
-  petitionNeeds?: string;
-  petitionSummary?: string;
-  content?: string;
-
-  positiveEx?: string;
-  negativeEx?: string;
-
-  good?: number;
-  bad?: number;
-  allows?: number;
-
-  url?: string;
-  petitionUrl?: string;
+type Props = {
+  petitionId: number;
+  good: number;
+  bad: number;
+  onChangeCounts?: (nextGood: number, nextBad: number) => void;
 };
 
-type NewsItem = {
-  title: string;
-  url: string;
-  source?: string;
-  date?: string;
-};
+export default function LikeDislikeBar({
+  petitionId,
+  good,
+  bad,
+  onChangeCounts,
+}: Props) {
+  const [loading, setLoading] = useState(false);
+  const [my, setMy] = useState<null | 1 | -1>(null);
 
-type LawItem = {
-  title: string;
-  summary: string;
-};
+  const goodCount = Number.isFinite(Number(good)) ? Number(good) : 0;
+  const badCount = Number.isFinite(Number(bad)) ? Number(bad) : 0;
 
-function formatDotDate(iso?: string) {
-  if (!iso) return "-";
-  return iso.slice(0, 10).replaceAll("-", ".");
-}
-
-function statusLabel(status?: number) {
-  const map: Record<number, string> = { 0: "진행중", 1: "종료", 2: "처리완료" };
-  if (typeof status !== "number") return "-";
-  return map[status] ?? String(status);
-}
-
-function safeString(v: unknown, fallback = "-") {
-  if (typeof v === "string" && v.trim()) return v;
-  return fallback;
-}
-
-function safeNumber(v: unknown, fallback = 0) {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function computePercent(allows?: number) {
-  const n = safeNumber(allows, 0);
-  const target = 50000;
-  const p = Math.floor((n / target) * 100);
-  return Math.max(0, Math.min(100, p));
-}
-
-function normalizeNews(data: any): NewsItem[] {
-  const arr = Array.isArray(data) ? data : [];
-  return arr
-    .map((it: any, idx: number) => {
-      const url = safeString(it?.url, "");
-      if (!url) return null;
-      return {
-        title: safeString(it?.title, `관련 기사 ${idx + 1}`),
-        url,
-        source: it?.source,
-        date: it?.date,
-      };
-    })
-    .filter(Boolean) as NewsItem[];
-}
-
-function normalizeLaws(data: any): LawItem[] {
-  const arr = Array.isArray(data) ? data : [];
-  return arr
-    .map((it: any) => {
-      const title = safeString(it?.title, "");
-      if (!title) return null;
-      return {
-        title,
-        summary: safeString(it?.summary, ""),
-      };
-    })
-    .filter(Boolean) as LawItem[];
-}
-
-export default function PetitionDetailPage() {
-  const router = useRouter();
-
-  const user = useAuthStore((s) => s.user);
-  const isAuthed = !!user;
-
-  const petitionId = useMemo(() => {
-    const v = router.query.id;
-    const n = typeof v === "string" ? Number(v) : NaN;
-    return Number.isFinite(n) ? n : null;
-  }, [router.query.id]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [detail, setDetail] = useState<PetitionDetailResponse | null>(null);
-
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [newsError, setNewsError] = useState<string | null>(null);
-
-  const [laws, setLaws] = useState<LawItem[]>([]);
-  const [lawsError, setLawsError] = useState<string | null>(null);
-
-  const [goodLocal, setGoodLocal] = useState(0);
-  const [badLocal, setBadLocal] = useState(0);
+  // ✅ 개수 기준 아이콘 결정
+  const likeIcon = goodCount > 0 ? "/on.svg" : "/off.svg";
+  const dislikeIcon = badCount > 0 ? "/fckon.svg" : "/fckoff.svg";
 
   useEffect(() => {
     if (!petitionId) return;
 
     let alive = true;
-    setLoading(true);
-    setError(null);
-    setNews([]);
-    setNewsError(null);
-    setLaws([]);
-    setLawsError(null);
 
-    Promise.all([
-      fetch(`/api/petition/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json().catch(() => null);
-        if (!r.ok) throw new Error(d?.message || "상세 조회 실패");
-        return d as PetitionDetailResponse;
-      }),
-      fetch(`/api/petition/news/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json().catch(() => null);
-        if (!r.ok) throw new Error("뉴스 조회 실패");
-        return d;
-      }),
-      fetch(`/api/petition/laws/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json().catch(() => null);
-        if (!r.ok) throw new Error("정책 조회 실패");
-        return d;
-      }),
-    ])
-      .then(([detailData, newsData, lawsData]) => {
+    // 1. [수정] 내 반응 조회 (GET)
+    // fetch -> api.get 변경 (헤더에 토큰 자동 포함됨)
+    api.get(`/petition/likes/${petitionId}`)
+      .then((r) => {
         if (!alive) return;
-        setDetail(detailData);
-        setNews(normalizeNews(newsData));
-        setLaws(normalizeLaws(lawsData));
-        setGoodLocal(safeNumber(detailData.good, 0));
-        setBadLocal(safeNumber(detailData.bad, 0));
-      })
-      .catch((e: any) => {
-        if (!alive) return;
-        const msg = String(e?.message || "");
-        if (msg.includes("뉴스")) {
-          setNewsError(e.message);
+        // Axios는 r.data에 본문이 있습니다. (r.json() 아님)
+        // 백엔드가 숫자를 반환하면 1, -1, 0(null) 등이 옴
+        const d = r.data; 
+        
+        // 데이터가 없거나 0이면 null 처리
+        if (!d) {
+          setMy(null);
           return;
         }
-        if (msg.includes("정책")) {
-          setLawsError(e.message);
-          return;
-        }
-        setError(e.message);
-        setDetail(null);
+
+        const v = Number(d); // 백엔드 응답이 숫자라고 가정 (Integer)
+        if (v === 1 || v === -1) setMy(v as 1 | -1);
+        else setMy(null);
       })
-      .finally(() => {
+      .catch((err) => {
         if (!alive) return;
-        setLoading(false);
+        // 401 에러 등은 조용히 무시 (비로그인 상태일 수 있음)
+        setMy(null);
       });
 
     return () => {
@@ -200,194 +60,85 @@ export default function PetitionDetailPage() {
     };
   }, [petitionId]);
 
-  const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
-  const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
+  const applyLocalCounts = (nextMy: null | 1 | -1) => {
+    let g = goodCount;
+    let b = badCount;
 
-  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
-  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
+    if (my === 1) g -= 1;
+    if (my === -1) b -= 1;
 
-  const heroMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
+    if (nextMy === 1) g += 1;
+    if (nextMy === -1) b += 1;
 
-    return [
-      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "-") },
-      { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
-      { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
-      {
-        iconSrc: "/proicons_send.svg",
-        label: "위원회회부일",
-        value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-",
-      },
-      {
-        iconSrc: "/proicons_script.svg",
-        label: "처리결과",
-        value: safeString(detail?.result, "-"),
-        valueHighlight: true,
-      },
-    ];
-  }, [detail, badge]);
+    onChangeCounts?.(Math.max(0, g), Math.max(0, b));
+  };
 
-  const miniMeta = useMemo(() => {
-    return [
-      {
-        iconSrc: "/proicons_calendar.svg",
-        label: "마감날짜",
-        value: formatDotDate(detail?.voteEndDate),
-        valueHighlight: true,
-      },
-      {
-        iconSrc: "/proicons_script.svg",
-        label: "처리결과",
-        value: safeString(detail?.result, "-"),
-        valueHighlight: true,
-      },
-    ];
-  }, [detail]);
+  const post = async (likes: 1 | -1) => {
+    if (loading) return;
+    setLoading(true);
 
-  const aiText = useMemo(
-    () => safeString(detail?.petitionSummary, "AI 요약 정보가 아직 없어요."),
-    [detail?.petitionSummary]
-  );
+    const nextMy = my === likes ? null : likes;
+    
+    // UI 먼저 업데이트 (낙관적 업데이트)
+    applyLocalCounts(nextMy);
+    setMy(nextMy);
 
-  const overviewText = useMemo(() => {
-    const t = detail?.petitionNeeds || detail?.content || "";
-    return safeString(t, "개요 정보가 아직 없어요.");
-  }, [detail?.petitionNeeds, detail?.content]);
+    try {
+      // 2. [수정] 좋아요/싫어요 전송 (POST)
+      // fetch -> api.post 변경
+      await api.post(`/petition/likes`, { 
+        id: petitionId, 
+        likes: likes 
+      });
 
-  const onClickGo = useMemo(() => {
-    const url = detail?.petitionUrl || detail?.url;
-    if (!url) return undefined;
-    return () => window.open(url, "_blank", "noreferrer");
-  }, [detail?.petitionUrl, detail?.url]);
+      // Axios는 2xx 범위가 아니면 자동으로 에러를 던지므로 r.ok 체크 불필요
+    } catch (error: any) {
+      console.error("좋아요 요청 실패:", error);
+      
+      // 실패 시 UI 원상복구
+      applyLocalCounts(my);
+      setMy(my);
 
-  const prosItems = useMemo(() => {
-    const s = safeString(detail?.positiveEx, "");
-    return s ? [{ title: "긍정적 영향", desc: s }] : [];
-  }, [detail?.positiveEx]);
-
-  const consItems = useMemo(() => {
-    const s = safeString(detail?.negativeEx, "");
-    return s ? [{ title: "부정적 영향", desc: s }] : [];
-  }, [detail?.negativeEx]);
-
-  const showProsCons = prosItems.length > 0 || consItems.length > 0;
-
-  if (!petitionId) {
-    return (
-      <main className={styles.page}>
-        <Header />
-        <div className={styles.container}>잘못된 id</div>
-      </main>
-    );
-  }
-
-  if (loading) {
-    return (
-      <main className={styles.page}>
-        <Header />
-        <div className={styles.container}>로딩중...</div>
-      </main>
-    );
-  }
-
-  if (error || !detail) {
-    return (
-      <main className={styles.page}>
-        <Header />
-        <div className={styles.container}>{error ?? "데이터 없음"}</div>
-      </main>
-    );
-  }
+      // 401 에러 (로그인 필요) 처리
+      if (error.response?.status === 401) {
+        if (confirm("로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?")) {
+          window.location.href = "/login";
+        }
+      } else {
+        alert("요청 처리에 실패했습니다.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <main className={styles.page}>
-      <Header />
-      <div className={styles.bgLayer} />
-
-      <div className={styles.contentWrap}>
-        <div className={styles.container}>
-          <DetailHeroCard
-            badge={badge}
-            title={title}
-            meta={heroMeta}
-            agreeCount={agreeCount}
-            percent={percent}
-            statusPill="마감"
-            onClickBookmark={() => {}}
-            onClickGo={onClickGo}
-          />
-
-          <div className={styles.grid}>
-            <div className={styles.leftCol}>
-              <AISummaryCard text={aiText} />
-
-              <PetitionOverview text={overviewText}>
-                {lawsError ? (
-                  <div style={{ marginTop: 16, color: "#666", fontWeight: 700 }}>
-                    {lawsError}
-                  </div>
-                ) : laws.length === 0 ? null : (
-                  <div style={{ marginTop: 18 }}>
-                    <div style={{ fontSize: 16, fontWeight: 900, marginBottom: 10 }}>
-                      관련 정책
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                      {laws.map((x, i) => (
-                        <div
-                          key={`${x.title}-${i}`}
-                          style={{
-                            border: "1px solid #E6E6E6",
-                            borderRadius: 12,
-                            padding: 14,
-                            background: "#fff",
-                          }}
-                        >
-                          <div style={{ fontWeight: 900, marginBottom: 6 }}>{x.title}</div>
-                          {x.summary ? (
-                            <div style={{ color: "#555", lineHeight: 1.7 }}>{x.summary}</div>
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </PetitionOverview>
-
-              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
-
-              <RelatedNewsSection items={news} error={newsError} />
-              <SummaryNotice />
-
-              <LikeDislikeBar
-                petitionId={petitionId}
-                good={goodLocal}
-                bad={badLocal}
-                isAuthed={isAuthed}
-                onChangeCounts={(g, b) => {
-                  setGoodLocal(g);
-                  setBadLocal(b);
-                }}
-              />
-            <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
-
-              <div className={styles.spacer} />
-            </div>
-
-            <aside className={styles.rightCol}>
-              <DetailMiniCard
-                badge={badge}
-                title={title}
-                meta={miniMeta}
-                agreeCount={agreeCount}
-                percent={percent}
-                onClickGo={onClickGo}
-              />
-            </aside>
-          </div>
-        </div>
+    <div className={styles.wrap}>
+      <div className={styles.bar}>
+        {/* 👍 좋아요 */}
+        <button
+          type="button"
+          className={`${styles.btn} ${my === 1 ? styles.activeGood : ""}`}
+          onClick={() => post(1)}
+          disabled={loading}
+        >
+          <span className={styles.count}>{goodCount}</span>
+          <img src={likeIcon} alt="좋아요" className={styles.iconImg} />
+        </button>
+  
+        <div className={styles.divider} />
+  
+        {/* 👎 싫어요 */}
+        <button
+          type="button"
+          className={`${styles.btn} ${my === -1 ? styles.activeBad : ""}`}
+          onClick={() => post(-1)}
+          disabled={loading}
+        >
+          <img src={dislikeIcon} alt="싫어요" className={styles.iconImg} />
+          <span className={styles.count}>{badCount}</span>
+        </button>
       </div>
-    </main>
+    </div>
   );
 }

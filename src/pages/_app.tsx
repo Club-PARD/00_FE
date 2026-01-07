@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { useAuthStore } from "@/store/authStore";
 import { Noto_Sans_KR } from "next/font/google";
@@ -10,11 +10,15 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const fetchMe = useAuthStore((s) => s.fetchMe);
+  const checkLoginFromUrl = useAuthStore((s) => s.checkLoginFromUrl);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    fetchMe();
-  }, [fetchMe]);
+    setIsMounted(true);
+    checkLoginFromUrl();
+  }, [checkLoginFromUrl]);
+
+  if (!isMounted) return null;
 
   return (
     <main className={notoSansKr.className}>
