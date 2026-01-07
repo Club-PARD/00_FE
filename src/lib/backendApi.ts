@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 
-const api = axios.create({
-  // ✅ baseURL 제거 (로컬 프록시 전용으로 사용)
+const backendApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // or NEXT_PUBLIC_SERVER_BASE_URL 중 하나로 통일
 });
 
-api.interceptors.request.use((config) => {
+backendApi.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   if (token) {
     config.headers = config.headers ?? {};
@@ -14,4 +14,4 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export default api;
+export default backendApi;

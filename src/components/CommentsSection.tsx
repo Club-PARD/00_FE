@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "@/styles/CommentsSection.module.css";
-import axios from "axios";
+import api from "@/lib/axios"; // ✅ 핵심
+
 
 type CommentItem = {
   id: number;
@@ -15,8 +16,7 @@ type Props = {
 };
 
 function safeString(v: unknown, fallback = "") {
-  if (typeof v === "string") return v;
-  return fallback;
+  return typeof v === "string" ? v : fallback;
 }
 
 function safeNumber(v: unknown, fallback = 0) {
@@ -40,10 +40,8 @@ function normalizeComments(data: any): CommentItem[] {
 export default function CommentsSection({ petitionId, isAuthed }: Props) {
   const [items, setItems] = useState<CommentItem[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [draft, setDraft] = useState("");
   const [posting, setPosting] = useState(false);
-
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
 
@@ -51,18 +49,16 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
 
   const showLoginToast = () => {
     setToast(true);
-    window.setTimeout(() => setToast(false), 1800);
+    setTimeout(() => setToast(false), 1800);
   };
 
   const fetchComments = async () => {
     if (!petitionId) return;
     setLoading(true);
     try {
-      const r = await axios.get(`/api/petition/comment/${petitionId}`, {
+      const r = await api.get(`/api/petition/comment/${petitionId}`, {
         validateStatus: () => true,
-        withCredentials: true,
       });
-
       if (r.status >= 200 && r.status < 300) setItems(normalizeComments(r.data));
       else setItems([]);
     } finally {
@@ -89,10 +85,10 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setDraft("");
 
     try {
-      const r = await axios.post(
+      const r = await api.post(
         `/api/petition/comment`,
         { id: petitionId, body },
-        { validateStatus: () => true, withCredentials: true }
+        { validateStatus: () => true }
       );
 
       if (r.status === 401 || r.status === 402) {
@@ -123,9 +119,8 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setOpenMenuId(null);
 
     try {
-      const r = await axios.delete(`/api/petition/comment/${commentId}`, {
+      const r = await api.delete(`/api/petition/comment/${commentId}`, {
         validateStatus: () => true,
-        withCredentials: true,
       });
 
       if (r.status === 401 || r.status === 402) {
@@ -151,12 +146,10 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         <div className={styles.inputCol}>
           <input
             className={styles.input}
-            placeholder="댓글 아직 안써짐"
+            placeholder="댓글을 입력하세요"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onSubmit();
-            }}
+            onKeyDown={(e) => e.key === "Enter" && onSubmit()}
             disabled={posting}
           />
           <div className={styles.underline} />
@@ -167,7 +160,6 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         {items.map((c) => (
           <div key={c.id} className={styles.item}>
             <div className={styles.avatar} />
-
             <div className={styles.content}>
               <div className={styles.name}>{c.name}</div>
               <p className={styles.body}>{c.body}</p>
@@ -177,10 +169,8 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
               {c.check ? (
                 <>
                   <button
-                    type="button"
                     className={styles.kebab}
                     onClick={() => setOpenMenuId((p) => (p === c.id ? null : c.id))}
-                    aria-label="댓글 메뉴"
                   >
                     ⋮
                   </button>
@@ -188,7 +178,6 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
                   {openMenuId === c.id && (
                     <div className={styles.menu}>
                       <button
-                        type="button"
                         className={styles.menuItem}
                         onClick={() => onDelete(c.id)}
                       >

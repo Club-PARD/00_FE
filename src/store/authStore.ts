@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import axios from 'axios';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +18,7 @@ interface AuthState {
   user: User | null;
   loading: boolean;
 
-  // Actions
+  // actions
   setToken: (token: string) => void;
   logout: () => void;
   checkLoginFromUrl: () => void;
@@ -33,10 +33,16 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       loading: true,
 
+      // 로그인 성공 시 토큰 저장
       setToken: (token: string) => {
-        set({ token, isAuthenticated: true, loading: false });
+        set({
+          token,
+          isAuthenticated: true,
+          loading: false,
+        });
       },
 
+      // 로그아웃
       logout: () => {
         set({
           token: null,
@@ -44,26 +50,35 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           loading: false,
         });
-        localStorage.removeItem('auth-storage');
+        localStorage.removeItem("auth-storage");
       },
 
+      // OAuth / SSO 등 URL에 token 붙어오는 경우 처리
       checkLoginFromUrl: () => {
         const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
+        const token = params.get("token");
 
         if (token) {
-          set({ token, isAuthenticated: true });
+          set({
+            token,
+            isAuthenticated: true,
+          });
+
+          // URL에서 token 제거
           window.history.replaceState(
             {},
             document.title,
             window.location.pathname
           );
+
+          // 토큰 세팅 후 내 정보 조회
           get().fetchMe();
         } else {
           set({ loading: false });
         }
       },
 
+      // 내 정보 조회
       fetchMe: async () => {
         const { token } = get();
 
@@ -73,28 +88,26 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const response = await axios.get(
-            `${API_BASE_URL}/user/me`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const res = await axios.get(`${API_BASE_URL}/user/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           set({
-            user: response.data,
+            user: res.data,
             isAuthenticated: true,
             loading: false,
           });
-        } catch (error) {
-          console.error('Failed to fetch user:', error);
+        } catch (e) {
+          console.error("fetchMe failed:", e);
+          // 토큰 만료 / 위조 → 강제 로그아웃
           get().logout();
         }
       },
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         token: state.token,
