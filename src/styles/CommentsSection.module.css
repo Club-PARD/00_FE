@@ -135,17 +135,30 @@
 
 .toast {
   position: absolute;
-  top: -66px;
-  left: 50%;
-  transform: translateX(-50%);
   min-width: 520px;
   max-width: 720px;
+
+  top: -66px;
+  left: 50%;
+  
+  transform: translateX(-50%);
+
   text-align: center;
   padding: 14px 18px;
   border-radius: 999px;
   background: rgba(88, 72, 141, 0.95);
+  
   color: #fff;
   font-weight: 900;
   font-size: 20px;
   z-index: 10;
+
+  opacity: 1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.toastHide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px); /* 사라질 때 살짝 위로 */
+  pointer-events: none;
 }

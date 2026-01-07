@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "@/styles/CommentsSection.module.css";
-import localApi from "@/lib/axios"; // ✅ 로컬 API 전용 axios
+import localApi from "@/lib/axios"; // 로컬 API 전용 axios
 
 type CommentItem = {
   id: number;
@@ -44,16 +44,29 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
   const [posting, setPosting] = useState(false);
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+
+  // toast 용
   const [toast, setToast] = useState(false);
+  const [toastHide, setToastHide] = useState(false);
 
   const count = useMemo(() => items.length, [items.length]);
 
   const showLoginToast = () => {
+    // 연타 대비 => 다시 처음부터 보이게
     setToast(true);
-    setTimeout(() => setToast(false), 1800);
+    setToastHide(false);
+
+    // 3초 뒤부터 페이드아웃 시작
+    setTimeout(() => setToastHide(true), 3000);
+
+    // 페이드아웃 애니메이션 끝난 뒤 DOM에서 제거
+    setTimeout(() => {
+      setToast(false);
+      setToastHide(false);
+    }, 3400);
   };
 
-  // ✅ 댓글 목록 불러오기
+  // 댓글 목록 불러오기
   const fetchComments = async () => {
     if (!petitionId) return;
 
@@ -154,7 +167,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
   return (
     <section className={styles.wrap} onClick={() => setOpenMenuId(null)}>
       {toast && (
-        <div className={styles.toast}>
+        <div className={`${styles.toast} ${toastHide ? styles.toastHide : ""}`}>
           로그인 후 이용할 수 있는 기능이에요!
         </div>
       )}
