@@ -33,7 +33,7 @@ export default function DetailMiniCard({
           <span className={styles.badge}>{badge}</span>
           <h3 className={styles.title}>{title}</h3>
 
-          <div className={styles.divider} />
+          <div className={styles.dividerTop} />
 
           <div className={styles.metaList}>
             {meta.map((m, idx) => (
@@ -56,7 +56,7 @@ export default function DetailMiniCard({
             ))}
           </div>
 
-          <div className={styles.divider} />
+          <div className={styles.dividerBottom} />
 
           <div className={styles.statsRow}>
             <div className={styles.people}>

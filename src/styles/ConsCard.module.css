@@ -1,0 +1,76 @@
+.card {
+    margin-top: 148px;
+    width: 100%;
+  }
+  
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: #c36b7d;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    font-family: "Noto Sans KR";
+    flex: 0 0 auto;
+  }
+  
+  .rule {
+    height: 4px;
+    flex: 1;
+    background: #C77288;
+    border-radius: 999px;
+  }
+  
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+  
+  .itemTitle {
+    font-size: 18px;
+    font-weight: 900;
+    color: #C77288;
+    font-family: "Noto Sans KR";
+    margin-bottom: 12px;
+  }
+  
+  .itemDesc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.9;
+    font-weight: 600;
+    color: #111;
+    font-family: "Noto Sans KR";
+  }
+  
+  .tags {
+    margin-top: 34px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: #fdecef;
+    color: #cc6478;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: "Noto Sans KR";
+  }
+  

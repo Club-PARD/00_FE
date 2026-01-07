@@ -1,80 +1,20 @@
-// import DetailHeroCard from "@/components/DetailHeroCard";
-// import Header from "@/components/Header";
-// import AISummaryCard from "@/components/AISummaryCard";
-// import DetailMiniCard from "@/components/DetailMiniCard";
-// import PetitionOverview from "@/components/PetitionOverview";
-
-// export default function PetitionDetailPage() {
-//   return (
-//     <main style={{ minHeight: "100vh", background: "#f5f6f8" }}>
-//       <Header />
-
-//       <div style={{ padding: "60px 20px" }}>
-//         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-//           <DetailHeroCard
-//             badge="문화 체육 관광 언론띠"
-//             title="편파, 조작, 왜곡, 불공정 방송, 민주당의 나팔수 MBC 폐방 요청에 관한 청원"
-//             meta={[
-//               { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
-//               { iconSrc: "/Group (2).svg", label: "소관위원회", value: "과학기술정보방송통신위원회" },
-//               { iconSrc: "/proicons_script.svg", label: "처리결과", value: "본회의부의", valueHighlight: true },
-//               { iconSrc: "/Group (1).svg", label: "상태", value: "본회의불부의" },
-//               { iconSrc: "/proicons_send.svg", label: "위원회회부일", value: "2025.03.31" },
-//             ]}
-//             agreeCount={175552}
-//             percent={100}
-//             onClickGo={() => alert("바로가기")}
-//           />
-
-//           <div
-//             style={{
-//               marginTop: 24,
-//               display: "grid",
-//               gridTemplateColumns: "792px 384px",
-//               gap: 24,
-//               alignItems: "start",
-//             }}
-//           >
-//             <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-//               <AISummaryCard text="MBC가 공영방송으로서 지켜야 할 '중립 의무'를 어기고 특정 정치 세력 편만 들고 있으니, 아예 방송국 문을 닫게(허가 취소) 해달라는 요구입니다." />
-
-//               <PetitionOverview
-//                 text={`대한민국 방송법은 방송의 자유와 독립을 보장함과 동시에 언론의 공공 책임과 공정성을 엄격히 규정하고 있습니다. 방송은 특정 정당이나 이념의 도구가 되어서는 안 되며, 국민 전체의 이익을 위해 균형 잡힌 정보를 제공해야 할 의무가 있기 때문입니다. 현재 특정 방송사의 보도 내용이 객관성과 공정성을 상실하고 사실을 왜곡하여 사회적 갈등을 심화시키고 있다는 주장이 제기되면서, 해당 방송사에 대한 법적 책임과 방송 유지 여부에 대한 논의가 진행되었습니다.`}
-//               />
-
-//               <div style={{ height: 900 }} />
-//             </div>
-
-//             <div style={{ position: "sticky", top: 120, alignSelf: "start" }}>
-//               <DetailMiniCard
-//                 badge="문화 체육 관광 언론띠"
-//                 title="편파, 조작, 왜곡, 불공정 방송, 민주당의 나팔수 MBC 폐방 요청에 관한 청원"
-//                 meta={[
-//                   { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: "2025.03.17 ~ 2025.04.16", valueHighlight: true },
-//                   { iconSrc: "/proicons_script.svg", label: "처리결과", value: "본회의불부의", valueHighlight: true },
-//                 ]}
-//                 agreeCount={175552}
-//                 percent={100}
-//                 onClickGo={() => alert("바로가기")}
-//               />
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
-
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 
+import RelatedNewsSection from "@/components/RelatedNewsSection";
 import ProsConsSection from "@/components/ProsConsSection";
 import DetailHeroCard from "@/components/DetailHeroCard";
 import Header from "@/components/Header";
 import AISummaryCard from "@/components/AISummaryCard";
 import DetailMiniCard from "@/components/DetailMiniCard";
 import PetitionOverview from "@/components/PetitionOverview";
+import SummaryNotice from "@/components/SummaryNotice";
+import LikeDislikeBar from "@/components/LikeDislikeBar";
+import CommentsSection from "@/components/CommentsSection";
+
+import { useAuthStore } from "@/store/authStore";
+
+import styles from "@/styles/PetitionDetail.module.css";
 
 type PetitionDetailResponse = {
   title?: string;
@@ -90,6 +30,7 @@ type PetitionDetailResponse = {
 
   result?: string;
 
+  petitionNeeds?: string;
   petitionSummary?: string;
   content?: string;
 
@@ -104,18 +45,25 @@ type PetitionDetailResponse = {
   petitionUrl?: string;
 };
 
+type NewsItem = {
+  title: string;
+  url: string;
+  source?: string;
+  date?: string;
+};
+
+type LawItem = {
+  title: string;
+  summary: string;
+};
+
 function formatDotDate(iso?: string) {
   if (!iso) return "-";
-  const s = iso.slice(0, 10);
-  return s.replaceAll("-", ".");
+  return iso.slice(0, 10).replaceAll("-", ".");
 }
 
 function statusLabel(status?: number) {
-  const map: Record<number, string> = {
-    0: "진행중",
-    1: "종료",
-    2: "처리완료",
-  };
+  const map: Record<number, string> = { 0: "진행중", 1: "종료", 2: "처리완료" };
   if (typeof status !== "number") return "-";
   return map[status] ?? String(status);
 }
@@ -125,8 +73,53 @@ function safeString(v: unknown, fallback = "-") {
   return fallback;
 }
 
+function safeNumber(v: unknown, fallback = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function computePercent(allows?: number) {
+  const n = safeNumber(allows, 0);
+  const target = 50000;
+  const p = Math.floor((n / target) * 100);
+  return Math.max(0, Math.min(100, p));
+}
+
+function normalizeNews(data: any): NewsItem[] {
+  const arr = Array.isArray(data) ? data : [];
+  return arr
+    .map((it: any, idx: number) => {
+      const url = safeString(it?.url, "");
+      if (!url) return null;
+      return {
+        title: safeString(it?.title, `관련 기사 ${idx + 1}`),
+        url,
+        source: it?.source,
+        date: it?.date,
+      };
+    })
+    .filter(Boolean) as NewsItem[];
+}
+
+function normalizeLaws(data: any): LawItem[] {
+  const arr = Array.isArray(data) ? data : [];
+  return arr
+    .map((it: any) => {
+      const title = safeString(it?.title, "");
+      if (!title) return null;
+      return {
+        title,
+        summary: safeString(it?.summary, ""),
+      };
+    })
+    .filter(Boolean) as LawItem[];
+}
+
 export default function PetitionDetailPage() {
   const router = useRouter();
+
+  const user = useAuthStore((s) => s.user);
+  const isAuthed = !!user;
 
   const petitionId = useMemo(() => {
     const v = router.query.id;
@@ -136,46 +129,82 @@ export default function PetitionDetailPage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [detail, setDetail] = useState<PetitionDetailResponse | null>(null);
+
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [newsError, setNewsError] = useState<string | null>(null);
+
+  const [laws, setLaws] = useState<LawItem[]>([]);
+  const [lawsError, setLawsError] = useState<string | null>(null);
+
+  const [goodLocal, setGoodLocal] = useState(0);
+  const [badLocal, setBadLocal] = useState(0);
 
   useEffect(() => {
     if (!petitionId) return;
 
-    (async () => {
-      setLoading(true);
-      setError(null);
+    let alive = true;
+    setLoading(true);
+    setError(null);
+    setNews([]);
+    setNewsError(null);
+    setLaws([]);
+    setLawsError(null);
 
-      try {
-        const r = await axios.get(`/api/petition/${petitionId}`, {
-          validateStatus: () => true,
-        });
-
-        if (r.status !== 200) {
-          setDetail(null);
-          setError(`상세 조회 실패 (${r.status})`);
+    Promise.all([
+      fetch(`/api/petition/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json().catch(() => null);
+        if (!r.ok) throw new Error(d?.message || "상세 조회 실패");
+        return d as PetitionDetailResponse;
+      }),
+      fetch(`/api/petition/news/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json().catch(() => null);
+        if (!r.ok) throw new Error("뉴스 조회 실패");
+        return d;
+      }),
+      fetch(`/api/petition/laws/${petitionId}`, { credentials: "include" }).then(async (r) => {
+        const d = await r.json().catch(() => null);
+        if (!r.ok) throw new Error("정책 조회 실패");
+        return d;
+      }),
+    ])
+      .then(([detailData, newsData, lawsData]) => {
+        if (!alive) return;
+        setDetail(detailData);
+        setNews(normalizeNews(newsData));
+        setLaws(normalizeLaws(lawsData));
+        setGoodLocal(safeNumber(detailData.good, 0));
+        setBadLocal(safeNumber(detailData.bad, 0));
+      })
+      .catch((e: any) => {
+        if (!alive) return;
+        const msg = String(e?.message || "");
+        if (msg.includes("뉴스")) {
+          setNewsError(e.message);
           return;
         }
-
-        setDetail(r.data ?? null);
-      } catch (e: any) {
+        if (msg.includes("정책")) {
+          setLawsError(e.message);
+          return;
+        }
+        setError(e.message);
         setDetail(null);
-        setError(e?.message ?? "fetch error");
-      } finally {
+      })
+      .finally(() => {
+        if (!alive) return;
         setLoading(false);
-      }
-    })();
+      });
+
+    return () => {
+      alive = false;
+    };
   }, [petitionId]);
 
   const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
   const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
 
-  const agreeCount = useMemo(() => {
-    const n = Number(detail?.allows);
-    return Number.isFinite(n) ? n : 0;
-  }, [detail?.allows]);
-
-  const percent = useMemo(() => 100, []);
+  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
+  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
   const heroMeta = useMemo(() => {
     const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
@@ -183,28 +212,48 @@ export default function PetitionDetailPage() {
     return [
       { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
       { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.committee, "-") },
-      { iconSrc: "/proicons_script.svg", label: "처리결과", value: safeString(detail?.result, "-"), valueHighlight: true },
       { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
-      { iconSrc: "/proicons_send.svg", label: "위원회회부일", value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-" },
+      { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
+      {
+        iconSrc: "/proicons_send.svg",
+        label: "위원회회부일",
+        value: detail?.committeeDate ? formatDotDate(detail.committeeDate) : "-",
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
     ];
-  }, [detail]);
+  }, [detail, badge]);
 
   const miniMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
     return [
-      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/proicons_script.svg", label: "처리결과", value: safeString(detail?.result, "-"), valueHighlight: true },
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "마감날짜",
+        value: formatDotDate(detail?.voteEndDate),
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/proicons_script.svg",
+        label: "처리결과",
+        value: safeString(detail?.result, "-"),
+        valueHighlight: true,
+      },
     ];
   }, [detail]);
 
-  const aiText = useMemo(() => {
-    return safeString(detail?.petitionSummary, "AI 요약 정보가 아직 없어요.");
-  }, [detail?.petitionSummary]);
+  const aiText = useMemo(
+    () => safeString(detail?.petitionSummary, "AI 요약 정보가 아직 없어요."),
+    [detail?.petitionSummary]
+  );
 
   const overviewText = useMemo(() => {
-    const t = detail?.content || detail?.positiveEx || detail?.negativeEx || "";
+    const t = detail?.petitionNeeds || detail?.content || "";
     return safeString(t, "개요 정보가 아직 없어요.");
-  }, [detail]);
+  }, [detail?.petitionNeeds, detail?.content]);
 
   const onClickGo = useMemo(() => {
     const url = detail?.petitionUrl || detail?.url;
@@ -212,74 +261,121 @@ export default function PetitionDetailPage() {
     return () => window.open(url, "_blank", "noreferrer");
   }, [detail?.petitionUrl, detail?.url]);
 
+  const prosItems = useMemo(() => {
+    const s = safeString(detail?.positiveEx, "");
+    return s ? [{ title: "긍정적 영향", desc: s }] : [];
+  }, [detail?.positiveEx]);
+
+  const consItems = useMemo(() => {
+    const s = safeString(detail?.negativeEx, "");
+    return s ? [{ title: "부정적 영향", desc: s }] : [];
+  }, [detail?.negativeEx]);
+
+  const showProsCons = prosItems.length > 0 || consItems.length > 0;
+
   if (!petitionId) {
     return (
-      <main style={{ minHeight: "100vh", background: "#f5f6f8" }}>
+      <main className={styles.page}>
         <Header />
-        <div style={{ padding: "60px 20px" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto" }}>잘못된 id</div>
-        </div>
+        <div className={styles.container}>잘못된 id</div>
       </main>
     );
   }
 
   if (loading) {
     return (
-      <main style={{ minHeight: "100vh", background: "#f5f6f8" }}>
+      <main className={styles.page}>
         <Header />
-        <div style={{ padding: "60px 20px" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto" }}>로딩중...</div>
-        </div>
+        <div className={styles.container}>로딩중...</div>
       </main>
     );
   }
 
   if (error || !detail) {
     return (
-      <main style={{ minHeight: "100vh", background: "#f5f6f8" }}>
+      <main className={styles.page}>
         <Header />
-        <div style={{ padding: "60px 20px" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto" }}>{error ?? "데이터 없음"}</div>
-        </div>
+        <div className={styles.container}>{error ?? "데이터 없음"}</div>
       </main>
     );
   }
 
   return (
-    <main style={{ minHeight: "100vh", background: "#f5f6f8" }}>
+    <main className={styles.page}>
       <Header />
+      <div className={styles.bgLayer} />
 
-      <div style={{ padding: "60px 20px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      <div className={styles.contentWrap}>
+        <div className={styles.container}>
           <DetailHeroCard
             badge={badge}
             title={title}
             meta={heroMeta}
             agreeCount={agreeCount}
             percent={percent}
+            statusPill="마감"
+            onClickBookmark={() => {}}
             onClickGo={onClickGo}
           />
 
-          <div
-            style={{
-              marginTop: 24,
-              display: "grid",
-              gridTemplateColumns: "792px 384px",
-              gap: 24,
-              alignItems: "start",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+          <div className={styles.grid}>
+            <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
 
-              <PetitionOverview text={overviewText} />
-              <ProsConsSection positiveText={detail.positiveEx} negativeText={detail.negativeEx} />
+              <PetitionOverview text={overviewText}>
+                {lawsError ? (
+                  <div style={{ marginTop: 16, color: "#666", fontWeight: 700 }}>
+                    {lawsError}
+                  </div>
+                ) : laws.length === 0 ? null : (
+                  <div style={{ marginTop: 18 }}>
+                    <div style={{ fontSize: 16, fontWeight: 900, marginBottom: 10 }}>
+                      관련 정책
+                    </div>
 
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {laws.map((x, i) => (
+                        <div
+                          key={`${x.title}-${i}`}
+                          style={{
+                            border: "1px solid #E6E6E6",
+                            borderRadius: 12,
+                            padding: 14,
+                            background: "#fff",
+                          }}
+                        >
+                          <div style={{ fontWeight: 900, marginBottom: 6 }}>{x.title}</div>
+                          {x.summary ? (
+                            <div style={{ color: "#555", lineHeight: 1.7 }}>{x.summary}</div>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </PetitionOverview>
 
-              <div style={{ height: 900 }} />
+              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
+
+              <RelatedNewsSection items={news} error={newsError} />
+              <SummaryNotice />
+
+              <LikeDislikeBar
+                petitionId={petitionId}
+                good={goodLocal}
+                bad={badLocal}
+                isAuthed={isAuthed}
+                onChangeCounts={(g, b) => {
+                  setGoodLocal(g);
+                  setBadLocal(b);
+                }}
+              />
+            <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
+
+              <div className={styles.spacer} />
             </div>
 
-            <div style={{ position: "sticky", top: 120, alignSelf: "start" }}>
+            <aside className={styles.rightCol}>
               <DetailMiniCard
                 badge={badge}
                 title={title}
@@ -288,11 +384,10 @@ export default function PetitionDetailPage() {
                 percent={percent}
                 onClickGo={onClickGo}
               />
-            </div>
+            </aside>
           </div>
         </div>
       </div>
     </main>
   );
 }
-

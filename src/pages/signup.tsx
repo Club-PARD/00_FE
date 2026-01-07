@@ -18,32 +18,34 @@ export default function SignupPage() {
   useEffect(() => {
     const q = router.query.email;
     const emailFromQuery = typeof q === "string" ? q : "";
-    if (emailFromQuery) setEmail(emailFromQuery);
+
+    if (emailFromQuery) {
+      setEmail(emailFromQuery);
+      return;
+    }
+
+    setEmail("");
+    setSubmitError("이메일 정보가 없습니다. 다시 로그인 해주세요.");
   }, [router.query.email]);
-
-  useEffect(() => {
-    if (email) return;
-
-    api
-      .get("/user/me", { validateStatus: () => true })
-      .then((r) => {
-        if (r.status === 200 && r.data?.email) setEmail(String(r.data.email));
-      })
-      .catch(() => {});
-  }, [email]);
 
   const trimmed = useMemo(() => name.trim(), [name]);
   const trimmedEmail = useMemo(() => email.trim(), [email]);
 
   const canSubmit = useMemo(
-    () => !!trimmed && !!trimmedEmail && !isDuplicate && !submitting && !checking,
-    [trimmed, trimmedEmail, isDuplicate, submitting, checking]
+    () =>
+      !!trimmed &&
+      !!trimmedEmail &&
+      !isDuplicate &&
+      !submitting &&
+      !checking &&
+      !submitError,
+    [trimmed, trimmedEmail, isDuplicate, submitting, checking, submitError]
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     if (!touched) setTouched(true);
-    if (submitError) setSubmitError("");
+    if (submitError && email) setSubmitError("");
   };
 
   const checkDuplicate = async (nickname: string) => {
@@ -111,7 +113,13 @@ export default function SignupPage() {
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.text}>이메일</div>
           <div className={styles.inputWrap}>
-            <input className={styles.input} value={trimmedEmail} readOnly disabled aria-label="이메일 표시" />
+            <input
+              className={styles.input}
+              value={trimmedEmail}
+              readOnly
+              disabled
+              aria-label="이메일 표시"
+            />
           </div>
 
           <div className={styles.text}>닉네임</div>
@@ -123,6 +131,7 @@ export default function SignupPage() {
               onBlur={onBlurName}
               placeholder="닉네임을 입력하세요."
               aria-label="닉네임 입력"
+              disabled={!trimmedEmail}
             />
             {isDuplicate && <span className={styles.errorIcon} aria-hidden />}
           </div>
@@ -137,6 +146,16 @@ export default function SignupPage() {
           >
             회원가입 완료하기
           </button>
+
+          {!trimmedEmail && (
+            <button
+              type="button"
+              className={styles.submitBtn}
+              onClick={() => router.replace("/login")}
+            >
+              로그인 페이지로 돌아가기
+            </button>
+          )}
         </form>
       </section>
     </div>

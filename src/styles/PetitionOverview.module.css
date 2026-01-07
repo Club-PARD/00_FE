@@ -8,7 +8,7 @@
     margin: 0;
     font-size: 24px;
     font-weight: 700;
-    color: #6a3df6;
+    color: black;
     font-family: "Gmarket Sans";
   }
   
@@ -16,8 +16,8 @@
   .text {
     margin-top: 14px;
     margin-bottom: 0;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     line-height: 175%;
     color: #111;
     font-family: "Noto Sans KR";
