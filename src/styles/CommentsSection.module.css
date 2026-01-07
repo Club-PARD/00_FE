@@ -1,0 +1,151 @@
+.wrap {
+  position: relative;
+  margin-top: 36px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 0 0 18px;
+  color: #111;
+}
+
+.inputRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  flex: 0 0 42px;
+}
+
+.inputCol {
+  flex: 1;
+  padding-top: 6px;
+}
+
+.input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  background: transparent;
+}
+
+.input::placeholder {
+  color: #777;
+  font-weight: 700;
+}
+
+.underline {
+  margin-top: 8px;
+  height: 2px;
+  background: #6a5cff;
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 900;
+  margin: 0 0 6px;
+  color: #111;
+}
+
+.body {
+  margin: 0;
+  font-size: 13px;
+  color: #222;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.menuWrap {
+  position: relative;
+  width: 28px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.kebab {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #777;
+  padding: 6px 6px;
+}
+
+.kebabPlaceholder {
+  width: 28px;
+  height: 28px;
+}
+
+.menu {
+  position: absolute;
+  top: 28px;
+  right: 4px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.menuItem {
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  color: #111;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: #f5f5f5;
+}
+
+.toast {
+  position: absolute;
+  top: -66px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 520px;
+  max-width: 720px;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 999px;
+  background: rgba(88, 72, 141, 0.95);
+  color: #fff;
+  font-weight: 900;
+  font-size: 20px;
+  z-index: 10;
+}

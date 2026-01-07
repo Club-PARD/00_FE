@@ -10,6 +10,9 @@ import DetailMiniCard from "@/components/DetailMiniCard";
 import PetitionOverview from "@/components/PetitionOverview";
 import SummaryNotice from "@/components/SummaryNotice";
 import LikeDislikeBar from "@/components/LikeDislikeBar";
+import CommentsSection from "@/components/CommentsSection";
+
+import { useAuthStore } from "@/store/authStore";
 
 import styles from "@/styles/PetitionDetail.module.css";
 
@@ -27,7 +30,7 @@ type PetitionDetailResponse = {
 
   result?: string;
 
-  petitionNeeds?: string; 
+  petitionNeeds?: string;
   petitionSummary?: string;
   content?: string;
 
@@ -41,7 +44,6 @@ type PetitionDetailResponse = {
   url?: string;
   petitionUrl?: string;
 };
-
 
 type NewsItem = {
   title: string;
@@ -116,6 +118,9 @@ function normalizeLaws(data: any): LawItem[] {
 export default function PetitionDetailPage() {
   const router = useRouter();
 
+  const user = useAuthStore((s) => s.user);
+  const isAuthed = !!user;
+
   const petitionId = useMemo(() => {
     const v = router.query.id;
     const n = typeof v === "string" ? Number(v) : NaN;
@@ -148,17 +153,17 @@ export default function PetitionDetailPage() {
 
     Promise.all([
       fetch(`/api/petition/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json();
+        const d = await r.json().catch(() => null);
         if (!r.ok) throw new Error(d?.message || "상세 조회 실패");
         return d as PetitionDetailResponse;
       }),
       fetch(`/api/petition/news/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json();
+        const d = await r.json().catch(() => null);
         if (!r.ok) throw new Error("뉴스 조회 실패");
         return d;
       }),
       fetch(`/api/petition/laws/${petitionId}`, { credentials: "include" }).then(async (r) => {
-        const d = await r.json();
+        const d = await r.json().catch(() => null);
         if (!r.ok) throw new Error("정책 조회 실패");
         return d;
       }),
@@ -202,9 +207,7 @@ export default function PetitionDetailPage() {
   const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
   const heroMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(
-      detail?.voteEndDate
-    )}`;
+    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
 
     return [
       { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
@@ -251,7 +254,6 @@ export default function PetitionDetailPage() {
     const t = detail?.petitionNeeds || detail?.content || "";
     return safeString(t, "개요 정보가 아직 없어요.");
   }, [detail?.petitionNeeds, detail?.content]);
-  
 
   const onClickGo = useMemo(() => {
     const url = detail?.petitionUrl || detail?.url;
@@ -362,11 +364,13 @@ export default function PetitionDetailPage() {
                 petitionId={petitionId}
                 good={goodLocal}
                 bad={badLocal}
+                isAuthed={isAuthed}
                 onChangeCounts={(g, b) => {
                   setGoodLocal(g);
                   setBadLocal(b);
                 }}
               />
+            <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
 
               <div className={styles.spacer} />
             </div>

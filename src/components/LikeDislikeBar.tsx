@@ -5,27 +5,29 @@ type Props = {
   petitionId: number;
   good: number;
   bad: number;
+  isAuthed: boolean;
   onChangeCounts?: (nextGood: number, nextBad: number) => void;
 };
 
-export default function LikeDislikeBar({
-  petitionId,
-  good,
-  bad,
-  onChangeCounts,
-}: Props) {
+export default function LikeDislikeBar({ petitionId, good, bad, isAuthed, onChangeCounts }: Props) {
   const [loading, setLoading] = useState(false);
   const [my, setMy] = useState<null | 1 | -1>(null);
 
-  const goodCount = Number.isFinite(Number(good)) ? Number(good) : 0;
-  const badCount = Number.isFinite(Number(bad)) ? Number(bad) : 0;
+  const [toast, setToast] = useState(false);
 
-  // ✅ 개수 기준 아이콘 결정
+  const goodCount = useMemo(() => (Number.isFinite(Number(good)) ? Number(good) : 0), [good]);
+  const badCount = useMemo(() => (Number.isFinite(Number(bad)) ? Number(bad) : 0), [bad]);
+
   const likeIcon = goodCount > 0 ? "/on.svg" : "/off.svg";
   const dislikeIcon = badCount > 0 ? "/fckon.svg" : "/fckoff.svg";
 
   useEffect(() => {
     if (!petitionId) return;
+
+    if (!isAuthed) {
+      setMy(null);
+      return;
+    }
 
     let alive = true;
 
@@ -33,6 +35,7 @@ export default function LikeDislikeBar({
       .then(async (r) => {
         const d = await r.json().catch(() => null);
         if (!alive) return;
+
         const v = Number(d?.likes);
         if (v === 1 || v === -1) setMy(v);
         else setMy(null);
@@ -45,7 +48,12 @@ export default function LikeDislikeBar({
     return () => {
       alive = false;
     };
-  }, [petitionId]);
+  }, [petitionId, isAuthed]);
+
+  const showLoginToast = () => {
+    setToast(true);
+    window.setTimeout(() => setToast(false), 1800);
+  };
 
   const applyLocalCounts = (nextMy: null | 1 | -1) => {
     let g = goodCount;
@@ -61,7 +69,12 @@ export default function LikeDislikeBar({
   };
 
   const post = async (likes: 1 | -1) => {
+    if (!isAuthed) {
+      showLoginToast();
+      return;
+    }
     if (loading) return;
+
     setLoading(true);
 
     const nextMy = my === likes ? null : likes;
@@ -87,8 +100,13 @@ export default function LikeDislikeBar({
 
   return (
     <div className={styles.wrap}>
+      {toast && (
+        <div className={styles.toast}>
+          로그인 후 이용할 수 있는 기능이에요!
+        </div>
+      )}
+
       <div className={styles.bar}>
-        {/* 👍 좋아요 : 숫자 → 아이콘 */}
         <button
           type="button"
           className={`${styles.btn} ${my === 1 ? styles.activeGood : ""}`}
@@ -98,10 +116,9 @@ export default function LikeDislikeBar({
           <span className={styles.count}>{goodCount}</span>
           <img src={likeIcon} alt="좋아요" className={styles.iconImg} />
         </button>
-  
+
         <div className={styles.divider} />
-  
-        {/* 👎 싫어요 : 아이콘 → 숫자 */}
+
         <button
           type="button"
           className={`${styles.btn} ${my === -1 ? styles.activeBad : ""}`}
@@ -114,7 +131,4 @@ export default function LikeDislikeBar({
       </div>
     </div>
   );
-  
-  
-  
 }
