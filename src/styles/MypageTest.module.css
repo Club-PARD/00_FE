@@ -75,8 +75,8 @@
   flex-direction: column;
   align-items: center;
 
-  /* 카드 사이 간격 48px*/
-  gap: 48px;
+  /* 카드 - 버튼 간격*/
+  gap: 64px;
 }
 
 /* 질문 카드 (article) */
@@ -90,9 +90,7 @@
   border: 1px solid #e5e5e5;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.03);
 
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+  display: block;
 }
 
 /* ----- Q숫자 + 질문 묶음 -----*/
@@ -100,7 +98,7 @@
   width: 588px;
   max-width: 100%;
 
-  margin: 0 auto;
+  margin: 0 auto 40px; /* 0 auto 40px인데 조금 줄임*/
 
   display: flex;
   flex-direction: column;
@@ -117,6 +115,7 @@
 
   color: #eaedff;
   margin: 0;
+  margin-bottom: 2px; /* 원래 안해도 되는건데 추가함*/
 }
 
 /* 질문 텍스트 */
@@ -150,7 +149,7 @@
   flex-direction: column;
   align-items: stretch;
 
-  gap: 8px;
+  gap: 8px; 
 }
 
 /* 버튼 기본 상태 */
@@ -298,4 +297,15 @@
     width: 100%;
     max-width: 320px;
   }
+}
+
+.questionBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.questionDivider {
+  height: 0;          /* 선 없애고 */
+  margin: 48px 0;     /* 질문 사이 간격 128px인데 너무 길어서 줄임 */
 }

@@ -222,17 +222,17 @@ const TestPage: NextPage = () => {
 
   // 제출 -> 서버 전송 -> 메인 이동
   const onSubmit = () => {
-  if (!isAllAnswered || submitting) return;
+    if (!isAllAnswered || submitting) return;
 
-  setSubmitting(true);
+    setSubmitting(true);
 
-  const resultType = pickResultTypeRandom(counts);
+    const resultType = pickResultTypeRandom(counts);
 
-  router.push({
-    pathname: "/mypage/test/result",
-    query: { type: resultType },
-  });
-};
+    router.push({
+      pathname: "/mypage/test/result",
+      query: { type: resultType },
+    });
+  };
 
   return (
     <div className={styles.testPage}>
@@ -250,53 +250,61 @@ const TestPage: NextPage = () => {
 
         {/* 질문 리스트 */}
         <section className={styles.questionList}>
-          {QUESTIONS.map((q) => {
-            const picked = answers[q.id];
+          
+          <article className={styles.questionCard}>
+            {QUESTIONS.map((q, index) => {
+              const picked = answers[q.id];
 
-            return (
-              <article key={q.id} className={styles.questionCard}>
-                {/* 질문 헤더 */}
-                <div className={styles.questionHeader}>
-                  <b className={styles.questionIndex}>Q{q.id}.</b>
-                  <div className={styles.questionText}>
-                    {renderWithHighlight(q.title, q.highlight)}
+              return (
+                <div key={q.id} className={styles.questionBlock}>
+                  {/* 질문 헤더 */}
+                  <div className={styles.questionHeader}>
+                    <b className={styles.questionIndex}>Q{q.id}.</b>
+                    <div className={styles.questionText}>
+                      {renderWithHighlight(q.title, q.highlight)}
+                    </div>
                   </div>
+
+                  {/* 보기 목록 */}
+                  <div className={styles.optionList}>
+                    {q.options.map((opt, idx) => {
+                      const active = picked === idx;
+
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          className={`${styles.optionItem} ${
+                            active ? styles.optionItemActive : ""
+                          }`}
+                          onClick={() => onPick(q.id, idx)}
+                        >
+                          <span className={styles.optionText}>{opt.text}</span>
+
+                          <span className={styles.optionIcon}>
+                            <Image
+                              src={active ? "/radio_on.svg" : "/radio_off.svg"}
+                              alt=""
+                              width={17.5}
+                              height={17.5}
+                              className={styles.radioImg}
+                            />
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* 마지막 질문이 아니면 구분 여백 */}
+                  {index !== QUESTIONS.length - 1 && (
+                    <div className={styles.questionDivider} />
+                  )}
                 </div>
+              );
+            })}
+          </article>
 
-                {/* 보기 목록 */}
-                <div className={styles.optionList}>
-                  {q.options.map((opt, idx) => {
-                    const active = picked === idx;
-
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        className={`${styles.optionItem} ${
-                          active ? styles.optionItemActive : ""
-                        }`}
-                        onClick={() => onPick(q.id, idx)}
-                      >
-                        <span className={styles.optionText}>{opt.text}</span>
-
-                        <span className={styles.optionIcon}>
-                          <Image
-                            src={active ? "/radio_on.svg" : "/radio_off.svg"}
-                            alt=""
-                            width={18.5}
-                            height={18.5}
-                            className={styles.radioImg}
-                          />
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </article>
-            );
-          })}
-
-          {/* 제출 버튼 */}
+          {/* 결과보기 버튼*/}
           <button
             type="button"
             className={styles.submitButton}
