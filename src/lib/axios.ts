@@ -1,17 +1,17 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 
-const api = axios.create({
-  // ✅ baseURL 제거 (로컬 프록시 전용으로 사용)
+const localApi = axios.create({
+
 });
 
-api.interceptors.request.use((config) => {
+localApi.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   if (token) {
-    config.headers = config.headers ?? {};
+    config.headers = config.headers ?? {}; 
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-export default api;
+export default localApi;
