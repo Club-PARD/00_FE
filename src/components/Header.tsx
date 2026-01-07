@@ -9,6 +9,7 @@ export default function Header() {
 
   const user = useAuthStore((s) => s.user);
   const loading = useAuthStore((s) => s.loading);
+  const logout = useAuthStore((s) => s.logout);
 
   return (
     <header className={styles.header}>
@@ -52,15 +53,20 @@ export default function Header() {
         {/* 오른쪽: 로그인 / 프로필 */}
         <div className={styles.rights}>
           {loading ? null : user ? (
-            /* 로그인 상태 → 프로필 아이콘 */
-            <Link href="/mypage" className={styles.profileBtn}>
-              <Image
-                src="/profile.svg"
-                alt="프로필"
-                width={32}
-                height={32}
-              />
-            </Link>
+            <>
+              <Link href="/mypage" className={styles.profileBtn}>
+                <Image src="/profile.svg" alt="프로필" width={32} height={32} />
+              </Link>
+
+              {/* ✅ 로그아웃 버튼 추가 */}
+              <button
+                type="button"
+                className={styles.loginBtn} // 일단 기존 스타일 재사용(간단하게)
+                onClick={logout}
+              >
+                로그아웃
+              </button>
+            </>
           ) : (
             /* 비로그인 상태 → 로그인 버튼 */
             <Link href="/login" className={styles.loginBtn}>
