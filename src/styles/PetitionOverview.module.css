@@ -1,26 +1,31 @@
-.wrapper {
-    max-width: 792px;
-    margin-top: 120px;
-  }
-  
-  /* 섹션 타이틀 (개요) */
-  .title {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: black;
-    font-family: "Gmarket Sans";
-  }
-  
-  /* 본문 텍스트 */
-  .text {
-    margin-top: 14px;
-    margin-bottom: 0;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 175%;
-    color: #111;
-    font-family: "Noto Sans KR";
-    white-space: pre-line; 
-  }
-  
+.section {
+  margin-top: 32px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.question {
+  font-size: 15px;
+  font-weight: 900;
+  color: #6a5cff; /* 보라색 (mora 포인트 컬러) */
+  line-height: 1.6;
+}
+
+.body {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111; /* 검은색 */
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
