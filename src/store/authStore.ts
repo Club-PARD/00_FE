@@ -3,7 +3,13 @@ import api from "@/lib/axios";
 
 type User = {
   name: string;
-  email: string;
+  email: string; // 조회용 (GET /user/me)
+  age: number;
+  status: number;
+};
+
+type UpdateUserPayload = {
+  name: string;
   age: number;
   status: number;
 };
