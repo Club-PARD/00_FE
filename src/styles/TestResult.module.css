@@ -1,0 +1,179 @@
+/* 페이지 전체 컨테이너 */
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-top: 72px;
+  font-family: "Noto Sans KR";
+  line-height: normal;
+}
+
+/* 결과 컨텐츠 가운데 모으기 */
+.main {
+  width: 100%;
+  max-width: 840px;
+
+  margin: 0 auto;
+  padding: 96px 20px 120px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+
+  text-align: center;
+  color: #303030;
+}
+
+/* 상단 결과 블록 - 이미지 제목 부분*/
+.resultTop {
+  width: 285px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+/* 결과 이미지 자리 => Image 쓰고 나중에 지우기 !!!!!!!!!!!!11*/
+.imageBox {
+  width: 228px;
+  height: 228px;
+  background: #d9d9d9;
+}
+
+/* 결과 타이틀 */
+.resultTitle {
+  margin: 0;
+
+  font-size: 36px;
+  font-weight: 400;
+
+  white-space: nowrap;
+}
+
+/* 강조되는 텍스트 */
+.strong {
+  font-weight: 800;
+  color: #6a3df6;
+}
+
+/* 타이틀 아래 뱃지 */
+.badge {
+  width: 212px;
+
+  padding: 12px 20px;
+  border-radius: 100px;
+  border: 1px solid #9a7cff;
+
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  color: #9a7cff;
+
+  margin-bottom: 0px; /* 원래 128px */
+  white-space: nowrap;
+}
+
+/* 긴 설명 영역*/
+.desc {
+  width: 100%;
+  margin-bottom: 80px;
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 170%;
+  color: #111;
+
+  text-align: center;
+}
+
+/* 카드 2개 묶음 -> 정책을 보는 관점, 이런 점이 돋보여요! */
+.cardGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: left;
+
+  margin-bottom: 48px;
+}
+
+/* 카드 기본 스타일 */
+.card {
+  width: 100%;
+
+  border-radius: 8px;
+  background: #fff;
+
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 카드 제목*/
+.cardTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #6a3df6;
+}
+
+/* 카드 본문*/
+.cardBody {
+  font-size: 14px;
+  line-height: 170%;
+  font-weight: 500;
+  color: #111;
+}
+
+/* 하단 버튼 영역 (다시하기 / 메인으로) */
+.actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* 버튼 공통 스타일 */
+.primaryBtn,
+.secondaryBtn {
+  height: 44px;
+  border-radius: 8px;
+  padding: 0px 40px;
+
+  justify-content: center;
+  align-items: center;
+
+  display: inline-flex;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1; 
+
+  cursor: pointer;
+}
+
+/* 보라색 버튼 */
+.primaryBtn {
+  border: none;
+  background: #6A3DF6;
+  color: #fff;
+}
+
+/* 흰색 버튼 */
+.secondaryBtn {
+  border: 1px solid #BFBFBF;
+  background: #fff;
+  color: #303030;
+}
+
+/* 결과 없을 때 안내 문구 */
+.empty {
+  margin: 0;
+  font-size: 16px;
+  color: #303030;
+}
