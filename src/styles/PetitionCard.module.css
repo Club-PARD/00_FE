@@ -52,9 +52,10 @@
   align-items: center;
   justify-content: center;
 
-  width: 56px;
-  height: 24px;
-  padding: 8px 12px;
+  /* 크기 고정*/
+  width: 64px;          
+  height: 24px;         
+  padding: 0;
   box-sizing: border-box;
 
   border-radius: 100px;
@@ -65,10 +66,11 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 1;
+
+  white-space: nowrap;
 }
 /* 7일 이하*/
 .ddayRed {
-  width: 48px;
   border: 1.5px solid #f60909;
   color: #f60909;
 }
