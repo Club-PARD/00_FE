@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "@/styles/CommentsSection.module.css";
-import api from "@/lib/axios"; // ✅ 핵심
-
+import localApi from "@/lib/axios"; // ✅ 로컬 API 전용 axios
 
 type CommentItem = {
   id: number;
   name: string;
   body: string;
-  check?: boolean;
+  check?: boolean; // 내가 작성한 댓글 여부 (삭제 버튼 노출)
 };
 
 type Props = {
@@ -40,8 +39,10 @@ function normalizeComments(data: any): CommentItem[] {
 export default function CommentsSection({ petitionId, isAuthed }: Props) {
   const [items, setItems] = useState<CommentItem[]>([]);
   const [loading, setLoading] = useState(false);
+
   const [draft, setDraft] = useState("");
   const [posting, setPosting] = useState(false);
+
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
 
@@ -52,15 +53,21 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setTimeout(() => setToast(false), 1800);
   };
 
+  // ✅ 댓글 목록 불러오기
   const fetchComments = async () => {
     if (!petitionId) return;
+
     setLoading(true);
     try {
-      const r = await api.get(`/api/petition/comment/${petitionId}`, {
+      const r = await localApi.get(`/api/petition/comment/${petitionId}`, {
         validateStatus: () => true,
       });
-      if (r.status >= 200 && r.status < 300) setItems(normalizeComments(r.data));
-      else setItems([]);
+
+      if (r.status >= 200 && r.status < 300) {
+        setItems(normalizeComments(r.data));
+      } else {
+        setItems([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,8 +75,10 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [petitionId]);
 
+  // ✅ 댓글 작성
   const onSubmit = async () => {
     const body = draft.trim();
     if (!body) return;
@@ -85,7 +94,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setDraft("");
 
     try {
-      const r = await api.post(
+      const r = await localApi.post(
         `/api/petition/comment`,
         { id: petitionId, body },
         { validateStatus: () => true }
@@ -108,6 +117,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     }
   };
 
+  // ✅ 댓글 삭제
   const onDelete = async (commentId: number) => {
     if (!isAuthed) {
       showLoginToast();
@@ -119,7 +129,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     setOpenMenuId(null);
 
     try {
-      const r = await api.delete(`/api/petition/comment/${commentId}`, {
+      const r = await localApi.delete(`/api/petition/comment/${commentId}`, {
         validateStatus: () => true,
       });
 
@@ -129,7 +139,13 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         return;
       }
 
-      if (r.status < 200 || r.status >= 300) setItems(prev);
+      if (r.status < 200 || r.status >= 300) {
+        setItems(prev);
+        return;
+      }
+
+      // ✅ 서버 상태와 다시 동기화
+      await fetchComments();
     } catch {
       setItems(prev);
     }
@@ -137,7 +153,11 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
 
   return (
     <section className={styles.wrap} onClick={() => setOpenMenuId(null)}>
-      {toast && <div className={styles.toast}>로그인 후 이용할 수 있는 기능이에요!</div>}
+      {toast && (
+        <div className={styles.toast}>
+          로그인 후 이용할 수 있는 기능이에요!
+        </div>
+      )}
 
       <h2 className={styles.title}>댓글 {count}개</h2>
 
@@ -146,10 +166,12 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         <div className={styles.inputCol}>
           <input
             className={styles.input}
-            placeholder="댓글을 입력하세요"
+            placeholder={loading ? "불러오는 중..." : "댓글을 입력하세요"}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && onSubmit()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") onSubmit();
+            }}
             disabled={posting}
           />
           <div className={styles.underline} />
@@ -160,17 +182,25 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         {items.map((c) => (
           <div key={c.id} className={styles.item}>
             <div className={styles.avatar} />
+
             <div className={styles.content}>
               <div className={styles.name}>{c.name}</div>
               <p className={styles.body}>{c.body}</p>
             </div>
 
-            <div className={styles.menuWrap} onClick={(e) => e.stopPropagation()}>
+            <div
+              className={styles.menuWrap}
+              onClick={(e) => e.stopPropagation()}
+            >
               {c.check ? (
                 <>
                   <button
+                    type="button"
                     className={styles.kebab}
-                    onClick={() => setOpenMenuId((p) => (p === c.id ? null : c.id))}
+                    onClick={() =>
+                      setOpenMenuId((p) => (p === c.id ? null : c.id))
+                    }
+                    aria-label="댓글 메뉴"
                   >
                     ⋮
                   </button>
@@ -178,6 +208,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
                   {openMenuId === c.id && (
                     <div className={styles.menu}>
                       <button
+                        type="button"
                         className={styles.menuItem}
                         onClick={() => onDelete(c.id)}
                       >

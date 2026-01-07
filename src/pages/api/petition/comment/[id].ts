@@ -9,25 +9,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const id = Number(idRaw);
   if (!idRaw || Number.isNaN(id)) return res.status(400).send("Invalid id");
 
-  const auth = req.headers.authorization ?? "";
+  const auth = req.headers.authorization ?? ""; // ✅ 핵심(토큰 포워딩)
 
   if (req.method === "GET") {
     const r = await axios.get(`${base}/petition/comment/${id}`, {
-      headers: {
-        authorization: auth,
-        cookie: req.headers.cookie ?? "",
-      },
+      headers: { authorization: auth, cookie: req.headers.cookie ?? "" },
       validateStatus: () => true,
     });
     return res.status(r.status).json(r.data ?? []);
   }
 
   if (req.method === "DELETE") {
-    const r = await axios.delete(`${base}/petition/comment/${id}`, {
-      headers: {
-        authorization: auth,
-        cookie: req.headers.cookie ?? "",
-      },
+    const r = await axios.delete(`${base}/petition/comment/${id}`, { // ✅ 명세 그대로
+      headers: { authorization: auth, cookie: req.headers.cookie ?? "" }, // ✅ 토큰 전달
       validateStatus: () => true,
     });
     return res.status(r.status).json(r.data ?? null);
