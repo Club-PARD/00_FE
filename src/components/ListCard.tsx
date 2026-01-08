@@ -4,6 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/Listcard.module.css";
 
+import { useAuthStore } from "@/store/authStore";
+import { useScrapStore } from "@/store/scrapStore";
+
 // 데이터 타입 정의
 export type CongressCardItem = {
   id: string;
@@ -67,9 +70,16 @@ type Props = {
   href?: string;
 
   forceCategoryGray?: boolean;
+  // 페이지에서 toast 띄우는 함수 내려받기
+  onLoginRequired?: () => void;
 };
 
-export default function CongressCard({ item, href, forceCategoryGray }: Props) {
+export default function CongressCard({
+  item,
+  href,
+  forceCategoryGray,
+  onLoginRequired,
+}: Props) {
   // 카테고리 키 / -> ,
   const categoryKey = item.category.replace(/\//g, ", ");
 
@@ -85,6 +95,15 @@ export default function CongressCard({ item, href, forceCategoryGray }: Props) {
 
   // 링크 주소
   const detailHref = href ?? `/petition/${item.id}`;
+
+  const isAuthed = useAuthStore((s) => s.isAuthenticated);
+
+  const scrapLoading = useScrapStore((s) => s.loading);
+  const toggleScrap = useScrapStore((s) => s.toggleScrap);
+  const isScrapped = useScrapStore((s) => s.isScrapped);
+
+  const petId = Number(item.id);
+  const scrapped = Number.isFinite(petId) ? isScrapped(petId) : false;
 
   return (
     <article className={styles.cardWrapper}>
@@ -102,10 +121,26 @@ export default function CongressCard({ item, href, forceCategoryGray }: Props) {
           onClick={(e) => {
             // 이벤트 버블링 방지
             e.stopPropagation();
-            console.log("북마크 클릭");
+
+            if (!Number.isFinite(petId)) return;
+
+            // 로그인 아니면 부모에게 toast 요청
+            if (!isAuthed) {
+              onLoginRequired?.();
+              return;
+            }
+
+            if (scrapLoading) return;
+            
+            toggleScrap(petId);
           }}
         >
-          <Image src="/bookMark.svg" alt="" width={24} height={24} />
+          <Image
+            src={scrapped ? "/bookMark_colored.svg" : "/bookMark.svg"}
+            alt=""
+            width={24}
+            height={24}
+          />
         </button>
       </div>
 
