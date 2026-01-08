@@ -1,52 +1,53 @@
+// mora/src/lib/scrapApi.ts
+import instance from "@/lib/api/axios";
+
 export type ScrapItem = {
-    petId: number;
-    title: string;
-    status: number;      
-    result: string;     
-    voteStartDate: string;
-    voteEndDate: string;
-  };
-  
-  type ApiError = { status: number; message: string };
-  
-  async function request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
-    const res = await fetch(input, {
-      ...init,
-      headers: {
-        "Content-Type": "application/json",
-        ...(init?.headers ?? {}),
-      },
-      credentials: "include", 
-    });
-  
-    if (!res.ok) {
-      let msg = "요청에 실패했습니다.";
-      try {
-        const text = await res.text();
-        if (text) msg = text;
-      } catch {}
-      const err: ApiError = { status: res.status, message: msg };
-      throw err;
-    }
-  
+  petId: number;
+  title: string;
+  status: number;
+  result: string;
+  voteStartDate: string;
+  voteEndDate: string;
+};
 
-    const text = await res.text();
-    return (text ? JSON.parse(text) : (undefined as unknown as T));
-  }
-  
-  export async function postScrap(petitionId: number) {
+export type ApiError = { status: number; message: string };
 
-    return request<void>(`/petition/scrap/${petitionId}`, { method: "POST" });
+function normalizeAxiosError(e: any): ApiError {
+  const status = e?.response?.status ?? e?.status ?? 0;
+  const message =
+    e?.response?.data?.message ??
+    (typeof e?.response?.data === "string" ? e.response.data : null) ??
+    e?.message ??
+    "요청에 실패했습니다.";
+  return { status, message };
+}
+
+// POST /petition/scrap/{id}
+export async function postScrap(petitionId: number): Promise<void> {
+  try {
+    await instance.post(`/petition/scrap/${petitionId}`);
+  } catch (e: any) {
+    throw normalizeAxiosError(e);
   }
-  
-  export async function getMyScraps() {
-    return request<ScrapItem[]>(`/user/scrap`, { method: "GET" });
+}
+
+// GET /user/scrap
+export async function getMyScraps(): Promise<ScrapItem[]> {
+  try {
+    const res = await instance.get<ScrapItem[]>(`/user/scrap`);
+    return res.data;
+  } catch (e: any) {
+    throw normalizeAxiosError(e);
   }
-  
-  export async function deleteScraps(petitionIds: number[]) {
-    return request<void>(`/user/scrap`, {
-      method: "DELETE",
-      body: JSON.stringify({ id: petitionIds }),
+}
+
+// DELETE /user/scrap  body: { id: [petitionId, ...] }
+export async function deleteScraps(petitionIds: number[]): Promise<void> {
+  try {
+    await instance.delete(`/user/scrap`, {
+      data: { id: petitionIds }, // ✅ axios delete body
     });
+  } catch (e: any) {
+    throw normalizeAxiosError(e);
   }
-  
+}

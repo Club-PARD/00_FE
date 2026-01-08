@@ -1,10 +1,10 @@
-// src/hooks/useScrap.ts
+// mora/src/hooks/useScrap.ts
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { deleteScraps, getMyScraps, postScrap, ScrapItem } from "@/lib/scrapApi";
 
 type UseScrapOptions = {
   petitionId: number;
-  onRequireLogin?: () => void; // 401일 때 실행 (예: 로그인 모달/페이지 이동)
+  onRequireLogin?: () => void; // 401일 때 실행
 };
 
 export function useScrap({ petitionId, onRequireLogin }: UseScrapOptions) {
@@ -22,9 +22,8 @@ export function useScrap({ petitionId, onRequireLogin }: UseScrapOptions) {
       const list = await getMyScraps();
       setScraps(list);
     } catch (e: any) {
-      // 로그인 안 한 경우(401)에는 목록을 굳이 에러로 터뜨리기보다는 "미스크랩" 취급
       if (e?.status === 401) {
-        setScraps([]);
+        setScraps([]); // 미로그인은 "스크랩 없음"으로 처리
       } else {
         throw e;
       }
@@ -38,8 +37,9 @@ export function useScrap({ petitionId, onRequireLogin }: UseScrapOptions) {
   }, [refresh]);
 
   const toggle = useCallback(async () => {
-    // 낙관적 업데이트(UX 개선)도 가능하 지만, 우선은 안전하게 서버 성공 후 반영
+    if (loading) return; // 연타 방지
     setLoading(true);
+
     try {
       if (isScrapped) {
         await deleteScraps([petitionId]);
@@ -49,6 +49,7 @@ export function useScrap({ petitionId, onRequireLogin }: UseScrapOptions) {
       await refresh();
     } catch (e: any) {
       if (e?.status === 401) {
+        setScraps([]); // 상태 일관성
         onRequireLogin?.();
         return;
       }
@@ -56,7 +57,7 @@ export function useScrap({ petitionId, onRequireLogin }: UseScrapOptions) {
     } finally {
       setLoading(false);
     }
-  }, [isScrapped, petitionId, refresh, onRequireLogin]);
+  }, [loading, isScrapped, petitionId, refresh, onRequireLogin]);
 
   return { scraps, isScrapped, loading, refresh, toggle };
 }
