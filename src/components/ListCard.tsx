@@ -98,12 +98,18 @@ export default function CongressCard({
 
   const isAuthed = useAuthStore((s) => s.isAuthenticated);
 
-  const scrapLoading = useScrapStore((s) => s.loading);
+  const isLoading = useScrapStore((s) => s.isLoading);
   const toggleScrap = useScrapStore((s) => s.toggleScrap);
-  const isScrapped = useScrapStore((s) => s.isScrapped);
-
   const petId = Number(item.id);
-  const scrapped = Number.isFinite(petId) ? isScrapped(petId) : false;
+
+  const scrapped = useScrapStore((s) =>
+    Number.isFinite(petId) ? s.scraps.some((x) => x.petId === petId) : false
+  );
+
+  // 로딩도 boolean으로 구독하는 게 더 확실함
+  const loading = useScrapStore((s) =>
+    Number.isFinite(petId) ? !!s.loadingById[petId] : false
+  );
 
   return (
     <article className={styles.cardWrapper}>
@@ -118,7 +124,7 @@ export default function CongressCard({
           className={styles.bookmarkBtn}
           type="button"
           aria-label="북마크"
-          onClick={(e) => {
+          onClick={async (e) => {
             // 이벤트 버블링 방지
             e.stopPropagation();
 
@@ -130,9 +136,10 @@ export default function CongressCard({
               return;
             }
 
-            if (scrapLoading) return;
-            
-            toggleScrap(petId);
+            if (isLoading(petId)) return;
+
+            // 서버 처리 + store 갱신 끝날 때까지 기다림
+            await toggleScrap(petId);
           }}
         >
           <Image

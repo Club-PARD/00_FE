@@ -93,12 +93,18 @@ export default function PetitionCard({
   const detailHref = href ?? `/petition/${item.id}`;
 
   const isAuthed = useAuthStore((s) => s.isAuthenticated);
-  const toggleScrap = useScrapStore((s) => s.toggleScrap);
-  const isScrapped = useScrapStore((s) => s.isScrapped);
-  const scrapLoading = useScrapStore((s) => s.loading);
+  const isLoading = useScrapStore((s) => s.isLoading);
 
   const petId = Number(item.id);
-  const scrapped = Number.isFinite(petId) ? isScrapped(petId) : false;
+  const scrapped = useScrapStore((s) =>
+    Number.isFinite(petId) ? s.scraps.some((x) => x.petId === petId) : false
+  );
+
+  const loading = useScrapStore((s) =>
+    Number.isFinite(petId) ? !!s.loadingById[petId] : false
+  );
+
+  const toggleScrap = useScrapStore((s) => s.toggleScrap);
 
   return (
     <article className={styles.cardWrapper}>
@@ -113,7 +119,7 @@ export default function PetitionCard({
             className={styles.bookmarkBtn}
             type="button"
             aria-label="북마크"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
               if (!Number.isFinite(petId)) return;
 
@@ -122,8 +128,9 @@ export default function PetitionCard({
                 return;
               }
 
-              if (scrapLoading) return;
-              toggleScrap(petId);
+              if (isLoading(petId)) return;
+
+              await toggleScrap(petId);
             }}
           >
             <Image

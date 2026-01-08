@@ -108,10 +108,10 @@ export default function PetitionDetailPage() {
   const isAuthed = useAuthStore((s) => s.isAuthenticated);
 
   // toast
-  const scrapLoading = useScrapStore((s) => s.loading);
-  const isScrappedFn = useScrapStore((s) => s.isScrapped);
   const toggleScrap = useScrapStore((s) => s.toggleScrap);
   const syncScraps = useScrapStore((s) => s.sync);
+  const isLoading = useScrapStore((s) => s.isLoading);
+  const syncing = useScrapStore((s) => s.syncing);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -123,12 +123,18 @@ export default function PetitionDetailPage() {
   const [goodLocal, setGoodLocal] = useState(0);
   const [badLocal, setBadLocal] = useState(0);
 
+  const isScrapped = useScrapStore((s) =>
+    petitionId ? s.scraps.some((x) => x.petId === petitionId) : false
+  );
+
+  const thisLoading = useScrapStore((s) =>
+    petitionId ? !!s.loadingById[petitionId] : false
+  );
+
   useEffect(() => {
     if (!petitionId) return;
     syncScraps();
   }, [petitionId, isAuthed, syncScraps]);
-
-  const isScrapped = petitionId ? isScrappedFn(petitionId) : false;
 
   useEffect(() => {
     if (!petitionId) return;
@@ -332,14 +338,14 @@ export default function PetitionDetailPage() {
             percent={percent}
             statusPill="마감"
             bookmarked={isScrapped}
-            bookmarkLoading={scrapLoading || isScrapped}
+            bookmarkLoading={thisLoading || syncing}
             onToggleBookmark={async () => {
               if (!petitionId) return;
               if (!isAuthed) {
                 showLoginToast();
                 return;
               }
-              if (scrapLoading) return;
+              if (thisLoading) return;
 
               await toggleScrap(petitionId);
             }}
