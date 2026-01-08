@@ -107,7 +107,6 @@ export default function PetitionDetailPage() {
 
   const isAuthed = useAuthStore((s) => s.isAuthenticated);
 
-  // toast
   const scrapLoading = useScrapStore((s) => s.loading);
   const isScrappedFn = useScrapStore((s) => s.isScrapped);
   const toggleScrap = useScrapStore((s) => s.toggleScrap);
@@ -168,23 +167,11 @@ export default function PetitionDetailPage() {
     };
   }, [petitionId]);
 
-  const badge = useMemo(
-    () => safeString(detail?.category, "-"),
-    [detail?.category]
-  );
-  const title = useMemo(
-    () => safeString(detail?.title, "제목 없음"),
-    [detail?.title]
-  );
+  const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
+  const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
 
-  const agreeCount = useMemo(
-    () => safeNumber(detail?.allows, 0),
-    [detail?.allows]
-  );
-  const percent = useMemo(
-    () => computePercent(detail?.allows),
-    [detail?.allows]
-  );
+  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
+  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
 
   const heroMeta = useMemo(() => {
     const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(
@@ -326,13 +313,14 @@ export default function PetitionDetailPage() {
         <div className={styles.container}>
           <DetailHeroCard
             badge={badge}
+            preTitle={overviewTitle}
             title={title}
             meta={heroMeta}
             agreeCount={agreeCount}
             percent={percent}
             statusPill="마감"
             bookmarked={isScrapped}
-            bookmarkLoading={scrapLoading || isScrapped}
+            bookmarkLoading={scrapLoading}
             onToggleBookmark={async () => {
               if (!petitionId) return;
               if (!isAuthed) {
@@ -350,13 +338,11 @@ export default function PetitionDetailPage() {
             <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
 
-              <PetitionOverview title={overviewTitle} text={overviewText} />
+              <PetitionOverview title="" text={overviewText} />
 
               <RelatedPolicyCard policies={laws} error={lawsError} />
 
-              {showProsCons && (
-                <ProsConsSection pros={prosItems} cons={consItems} />
-              )}
+              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
 
               <SummaryNotice />
 

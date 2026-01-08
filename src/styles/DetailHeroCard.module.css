@@ -210,3 +210,11 @@
 .cta:hover {
   background: #5f37dd;
 }
+
+.preTitle {
+  margin-top: 8px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
