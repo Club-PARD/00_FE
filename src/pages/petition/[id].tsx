@@ -96,6 +96,7 @@ function normalizeLaws(data: any): LawItem[] {
 
 export default function PetitionDetailPage() {
   const router = useRouter();
+
   const { toast, toastHide, showLoginToast } = useLoginToast();
 
   const petitionId = useMemo(() => {
@@ -178,9 +179,22 @@ export default function PetitionDetailPage() {
   const heroMeta = useMemo(() => {
     const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
     return [
-      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.department, "-") },
-      { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "동의기간",
+        value: period,
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/Group (2).svg",
+        label: "소관위원회",
+        value: safeString(detail?.department, "-"),
+      },
+      {
+        iconSrc: "/Group (1).svg",
+        label: "상태",
+        value: statusLabel(detail?.status),
+      },
       { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
       {
         iconSrc: "/proicons_send.svg",
@@ -238,10 +252,12 @@ export default function PetitionDetailPage() {
 
   const onClickGo = useCallback(() => {
     const raw = (detail?.url || detail?.petitionUrl || "").trim();
+
     if (!raw) {
       alert("바로가기 링크가 아직 등록되지 않았어요.");
       return;
     }
+
     const finalUrl = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
     window.open(finalUrl, "_blank", "noopener,noreferrer");
   }, [detail?.url, detail?.petitionUrl]);
@@ -321,11 +337,15 @@ export default function PetitionDetailPage() {
           <div className={styles.grid}>
             <div className={styles.leftCol}>
               <AISummaryCard text={aiText} />
+
               <PetitionOverview title="" text={overviewText} />
+
               <RelatedPolicyCard policies={laws} error={lawsError} />
+
               {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
+
               <SummaryNotice />
-              <div className={styles.graySection}>
+
               <LikeDislikeBar
                 petitionId={petitionId}
                 good={goodLocal}
@@ -337,9 +357,7 @@ export default function PetitionDetailPage() {
                 }}
               />
 
-              
-                <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
-              </div>
+              <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
             </div>
 
             <aside className={styles.rightCol}>
@@ -355,7 +373,8 @@ export default function PetitionDetailPage() {
               </div>
             </aside>
           </div>
-          <div className={styles.grayFooterSpace} />
+
+          <div className={styles.commentsPagerSpace} />
         </div>
       </div>
     </main>

@@ -25,14 +25,7 @@
   margin-bottom: 18px;
 }
 
-/* 사용자 아바타 (더미 원형) */
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #d9d9d9;
-  flex: 0 0 42px;
-}
+
 
 /* 입력창 래퍼 */
 .inputCol {
