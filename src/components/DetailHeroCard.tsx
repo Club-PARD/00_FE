@@ -18,10 +18,17 @@ type DetailHeroCardProps = {
   percent: number;
 
   statusPill?: string;
-  onClickBookmark?: () => void;
-  onClickGo?: () => void;
 
-  initialBookmarked?: boolean;
+  /** ✅ 제어형: 부모가 상태를 내려줌 */
+  bookmarked: boolean;
+
+  /** ✅ 서버 토글(스크랩 API) */
+  onToggleBookmark?: (nextBookmarked: boolean) => Promise<void> | void;
+
+  /** ✅ 외부 로딩 상태(훅 loading) */
+  bookmarkLoading?: boolean;
+
+  onClickGo?: () => void;
 };
 
 const DEFAULT_ICON: Record<string, string> = {
@@ -46,12 +53,16 @@ export default function DetailHeroCard({
   agreeCount,
   percent,
   statusPill = "마감",
-  onClickBookmark,
+  bookmarked,
+  onToggleBookmark,
+  bookmarkLoading = false,
   onClickGo,
-  initialBookmarked = false,
 }: DetailHeroCardProps) {
   const value = Math.max(0, Math.min(100, percent));
-  const [bookmarked, setBookmarked] = useState<boolean>(initialBookmarked);
+
+  // ✅ 내부 pending으로 연타 방지(외부 loading과 별개)
+  const [pending, setPending] = useState(false);
+  const disabled = bookmarkLoading || pending;
 
   const metaMap = useMemo(() => {
     const m = new Map<string, MetaItem>();
@@ -115,17 +126,7 @@ export default function DetailHeroCard({
         };
       }
 
-      if (label === "위원회회부일") {
-        const v = found?.value;
-        return {
-          iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
-          label,
-          value: hasValue(v) ? v : "-",
-          valueHighlight: found?.valueHighlight ?? false,
-        };
-      }
-
-      if (label === "소관위원회") {
+      if (label === "위원회회부일" || label === "소관위원회") {
         const v = found?.value;
         return {
           iconSrc: found?.iconSrc ?? DEFAULT_ICON[label],
@@ -145,21 +146,36 @@ export default function DetailHeroCard({
     });
   }, [metaMap, badge]);
 
+  const handleBookmark = async () => {
+    if (disabled) return;
+
+    const next = !bookmarked;
+
+    try {
+      setPending(true);
+      await onToggleBookmark?.(next);
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
     <section className={styles.card}>
       <div className={styles.inner}>
         <div className={styles.topRow}>
-          {statusPill ? <span className={styles.statusPill}>{statusPill}</span> : <span />}
+          {statusPill ? (
+            <span className={styles.statusPill}>{statusPill}</span>
+          ) : (
+            <span />
+          )}
 
           <button
             type="button"
             className={styles.bookmarkBtn}
-            onClick={() => {
-              setBookmarked((prev) => !prev);
-              onClickBookmark?.();
-            }}
+            onClick={handleBookmark}
             aria-label="북마크"
             aria-pressed={bookmarked}
+            disabled={disabled}
           >
             <img
               src={bookmarked ? "/bookMark_colored.svg" : "/bookMark.svg"}
@@ -198,8 +214,14 @@ export default function DetailHeroCard({
           <div className={styles.left}>
             <div className={styles.statsRow}>
               <div className={styles.people}>
-                <img src="/numberofpeople.svg" alt="" className={styles.peopleIcon} />
-                <span className={styles.peopleText}>{agreeCount.toLocaleString()}명</span>
+                <img
+                  src="/numberofpeople.svg"
+                  alt=""
+                  className={styles.peopleIcon}
+                />
+                <span className={styles.peopleText}>
+                  {agreeCount.toLocaleString()}명
+                </span>
               </div>
 
               <span className={styles.percent}>{value}%</span>

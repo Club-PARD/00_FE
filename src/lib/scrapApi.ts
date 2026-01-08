@@ -1,5 +1,5 @@
 // mora/src/lib/scrapApi.ts
-import instance from "@/lib/api/axios";
+import localApi from "@/lib/axios";
 
 export type ScrapItem = {
   petId: number;
@@ -10,10 +10,12 @@ export type ScrapItem = {
   voteEndDate: string;
 };
 
-export type ApiError = { status: number; message: string };
+type ApiError = { status: number; message: string };
+
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
 function normalizeAxiosError(e: any): ApiError {
-  const status = e?.response?.status ?? e?.status ?? 0;
+  const status = e?.response?.status ?? 0;
   const message =
     e?.response?.data?.message ??
     (typeof e?.response?.data === "string" ? e.response.data : null) ??
@@ -22,30 +24,27 @@ function normalizeAxiosError(e: any): ApiError {
   return { status, message };
 }
 
-// POST /petition/scrap/{id}
 export async function postScrap(petitionId: number): Promise<void> {
   try {
-    await instance.post(`/petition/scrap/${petitionId}`);
+    await localApi.post(`${API_BASE}/petition/scrap/${petitionId}`);
   } catch (e: any) {
     throw normalizeAxiosError(e);
   }
 }
 
-// GET /user/scrap
 export async function getMyScraps(): Promise<ScrapItem[]> {
   try {
-    const res = await instance.get<ScrapItem[]>(`/user/scrap`);
+    const res = await localApi.get<ScrapItem[]>(`${API_BASE}/user/scrap`);
     return res.data;
   } catch (e: any) {
     throw normalizeAxiosError(e);
   }
 }
 
-// DELETE /user/scrap  body: { id: [petitionId, ...] }
 export async function deleteScraps(petitionIds: number[]): Promise<void> {
   try {
-    await instance.delete(`/user/scrap`, {
-      data: { id: petitionIds }, // ✅ axios delete body
+    await localApi.delete(`${API_BASE}/user/scrap`, {
+      data: { id: petitionIds }, 
     });
   } catch (e: any) {
     throw normalizeAxiosError(e);
