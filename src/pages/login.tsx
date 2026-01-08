@@ -1,7 +1,14 @@
 import { useEffect } from "react";
+import { useAuthStore } from "@/store/authStore";
 import styles from "@/styles/Login.module.css";
 
 export default function LoginPage() {
+  const checkLoginFromUrl = useAuthStore((s) => s.checkLoginFromUrl);
+
+  useEffect(() => {
+    checkLoginFromUrl();
+  }, [checkLoginFromUrl]);
+
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -37,12 +44,20 @@ export default function LoginPage() {
               type="button"
               onClick={() => {
                 const base = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
-                if (!base) return;
+                if (!base) {
+                  console.error("NEXT_PUBLIC_SERVER_BASE_URL 없음");
+                  return;
+                }
 
                 const origin = window.location.origin;
-                window.location.href = `${base}/oauth2/authorization/google?redirect_origin=${encodeURIComponent(
+
+                console.log("base:", base);
+                console.log("origin:", origin);
+
+                const url = `${base}/oauth2/authorization/google?origin=${encodeURIComponent(
                   origin
                 )}`;
+                window.location.href = url;
               }}
             >
               <span className={styles.googleIcon} aria-hidden />
