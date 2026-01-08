@@ -44,12 +44,17 @@ export default function LoginPage() {
               type="button"
               onClick={() => {
                 const base = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+                
+                // 하고 지워
+                console.log("BASE:", base);
+                
                 if (!base) return;
 
                 const origin = window.location.origin;
-                window.location.href = `${base}/oauth2/authorization/google?origin=${encodeURIComponent(
-                  origin
-                )}`;
+                const url = `${base}/oauth2/authorization/google?origin=${encodeURIComponent(origin)}`;
+
+                console.log("LOGIN URL:", url);
+                window.location.href = url;
               }}
             >
               <span className={styles.googleIcon} aria-hidden />
