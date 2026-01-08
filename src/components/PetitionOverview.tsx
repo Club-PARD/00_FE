@@ -20,6 +20,7 @@ export default function PetitionOverview({ text }: Props) {
   return (
     <section className={styles.section}>
       <div className={styles.box}>
+        <div className={styles.heading}>개요</div>
         <div className={styles.body}>
           {paragraphs.map((p, i) => (
             <p key={i}>{p}.</p>
