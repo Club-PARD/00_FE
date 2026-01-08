@@ -54,5 +54,73 @@
     height: 900px;
   }
   
-
+  .lowerBg {
+    width: 100%;
+    background: #f5f6f8;
+    margin-top: 0;
+    padding: 28px 0 88px;
+    border-top: 1px solid #e5e7eb;
+  }
   
+  .likeArea {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
+  }
+  
+  .commentsArea {
+    margin-top: 28px;
+  }
+  
+
+  .miniSticky {
+    position: sticky;
+    top: 120px;
+  }
+  
+  .commentsPagerSpace {
+    height: 140px;
+  }
+
+  /* DetailMiniCard sticky 위치 */
+.miniSticky {
+  position: sticky;
+  top: 120px;
+}
+
+/* LikeDislikeBar 아래부터 회색 배경 시작 */
+.graySection {
+  position: relative;
+  margin-top: 28px;
+}
+
+/* 회색 배경을 화면 끝까지(100vw) 깔기 */
+.graySection::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -28px;            /* margin-top 만큼 위로 끌어올려 "바로 아래부터" 보이게 */
+  width: 100vw;
+  height: calc(100% + 28px);
+  background: #F5F5F5;
+  z-index: -1;
+}
+
+/* pagination(absolute) 아래쪽 공간 확보 + 회색 배경 이어지게 */
+.grayFooterSpace {
+  position: relative;
+  height: 140px; 
+}
+
+.grayFooterSpace::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  background: #f3f3f3;
+  z-index: -1;
+}
