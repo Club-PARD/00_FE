@@ -15,6 +15,7 @@ import CommentsSection from "@/components/CommentsSection";
 
 import styles from "@/styles/PetitionDetail.module.css";
 import { useAuthStore } from "@/store/authStore";
+import { useScrap } from "@/hooks/useScrap";
 
 type PetitionDetailResponse = {
   title?: string;
@@ -104,6 +105,19 @@ export default function PetitionDetailPage() {
   const token = useAuthStore((s) => s.token);
   const isAuthed = !!token;
 
+  // ✅ 북마크 훅 연결 (petitionId가 null일 때 훅이 오작동하지 않도록 0 넣고, 내부에서 401 처리)
+  const {
+    isScrapped,
+    loading: scrapLoading,
+    toggle: toggleScrap,
+  } = useScrap({
+    petitionId: petitionId ?? 0,
+    onRequireLogin: () => {
+      alert("로그인이 필요합니다.");
+      // router.push("/login"); // 원하면 이동
+    },
+  });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [detail, setDetail] = useState<PetitionDetailResponse | null>(null);
@@ -181,7 +195,15 @@ export default function PetitionDetailPage() {
         valueHighlight: true,
       },
     ];
-  }, [detail?.voteStartDate, detail?.voteEndDate, detail?.department, detail?.status, detail?.finalDate, detail?.result, badge]);
+  }, [
+    detail?.voteStartDate,
+    detail?.voteEndDate,
+    detail?.department,
+    detail?.status,
+    detail?.finalDate,
+    detail?.result,
+    badge,
+  ]);
 
   const miniMeta = useMemo(() => {
     return [
@@ -280,7 +302,11 @@ export default function PetitionDetailPage() {
             agreeCount={agreeCount}
             percent={percent}
             statusPill="마감"
-            onClickBookmark={() => {}}
+            bookmarked={isScrapped}              // ✅ 제어형 상태
+            bookmarkLoading={scrapLoading}       // ✅ 로딩 시 연타 방지
+            onToggleBookmark={async () => {
+              await toggleScrap();              // ✅ POST/DELETE는 훅이 처리
+            }}
             onClickGo={onClickGo}
           />
 
