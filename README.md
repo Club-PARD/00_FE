@@ -1,29 +1,12 @@
 <div align="center">
 <a id="readme-top"></a>
-<!— Header banner —>
-<p align="center">
+<!-- Header banner -->
 
-  <a>
-    <img src="https://img.shields.io/badge/HTML5-E34F26.svg?style=flat&logo=html5&logoColor=white" alt="HTML">
-  </a>
-  <a>
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=javascript&logoColor=white" alt="js">
-  </a>
-  <a>
-    <img src="https://img.shields.io/badge/springboot-6DB33F.svg?style=flate&logo=springboot&logoColor=white" alt="springboot">
-  </a>
-  <a>
-    <img src="https://img.shields.io/badge/CSS3-1572B6.svg?style=flat&logo=css3&logoColor=white" alt="CSS">
-  </a>
-  <a>
-    <img src="https://img.shields.io/badge/AWS-232F3E.svg?style=flat&logo=amazonwebservices&logoColor=white" alt="aws">
-  </a>
-</p>
-
-——
+---
 
 <p align="center">
-    <img alt="Mora" title="Mora" src="../00_FE/public/logo.svg" width="45%">
+    <img src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/00_FE/public/logo.svg" width="45%"/>
+
 </p>
 
 <br/>
@@ -33,15 +16,15 @@
 <br/>
 </div>
 
-——
+---
 
 # ✱ 목차
 
 - [소개](#소개)
-- [Features](#-Features)
-- [System Design and Documentation](#%EF%B8%8F-system-design-and-documentation)
-- [Tech Stack](#-Tech-Stack)
-- [Acknowledgements](#-Acknowledgements)
+- [Features](#features)
+- [System Design and Documentation](system-design-and-documentation)
+- [Tech Stack](#tech-stack)
+- [Acknowledgements](#acknowledgements)
 
 <div>
 
@@ -65,51 +48,85 @@
 
 ### 핵심 기능
 
-<aside>
 
 ### 1. 정보 경량화: 청원 분석 요약
 
-| 청원 원문(감정적/편향적 표현 포함)을 그대로 두지 않고, 20대가 이해하기 쉬운 형태로 재구성합니다.
+> 청원 원문(감정적/편향적 표현 포함)을 그대로 두지 않고, 20대가 이해하기 쉬운 형태로 재구성합니다.
 
-</aside>
+<p align="center">
+  <img 
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture1.png"
+    alt="청원 분석 요약 화면"
+    width="80%"
+  />
+</p>
 
-<aside>
+
 
 ### 2. 참여의 One-Stop: 청원 브릿지
 
-| 사용자가 청원을 읽는데서 멈추는 것이 아니라, 직접 참여할 수 있도록 공식 청원(국민동의청원/청원24)로 바로 이동할 수 있는 동선 제공을 제공합니다.
+> 사용자가 청원을 읽는데서 멈추는 것이 아니라, 직접 참여할 수 있도록 공식 청원(국민동의청원/청원24)로 바로 이동할 수 있는 동선 제공을 제공합니다.
 
-</aside>
+<p align="center">
+  <img 
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture2.png"
+    alt="청원 브릿지 화면"
+    width="80%"
+  />
+</p>
 
-<aside>
+
 
 ### 3. 효능감 회복: 이슈 트래커(북마크/알림)
 
-| 사용자가 관심을 가진 안건을 끝까지 확인함으로써, 사용자가 정책 변화에 힘을 쓸 수 있다는 것을 느끼도록 돕습니다.
+> 사용자가 관심을 가진 안건을 끝까지 확인함으로써, 사용자가 정책 변화에 힘을 쓸 수 있다는 것을 느끼도록 돕습니다.
 
-</aside>
+<p align="center">
+  <img 
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/email.png"
+    alt="이슈 트래커"
+    width="80%"
+  />
+</p>
 
-<aside>
+
 
 ### 4. 데이터 엔진: 성향 테스트 및 성향 기반 댓글
 
-| 간단한 성향 테스트를 통해 사용자에게 유형을 부여하고, 사용자들의 댓글이 단순한 소음이 아닌, 하나의 데이터가 될 수 있도록 합니다.
+> 간단한 성향 테스트를 통해 사용자에게 유형을 부여하고, 사용자들의 댓글이 단순한 소음이 아닌, 하나의 데이터가 될 수 있도록 합니다.
 
-</aside>
+<p align="center">
+  <img 
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture4.png"
+    alt="댓글"
+    width="80%"
+  />
+</p>
 
-<aside>
+
 
 ### 5. 청원 탐색 UX: 카드뉴스/정렬/필터/검색
 
-| 주간 TOP 청원 배너와 카드뉴스를 제공하여, 사용자들이 현재 이슈가 되고 있는 청원에 빠르게 접근할 수 있도록 합니다.
+> 주간 TOP 청원 배너와 카드뉴스를 제공하여, 사용자들이 현재 이슈가 되고 있는 청원에 빠르게 접근할 수 있도록 합니다.
 
-</aside>
+<p align="center">
+  <img 
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture5.png"
+    alt="카드 뉴스"
+    width="80%"
+  />
+</p>
+
 
 # System Design and Documentation
 
 ### ERD
 
-<img alt="ERD," title="ERD," src="./rainbow_web/src/Assets/Img/ERD_Sincerely.png" width="45%">
+<img 
+  src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/00_FE/public/ERD.png"
+  alt="ERD"
+  width="45%"
+/>
 
 ---
 
@@ -184,7 +201,7 @@
 > **This was made possible by** </br>
 > <a href="https://we-pard.com/" style="display:flex;flex-direction:column;">
 > <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExampoeG5sZDN4ZHhoNWRpMXRsdDZlcjhzczk4eTE0d2dyajB6YWJjeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SwO3hAK7Jt5nYD0L1z/giphy.gif" width="520" height="140" />
-> <a/>
+> </a>
 
 ---
 
