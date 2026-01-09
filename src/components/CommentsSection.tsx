@@ -79,7 +79,7 @@ const profileSrc = (status?: number) => {
     case 2:
       return "/profile_Pragmatist.svg";
     case 3:
-      return "/profile_Value_driven.svg";
+      return "/profile_Value-driven.svg";
     default:
       return "/profile.svg";
   }
