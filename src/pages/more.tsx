@@ -7,22 +7,23 @@ import Image from "next/image";
 
 const MorePage: NextPage = () => {
   return (
-    <>
+    <div className={styles.page}>
       <Header />
 
       {/* 이미지 영역 */}
       <div className={styles.imageSection}>
         <Image
-          src="/long_image.png"
+          src="/seeMora.svg"
           alt="상세 이미지"
           width={1440}
-          height={3000} // 예시: 긴 이미지
+          height={3000}
+          className={styles.image}
           priority
         />
       </div>
 
-      <Footer />
-    </>
+      <Footer transparent />
+    </div>
   );
 };
 

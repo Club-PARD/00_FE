@@ -22,6 +22,8 @@ import LoginToast from "@/components/LoginToast";
 
 import { useScrapStore } from "@/store/scrapStore";
 
+import { isEarlyClosed } from "@/lib/dateRule";
+
 type PetitionDetailResponse = {
   title?: string;
   subTitle?: string;
@@ -61,7 +63,8 @@ function formatDotDate(iso?: string) {
   return iso.slice(0, 10).replaceAll("-", ".");
 }
 
-function statusLabel(status?: number) {
+function statusLabel(status?: number, earlyClosed?: boolean) {
+  if (earlyClosed) return "조기마감";
   const map: Record<number, string> = { 0: "진행중", 1: "종료", 2: "처리완료" };
   if (typeof status !== "number") return "-";
   return map[status] ?? String(status);
@@ -142,8 +145,12 @@ export default function PetitionDetailPage() {
 
     try {
       const [detailRes, lawsRes] = await Promise.all([
-        axios.get(`/api/petition/${petitionId}`, { validateStatus: () => true }),
-        axios.get(`/api/petition/laws/${petitionId}`, { validateStatus: () => true }),
+        axios.get(`/api/petition/${petitionId}`, {
+          validateStatus: () => true,
+        }),
+        axios.get(`/api/petition/laws/${petitionId}`, {
+          validateStatus: () => true,
+        }),
       ]);
 
       if (detailRes.status >= 400) {
@@ -193,18 +200,49 @@ export default function PetitionDetailPage() {
     };
   }, [petitionId, fetchDetailAndLaws]);
 
-  const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
-  const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
+  const badge = useMemo(
+    () => safeString(detail?.category, "-"),
+    [detail?.category]
+  );
+  const title = useMemo(
+    () => safeString(detail?.title, "제목 없음"),
+    [detail?.title]
+  );
 
-  const agreeCount = useMemo(() => safeNumber(detail?.allows, 0), [detail?.allows]);
-  const percent = useMemo(() => computePercent(detail?.allows), [detail?.allows]);
+  const earlyClosed = useMemo(() => {
+    return isEarlyClosed(detail?.status, detail?.voteStartDate);
+  }, [detail?.status, detail?.voteStartDate]);
+
+  const agreeCount = useMemo(
+    () => safeNumber(detail?.allows, 0),
+    [detail?.allows]
+  );
+  const percent = useMemo(
+    () => computePercent(detail?.allows),
+    [detail?.allows]
+  );
 
   const heroMeta = useMemo(() => {
-    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
+    const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(
+      detail?.voteEndDate
+    )}`;
     return [
-      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
-      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.department, "-") },
-      { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
+      {
+        iconSrc: "/proicons_calendar.svg",
+        label: "동의기간",
+        value: period,
+        valueHighlight: true,
+      },
+      {
+        iconSrc: "/Group (2).svg",
+        label: "소관위원회",
+        value: safeString(detail?.department, "-"),
+      },
+      {
+        iconSrc: "/Group (1).svg",
+        label: "상태",
+        value: statusLabel(detail?.status, earlyClosed),
+      },
       { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
       {
         iconSrc: "/proicons_send.svg",
@@ -328,7 +366,7 @@ export default function PetitionDetailPage() {
               meta={heroMeta}
               agreeCount={agreeCount}
               percent={percent}
-              statusPill="마감"
+              statusPill={earlyClosed ? "조기마감" : "마감"}
               bookmarked={isScrapped}
               bookmarkLoading={thisLoading || syncing}
               onToggleBookmark={async () => {
@@ -351,7 +389,9 @@ export default function PetitionDetailPage() {
               <AISummaryCard text={aiText} />
               <PetitionOverview title="" text={overviewText} />
               <RelatedPolicyCard policies={laws} error={lawsError} />
-              {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
+              {showProsCons && (
+                <ProsConsSection pros={prosItems} cons={consItems} />
+              )}
               <SummaryNotice />
             </div>
 
@@ -379,7 +419,10 @@ export default function PetitionDetailPage() {
                     onRequireLoginToast={showLoginToast}
                     onRequestRefresh={fetchDetailAndLaws}
                   />
-                  <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
+                  <CommentsSection
+                    petitionId={petitionId}
+                    isAuthed={isAuthed}
+                  />
                 </div>
                 <div className={styles.lowerRight} />
               </div>

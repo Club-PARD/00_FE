@@ -178,6 +178,7 @@ export default function CongressPage() {
       endDate: computedEnd
         ? formatDot(computedEnd)
         : (p.voteEndDate ?? "").split("T")[0].replace(/-/g, "."),
+      status: p.status,
     };
   };
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,55 +16,74 @@ type BannerViewItem = {
   link: string;
 };
 
-//이미지 + 연결할 청원 id
-const BANNERS = [
-  { imgSrc: "/banners/banner_01.svg", petitionId: "1", alt: "배너 1" },
-  { imgSrc: "/banners/banner_02.svg", petitionId: "35", alt: "배너 2" },
-  { imgSrc: "/banners/banner_03.svg", petitionId: "3", alt: "배너 3" },
-  { imgSrc: "/banners/banner_04.svg", petitionId: "4", alt: "배너 4" },
-] as const;
+// !!!!!!!!! 매주 여기만 수정하면 되는 배너 이미지 세트 !!!!!!!!!
+// id와 img, link 연결하기
+const WEEKLY_BANNERS: BannerViewItem[] = [
+  {
+    id: "2026w02-1",
+    imgSrc: "/banners/banner_01.svg",
+    alt: "주간 TOP 1",
+    link: "/petition/3",
+  },
+  {
+    id: "2026w02-2",
+    imgSrc: "/banners/banner_02.svg",
+    alt: "주간 TOP 2",
+    link: "/petition/4",
+  },
+  {
+    id: "2026w02-3",
+    imgSrc: "/banners/banner_03.svg",
+    alt: "주간 TOP 3",
+    link: "/petition/5",
+  },
+  {
+    id: "2026w02-4",
+    imgSrc: "/banners/banner_04.svg",
+    alt: "주간 TOP 4",
+    link: "/petition/6",
+  },
+];
 
 export default function Banner() {
-  const [items, setItems] = useState<BannerViewItem[]>([]);
+  // 배너 데이터 (이미지 경로, 클릭시 이동할 주소)
 
-  useEffect(() => {
-    const UNIQUE = BANNERS.length;
-    const REPEAT = 2;
+  /*
+    내용 매번 수정해야 되는 부분
+    imgSrc => 보여줄 이미지
+    link => 해당 이미지와 관련된 청원으로 이동
+  */
 
-    const baseCount = UNIQUE;
-    const mapped: BannerViewItem[] = Array.from(
-      { length: baseCount * REPEAT },
-      (_, idx) => {
-        const baseIdx = idx % baseCount;
-        const b = BANNERS[baseIdx];
-
-        return {
-          id: `${b.petitionId}-${idx}`,
-          imgSrc: b.imgSrc,
-          alt: b.alt,
-          link: `/petition/${b.petitionId}`,
-        };
-      }
-    );
-
-    setItems(mapped);
-  }, []);
+  const hasBanners = WEEKLY_BANNERS.length > 0;
+  const enableLoop = WEEKLY_BANNERS.length > 1;
 
   return (
-    <div className={styles.bannerWrapper}>
-      {items.length > 0 && (
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          spaceBetween={24}
-          slidesPerView={"auto"}
-          centeredSlides={true}
-          loop={true}
-          allowTouchMove={false}
-          slideToClickedSlide={true}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          className={styles.swiperContainer}
-        >
-          {items.map((banner) => (
+    <>
+      <div className={styles.bannerWrapper}>
+        {hasBanners && (
+          <Swiper
+            /* 화살표, 자동재생 사용 */
+            modules={[Navigation, Autoplay]}
+            // 슬라이드 간격
+            spaceBetween={24}
+            // CSS
+            slidesPerView={"auto"}
+            // 활성화된 슬라이드가 가운데로 오도록
+            centeredSlides={true}
+            // 무한 반복
+            loop={true}
+            // 마우스 드래그(터치)로 넘기는 기능 끄기
+            allowTouchMove={false}
+            // 클릭된 슬라이드를 가운데로 이동시키기
+            slideToClickedSlide={true}
+            // 4초마다 자동 넘김
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            className={styles.swiperContainer}
+          >
+            {WEEKLY_BANNERS.map((banner) => (
             <SwiperSlide key={banner.id} className={styles.slide}>
               <Link href={banner.link} className={styles.linkBlock}>
                 <Image
@@ -80,8 +98,10 @@ export default function Banner() {
               </Link>
             </SwiperSlide>
           ))}
-        </Swiper>
-      )}
-    </div>
+
+          </Swiper>
+        )}
+      </div>
+    </>
   );
 }
