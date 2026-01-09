@@ -1,40 +1,195 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+<div align="center">
+<a id="readme-top"></a>
+<!— Header banner —>
+<p align="center">
 
-## Getting Started
+  <a>
+    <img src="https://img.shields.io/badge/HTML5-E34F26.svg?style=flat&logo=html5&logoColor=white" alt="HTML">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=javascript&logoColor=white" alt="js">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/springboot-6DB33F.svg?style=flate&logo=springboot&logoColor=white" alt="springboot">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/CSS3-1572B6.svg?style=flat&logo=css3&logoColor=white" alt="CSS">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/AWS-232F3E.svg?style=flat&logo=amazonwebservices&logoColor=white" alt="aws">
+  </a>
+</p>
 
-First, run the development server:
+——
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<p align="center">
+    <img alt="Mora" title="Mora" src="../00_FE/public/logo.svg" width="45%">
+</p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br/>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+청년의 목소리를 담아낼 그릇 <br />청년 대표성 회복 플랫폼 <b>mora</b>
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<br/>
+</div>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+——
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# ✱ 목차
 
-## Learn More
+- [소개](#소개)
+- [Features](#-Features)
+- [System Design and Documentation](#%EF%B8%8F-system-design-and-documentation)
+- [Tech Stack](#-Tech-Stack)
+- [Acknowledgements](#-Acknowledgements)
 
-To learn more about Next.js, take a look at the following resources:
+<div>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+# 🌐 소개
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 서비스명: Mora
 
-## Deploy on Vercel
+#### 대한민국 청년들이 정책 참여에 뛰어들고, 자신의 목소리를 실제 제도권 참여로 연결하도록 돕는 웹 서비스 입니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> ❗ **Problem Definition:** 정치 및 정책에 참여하는 것이 어렵고, 피드백이 없어 무력감을 느낍니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### mora는 이것을 해결하고자 합니다
+
+| As-is                                                          | To-be                                                                         |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 행정/정책 용어가 어렵고, 공부하는 비용이 너무 큽니다.          | AI 요약으로 핵심 쟁점을 빠르게 파악하게 도와줍니다.                           |
+| 공식 청원 사이트는 복잡하고 사용자 친화적이지 않습니다.        | 원하는 청원에서 공식 청원(국민동의청원/청원24)로 가는 최단 경로를 제공합니다. |
+| 참여해도 처리 과정/결과를 추적하기 어려워 효능감이 사라집니다. | 북마크/알림으로 진행상황과 처리결과를 끝까지 추적할 수 있게 합니다.           |
+
+# Features
+
+### 핵심 기능
+
+<aside>
+
+### 1. 정보 경량화: 청원 분석 요약
+
+| 청원 원문(감정적/편향적 표현 포함)을 그대로 두지 않고, 20대가 이해하기 쉬운 형태로 재구성합니다.
+
+</aside>
+
+<aside>
+
+### 2. 참여의 One-Stop: 청원 브릿지
+
+| 사용자가 청원을 읽는데서 멈추는 것이 아니라, 직접 참여할 수 있도록 공식 청원(국민동의청원/청원24)로 바로 이동할 수 있는 동선 제공을 제공합니다.
+
+</aside>
+
+<aside>
+
+### 3. 효능감 회복: 이슈 트래커(북마크/알림)
+
+| 사용자가 관심을 가진 안건을 끝까지 확인함으로써, 사용자가 정책 변화에 힘을 쓸 수 있다는 것을 느끼도록 돕습니다.
+
+</aside>
+
+<aside>
+
+### 4. 데이터 엔진: 성향 테스트 및 성향 기반 댓글
+
+| 간단한 성향 테스트를 통해 사용자에게 유형을 부여하고, 사용자들의 댓글이 단순한 소음이 아닌, 하나의 데이터가 될 수 있도록 합니다.
+
+</aside>
+
+<aside>
+
+### 5. 청원 탐색 UX: 카드뉴스/정렬/필터/검색
+
+| 주간 TOP 청원 배너와 카드뉴스를 제공하여, 사용자들이 현재 이슈가 되고 있는 청원에 빠르게 접근할 수 있도록 합니다.
+
+</aside>
+
+# System Design and Documentation
+
+### ERD
+
+<img alt="ERD," title="ERD," src="./rainbow_web/src/Assets/Img/ERD_Sincerely.png" width="45%">
+
+---
+
+# Tech Stack
+
+## Built With
+
+### Frontend
+
+<p>
+  <img src="https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Zustand-443E38?style=flat&logo=zustand&logoColor=white"/>
+  <img src="https://img.shields.io/badge/CSS%20Modules-000000?style=flat&logo=cssmodules&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/>
+  <img src="https://img.shields.io/badge/NextAuth-000000?style=flat&logo=nextdotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Swiper-6332F6?style=flat&logo=swiper&logoColor=white"/>
+</p>
+
+
+### Backend
+<p>
+  <img src="https://img.shields.io/badge/Java-17-007396?style=flat&logo=java&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.4.1-6DB33F?style=flat&logo=springboot&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=springsecurity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/OAuth2-000000?style=flat&logo=auth0&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JPA-59666C?style=flat&logo=hibernate&logoColor=white"/>
+  <img src="https://img.shields.io/badge/OpenFeign-000000?style=flat&logo=apache&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Selenium-43B02A?style=flat&logo=selenium&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Async-6DB33F?style=flat&logo=spring&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Mail-6DB33F?style=flat&logo=gmail&logoColor=white"/>
+</p>
+
+#### Backend Responsibilities
+- Spring @Async 기반 비동기 처리
+- Selenium(Chrome Driver)을 활용한 데이터 크롤링
+- Spring Boot Mail을 통한 이메일 알림
+
+#### Database
+<p>
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/>
+</p>
+
+#### Public Data
+<p>
+  <img src="https://img.shields.io/badge/Public%20API-국회%20정보공개%20포털-003764?style=flat"/>
+</p>
+
+#### AI / LLM
+<p>
+  <img src="https://img.shields.io/badge/OpenAI-GPT--4o%20mini-412991?style=flat&logo=openai&logoColor=white"/>
+</p>
+
+#### Server / Infrastructure
+<p>
+  <img src="https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat&logo=amazonaws&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white"/>
+</p>
+
+### Cooperate Tool
+<p>
+  <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=Figma&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white"/>
+</p>
+<br>
+
+# 🙏 Acknowledgements
+
+> **This was made possible by** </br>
+> <a href="https://we-pard.com/" style="display:flex;flex-direction:column;">
+> <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExampoeG5sZDN4ZHhoNWRpMXRsdDZlcjhzczk4eTE0d2dyajB6YWJjeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SwO3hAK7Jt5nYD0L1z/giphy.gif" width="520" height="140" />
+> <a/>
+
+---
+
+### License
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
