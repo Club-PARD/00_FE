@@ -104,22 +104,26 @@ export default function CongressCard({
     Number.isFinite(petId) ? !!s.loadingById[petId] : false
   );
 
+  const badgeText = !end
+    ? "-"
+    : earlyClosed
+    ? "조기마감"
+    : closed
+    ? "마감"
+    : dday === null
+    ? "-"
+    : `D-${dday}`;
+
   return (
     <article className={styles.cardWrapper}>
       {/* 헤더: D-Day & 북마크 */}
       <div className={styles.headerRow}>
         <span
-          className={`${styles.ddayBadge} ${isUrgent ? styles.ddayRed : ""}`}
+          className={`${styles.ddayBadge} ${isUrgent ? styles.ddayRed : ""} ${
+            earlyClosed ? styles.ddayWide : ""
+          }`}
         >
-          {!end
-            ? "-"
-            : earlyClosed
-            ? "조기마감"
-            : closed
-            ? "마감"
-            : dday === null
-            ? "-"
-            : `D-${dday}`}
+          {badgeText}
         </span>
         <button
           className={styles.bookmarkBtn}

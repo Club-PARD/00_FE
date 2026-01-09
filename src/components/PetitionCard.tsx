@@ -103,6 +103,16 @@ export default function PetitionCard({
     Number.isFinite(petId) ? !!s.loadingById[petId] : false
   );
 
+  const badgeText = !end
+    ? "-"
+    : earlyClosed
+    ? "조기마감"
+    : closed
+    ? "마감"
+    : dday === null
+    ? "-"
+    : `D-${dday}`;
+
   const toggleScrap = useScrapStore((s) => s.toggleScrap);
 
   return (
@@ -110,16 +120,12 @@ export default function PetitionCard({
       {/* 상단 흰 카드 영역 (클릭 이동 x) */}
       <div className={styles.whiteCard}>
         <div className={styles.headerRow}>
-          <span className={`${styles.ddayBadge} ${badgeColorClass}`}>
-            {!end
-              ? "-"
-              : earlyClosed
-              ? "조기마감"
-              : closed
-              ? "마감"
-              : dday === null
-              ? "-"
-              : `D-${dday}`}
+          <span
+            className={`${styles.ddayBadge} ${badgeColorClass} ${
+              badgeText === "조기마감" ? styles.ddayWide : ""
+            }`}
+          >
+            {badgeText}
           </span>
 
           <button

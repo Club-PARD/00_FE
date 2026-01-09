@@ -1,10 +1,17 @@
 import Image from "next/image";
 import styles from "@/styles/Footer.module.css";
 
-export default function Footer() {
+type FooterProps = {
+  transparent?: boolean; // /more에서만 true로 주기 위함
+};
+
+export default function Footer({ transparent = false }: FooterProps) {
   return (
-    <footer className={styles.footer}>
-      {/* 상단 링크 영역 */}
+    <footer
+      className={`${styles.footer} ${transparent ? styles.transparent : ""}`}
+    >
+
+      {/* 상단 링크 영역 - 실제로 되지는 않음 */}
       <div className={styles.links}>
         <span className={styles.link}>이용약관</span>
         <span className={styles.separator}>|</span>
