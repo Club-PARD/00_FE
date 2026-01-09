@@ -19,10 +19,10 @@ type BannerViewItem = {
 
 //이미지 + 연결할 청원 id
 const BANNERS = [
-  { imgSrc: "/banners/banner_01.svg", petitionId: "28", alt: "배너 1" },
+  { imgSrc: "/banners/banner_01.svg", petitionId: "1", alt: "배너 1" },
   { imgSrc: "/banners/banner_02.svg", petitionId: "35", alt: "배너 2" },
-  { imgSrc: "/banners/banner_03.svg", petitionId: "12", alt: "배너 3" },
-  { imgSrc: "/banners/banner_04.svg", petitionId: "7", alt: "배너 4" },
+  { imgSrc: "/banners/banner_03.svg", petitionId: "3", alt: "배너 3" },
+  { imgSrc: "/banners/banner_04.svg", petitionId: "4", alt: "배너 4" },
 ] as const;
 
 export default function Banner() {
