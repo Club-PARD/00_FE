@@ -12,6 +12,7 @@ import SummaryNotice from "@/components/SummaryNotice";
 import LikeDislikeBar from "@/components/LikeDislikeBar";
 import RelatedPolicyCard from "@/components/RelatedPolicyCard";
 import CommentsSection from "@/components/CommentsSection";
+import Footer from "@/components/Footer";
 
 import styles from "@/styles/PetitionDetail.module.css";
 import { useAuthStore } from "@/store/authStore";
@@ -133,6 +134,45 @@ export default function PetitionDetailPage() {
     syncScraps();
   }, [petitionId, isAuthed, syncScraps]);
 
+  const fetchDetailAndLaws = useCallback(async () => {
+    if (!petitionId) return;
+
+    setError(null);
+    setLawsError(null);
+
+    try {
+      const [detailRes, lawsRes] = await Promise.all([
+        axios.get(`/api/petition/${petitionId}`, { validateStatus: () => true }),
+        axios.get(`/api/petition/laws/${petitionId}`, { validateStatus: () => true }),
+      ]);
+
+      if (detailRes.status >= 400) {
+        setDetail(null);
+        setError((detailRes.data as any)?.message ?? "상세 조회 실패");
+        return;
+      }
+
+      if (lawsRes.status >= 400) {
+        setLaws([]);
+        setLawsError((lawsRes.data as any)?.message ?? "관련 법안 조회 실패");
+      }
+
+      const detailData = detailRes.data as PetitionDetailResponse;
+      setDetail(detailData);
+
+      setGoodLocal(safeNumber(detailData.good, 0));
+      setBadLocal(safeNumber(detailData.bad, 0));
+
+      if (lawsRes.status < 400) {
+        setLaws(normalizeLaws(lawsRes.data));
+      }
+    } catch (e: any) {
+      const msg = e.response?.data?.message || e.message || "알 수 없는 오류";
+      setError(msg);
+      setDetail(null);
+    }
+  }, [petitionId]);
+
   useEffect(() => {
     if (!petitionId) return;
 
@@ -142,32 +182,16 @@ export default function PetitionDetailPage() {
     setLaws([]);
     setLawsError(null);
 
-    Promise.all([
-      axios.get(`/api/petition/${petitionId}`).then((r) => r.data as PetitionDetailResponse),
-      axios.get(`/api/petition/laws/${petitionId}`).then((r) => r.data),
-    ])
-      .then(([detailData, lawsData]) => {
-        if (!alive) return;
-        setDetail(detailData);
-        setLaws(normalizeLaws(lawsData));
-        setGoodLocal(safeNumber(detailData.good, 0));
-        setBadLocal(safeNumber(detailData.bad, 0));
-      })
-      .catch((e: any) => {
-        if (!alive) return;
-        const msg = e.response?.data?.message || e.message || "알 수 없는 오류";
-        setError(msg);
-        setDetail(null);
-      })
-      .finally(() => {
-        if (!alive) return;
-        setLoading(false);
-      });
+    (async () => {
+      await fetchDetailAndLaws();
+      if (!alive) return;
+      setLoading(false);
+    })();
 
     return () => {
       alive = false;
     };
-  }, [petitionId]);
+  }, [petitionId, fetchDetailAndLaws]);
 
   const badge = useMemo(() => safeString(detail?.category, "-"), [detail?.category]);
   const title = useMemo(() => safeString(detail?.title, "제목 없음"), [detail?.title]);
@@ -178,22 +202,9 @@ export default function PetitionDetailPage() {
   const heroMeta = useMemo(() => {
     const period = `${formatDotDate(detail?.voteStartDate)} ~ ${formatDotDate(detail?.voteEndDate)}`;
     return [
-      {
-        iconSrc: "/proicons_calendar.svg",
-        label: "동의기간",
-        value: period,
-        valueHighlight: true,
-      },
-      {
-        iconSrc: "/Group (2).svg",
-        label: "소관위원회",
-        value: safeString(detail?.department, "-"),
-      },
-      {
-        iconSrc: "/Group (1).svg",
-        label: "상태",
-        value: statusLabel(detail?.status),
-      },
+      { iconSrc: "/proicons_calendar.svg", label: "동의기간", value: period, valueHighlight: true },
+      { iconSrc: "/Group (2).svg", label: "소관위원회", value: safeString(detail?.department, "-") },
+      { iconSrc: "/Group (1).svg", label: "상태", value: statusLabel(detail?.status) },
       { iconSrc: "/proicons_attach.svg", label: "청원분야", value: badge },
       {
         iconSrc: "/proicons_send.svg",
@@ -251,12 +262,10 @@ export default function PetitionDetailPage() {
 
   const onClickGo = useCallback(() => {
     const raw = (detail?.url || detail?.petitionUrl || "").trim();
-
     if (!raw) {
       alert("바로가기 링크가 아직 등록되지 않았어요.");
       return;
     }
-
     const finalUrl = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
     window.open(finalUrl, "_blank", "noopener,noreferrer");
   }, [detail?.url, detail?.petitionUrl]);
@@ -308,9 +317,8 @@ export default function PetitionDetailPage() {
       <Header />
       <LoginToast open={toast} hide={toastHide} />
       <div className={styles.bgLayer} />
-  
-      <div className={styles.contentWrap}>
 
+      <div className={styles.contentWrap}>
         <section className={styles.whiteSection}>
           <div className={styles.container}>
             <DetailHeroCard
@@ -336,30 +344,15 @@ export default function PetitionDetailPage() {
             />
           </div>
         </section>
- 
+
         <div className={styles.container}>
           <div className={styles.grid}>
             <div className={styles.leftCol}>
-
               <AISummaryCard text={aiText} />
               <PetitionOverview title="" text={overviewText} />
               <RelatedPolicyCard policies={laws} error={lawsError} />
               {showProsCons && <ProsConsSection pros={prosItems} cons={consItems} />}
               <SummaryNotice />
- 
-              <LikeDislikeBar
-                petitionId={petitionId}
-                good={goodLocal}
-                bad={badLocal}
-                isAuthed={isAuthed}
-                onRequireLoginToast={showLoginToast}
-                onChangeCounts={(g, b) => {
-                  setGoodLocal(g);
-                  setBadLocal(b);
-                }}
-              />
-  
-              <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
             </div>
 
             <aside className={styles.rightCol}>
@@ -374,12 +367,29 @@ export default function PetitionDetailPage() {
                 />
               </div>
             </aside>
+
+            <section className={styles.lowerRow}>
+              <div className={styles.lowerGrid}>
+                <div className={styles.lowerLeft}>
+                  <LikeDislikeBar
+                    petitionId={petitionId}
+                    good={goodLocal}
+                    bad={badLocal}
+                    isAuthed={isAuthed}
+                    onRequireLoginToast={showLoginToast}
+                    onRequestRefresh={fetchDetailAndLaws}
+                  />
+                  <CommentsSection petitionId={petitionId} isAuthed={isAuthed} />
+                </div>
+                <div className={styles.lowerRight} />
+              </div>
+            </section>
           </div>
-  
+
           <div className={styles.commentsPagerSpace} />
         </div>
       </div>
+      <Footer />
     </main>
   );
-  
-}  
+}

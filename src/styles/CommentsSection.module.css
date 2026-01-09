@@ -51,12 +51,20 @@
 }
 
 /* 입력창 하단 보라색 밑줄 */
+/* 기본: 회색 밑줄 */
 .underline {
   margin-top: 8px;
   height: 2px;
-  background: #6a5cff;
   width: 100%;
+  background: #e0e0e0;
+  transition: background 0.2s ease;
 }
+
+/* input에 포커스가 들어오면 보라색 */
+.input:focus + .underline {
+  background: #6a5cff;
+}
+
 
 /* =========================
    댓글 목록 영역
