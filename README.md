@@ -18,17 +18,17 @@
 
 ---
 
-# ✱ 목차
+# ✱ Context
 
-- [소개](#소개)
+- [Intro](#Intro)
 - [Features](#features)
-- [System Design and Documentation](system-design-and-documentation)
+- [System Design and Documentation](#system-design-and-documentation)
 - [Tech Stack](#tech-stack)
 - [Acknowledgements](#acknowledgements)
 
 <div>
 
-# 🌐 소개
+# Intro
 
 ### 서비스명: Mora
 
@@ -123,7 +123,7 @@
 ### ERD
 
 <img 
-  src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/00_FE/public/ERD.png"
+  src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/ERD.png"
   alt="ERD"
   width="45%"
 />
@@ -196,7 +196,7 @@
 </p>
 <br>
 
-# 🙏 Acknowledgements
+# Acknowledgements
 
 > **This was made possible by** </br>
 > <a href="https://we-pard.com/" style="display:flex;flex-direction:column;">
