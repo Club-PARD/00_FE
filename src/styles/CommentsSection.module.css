@@ -71,7 +71,7 @@
 /* 개별 댓글 */
 .item {
   display: flex;
-  gap: 4px;
+  gap: 15px;
   align-items: flex-start;
 }
 
