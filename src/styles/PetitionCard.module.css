@@ -58,6 +58,8 @@
   padding: 0;
   box-sizing: border-box;
 
+  min-width: 65px;
+
   border-radius: 100px;
   border: 1.5px solid #767676;
   background-color: #fff;

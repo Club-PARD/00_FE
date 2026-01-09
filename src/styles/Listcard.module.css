@@ -41,6 +41,8 @@
   height: 24px;         
   padding: 0; 
 
+  min-width: 65px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;

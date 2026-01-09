@@ -21,18 +21,6 @@ function parseDate(dateStr: string) {
   return new Date(normalized + "T00:00:00");
 }
 
-// 진행 중인가 (endDate가 오늘 이후면 진행중 (true로))
-function isOngoing(endDate: string) {
-  const end = parseDate(endDate);
-  if (isNaN(end.getTime())) return false;
-
-  const today = new Date();
-  end.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-
-  return end.getTime() >= today.getTime(); // 오늘 포함이면 진행중
-}
-
 // 한 페이지에 보이는 카드 수
 const ITEMS_PER_PAGE = 24; // 한 페이지 카드 수 24
 
@@ -112,6 +100,7 @@ export default function LifePage() {
       allows: p.allows ?? 0,
       startDate: (p.voteStartDate ?? "").split("T")[0].replace(/-/g, "."),
       endDate: (p.voteEndDate ?? "").split("T")[0].replace(/-/g, "."),
+      status: p.status,
     };
   };
 
