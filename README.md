@@ -1,91 +1,195 @@
-📌 서비스 소개 (Service Overview)
+<div align="center">
+<a id="readme-top"></a>
+<!— Header banner —>
+<p align="center">
 
-Mora는 복잡하고 멀게 느껴지는 청원·정책 정보를
-20대 사용자가 일상적인 언어로 이해하고, 스스로 판단할 수 있도록 돕는 청원 정보 플랫폼입니다.
+  <a>
+    <img src="https://img.shields.io/badge/HTML5-E34F26.svg?style=flat&logo=html5&logoColor=white" alt="HTML">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=javascript&logoColor=white" alt="js">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/springboot-6DB33F.svg?style=flate&logo=springboot&logoColor=white" alt="springboot">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/CSS3-1572B6.svg?style=flat&logo=css3&logoColor=white" alt="CSS">
+  </a>
+  <a>
+    <img src="https://img.shields.io/badge/AWS-232F3E.svg?style=flat&logo=amazonwebservices&logoColor=white" alt="aws">
+  </a>
+</p>
 
-우리는 청년이 정치에 무관심하다고 보지 않습니다.
-문제는 관심은 있지만,
+——
 
-정보는 너무 무겁고(Heavy)
+<p align="center">
+    <img alt="Mora" title="Mora" src="../00_FE/public/logo.svg" width="45%">
+</p>
 
-참여 경로는 복잡하며(Thick)
+<br/>
 
-참여 이후의 결과를 체감할 수 없는 효능감 부재(No Efficacy) 에 있습니다.
+청년의 목소리를 담아낼 그릇 <br />청년 대표성 회복 플랫폼 <b>mora</b>
 
-Mora는 이 문제를 해결하기 위해
-청원을 단순히 “보여주는 것”이 아니라,
-이해 → 판단 → 참여로 이어지는 흐름 자체를 다시 설계했습니다.
+<br/>
+</div>
+
+——
+
+# ✱ 목차
+
+- [소개](#소개)
+- [Features](#-Features)
+- [System Design and Documentation](#%EF%B8%8F-system-design-and-documentation)
+- [Tech Stack](#-Tech-Stack)
+- [Acknowledgements](#-Acknowledgements)
+
+<div>
+
+# 🌐 소개
+
+### 서비스명: Mora
+
+#### 대한민국 청년들이 정책 참여에 뛰어들고, 자신의 목소리를 실제 제도권 참여로 연결하도록 돕는 웹 서비스 입니다.
+
+> ❗ **Problem Definition:** 정치 및 정책에 참여하는 것이 어렵고, 피드백이 없어 무력감을 느낍니다.
+
+### mora는 이것을 해결하고자 합니다
+
+| As-is                                                          | To-be                                                                         |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 행정/정책 용어가 어렵고, 공부하는 비용이 너무 큽니다.          | AI 요약으로 핵심 쟁점을 빠르게 파악하게 도와줍니다.                           |
+| 공식 청원 사이트는 복잡하고 사용자 친화적이지 않습니다.        | 원하는 청원에서 공식 청원(국민동의청원/청원24)로 가는 최단 경로를 제공합니다. |
+| 참여해도 처리 과정/결과를 추적하기 어려워 효능감이 사라집니다. | 북마크/알림으로 진행상황과 처리결과를 끝까지 추적할 수 있게 합니다.           |
+
+# Features
+
+### 핵심 기능
+
+<aside>
+
+### 1. 정보 경량화: 청원 분석 요약
+
+| 청원 원문(감정적/편향적 표현 포함)을 그대로 두지 않고, 20대가 이해하기 쉬운 형태로 재구성합니다.
+
+</aside>
+
+<aside>
+
+### 2. 참여의 One-Stop: 청원 브릿지
+
+| 사용자가 청원을 읽는데서 멈추는 것이 아니라, 직접 참여할 수 있도록 공식 청원(국민동의청원/청원24)로 바로 이동할 수 있는 동선 제공을 제공합니다.
+
+</aside>
+
+<aside>
+
+### 3. 효능감 회복: 이슈 트래커(북마크/알림)
+
+| 사용자가 관심을 가진 안건을 끝까지 확인함으로써, 사용자가 정책 변화에 힘을 쓸 수 있다는 것을 느끼도록 돕습니다.
+
+</aside>
+
+<aside>
+
+### 4. 데이터 엔진: 성향 테스트 및 성향 기반 댓글
+
+| 간단한 성향 테스트를 통해 사용자에게 유형을 부여하고, 사용자들의 댓글이 단순한 소음이 아닌, 하나의 데이터가 될 수 있도록 합니다.
+
+</aside>
+
+<aside>
+
+### 5. 청원 탐색 UX: 카드뉴스/정렬/필터/검색
+
+| 주간 TOP 청원 배너와 카드뉴스를 제공하여, 사용자들이 현재 이슈가 되고 있는 청원에 빠르게 접근할 수 있도록 합니다.
+
+</aside>
+
+# System Design and Documentation
+
+### ERD
+
+<img alt="ERD," title="ERD," src="./rainbow_web/src/Assets/Img/ERD_Sincerely.png" width="45%">
+
+---
+
+# Tech Stack
+
+## Built With
+
+### Frontend
+
+<p>
+  <img src="https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Zustand-443E38?style=flat&logo=zustand&logoColor=white"/>
+  <img src="https://img.shields.io/badge/CSS%20Modules-000000?style=flat&logo=cssmodules&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/>
+  <img src="https://img.shields.io/badge/NextAuth-000000?style=flat&logo=nextdotjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Swiper-6332F6?style=flat&logo=swiper&logoColor=white"/>
+</p>
 
 
-✨ 핵심 기능
+### Backend
+<p>
+  <img src="https://img.shields.io/badge/Java-17-007396?style=flat&logo=java&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.4.1-6DB33F?style=flat&logo=springboot&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=springsecurity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/OAuth2-000000?style=flat&logo=auth0&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JPA-59666C?style=flat&logo=hibernate&logoColor=white"/>
+  <img src="https://img.shields.io/badge/OpenFeign-000000?style=flat&logo=apache&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Selenium-43B02A?style=flat&logo=selenium&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Async-6DB33F?style=flat&logo=spring&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Mail-6DB33F?style=flat&logo=gmail&logoColor=white"/>
+</p>
 
-📄 청원·정책 정보 경량화
+#### Backend Responsibilities
+- Spring @Async 기반 비동기 처리
+- Selenium(Chrome Driver)을 활용한 데이터 크롤링
+- Spring Boot Mail을 통한 이메일 알림
 
-Mora는 청원과 정책 정보를 그대로 나열하지 않고,
-사용자가 빠르게 이해할 수 있도록 구조화된 형태로 재구성합니다.
-청원 상세 페이지에서는 배경 설명, 핵심 쟁점, 청원 요약 등을 단계적으로 제공하여
-긴 글을 모두 읽지 않아도 이슈의 흐름과 맥락을 파악할 수 있도록 설계했습니다.
-이를 통해 정책 정보를 이해하는 데 필요한 탐색 비용을 줄이고,
-모바일 환경에서도 부담 없이 정보를 소비할 수 있도록 했습니다.
+#### Database
+<p>
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/>
+</p>
 
-⚖️ 균형 잡힌 관점 제공 (찬·반 구조)
+#### Public Data
+<p>
+  <img src="https://img.shields.io/badge/Public%20API-국회%20정보공개%20포털-003764?style=flat"/>
+</p>
 
-Mora는 특정 입장을 유도하지 않습니다.
-청원 이슈가 20대의 삶에 미치는 영향을 긍정적 측면과 부정적 측면으로 나누어 함께 제시하여,
-사용자가 스스로 장단점을 비교하고 판단할 수 있는 환경을 제공합니다.
-이 구조는 감정적인 찬반 대립이 아닌, 맥락을 이해한 뒤 내리는 선택을 돕는 것을 목표로 합니다.
+#### AI / LLM
+<p>
+  <img src="https://img.shields.io/badge/OpenAI-GPT--4o%20mini-412991?style=flat&logo=openai&logoColor=white"/>
+</p>
 
-🔗 참여로 이어지는 흐름 설계 (청원 브릿지)
+#### Server / Infrastructure
+<p>
+  <img src="https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat&logo=amazonaws&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white"/>
+</p>
 
-정보 제공에서 멈추지 않고, 실제 참여로 이어지는 동선을 설계했습니다.
-사용자는 서비스 내부에서 이슈를 충분히 이해한 뒤
-공식 청원 페이지로 자연스럽게 이동할 수 있으며,
-읽기 중심의 소비 경험이 행동으로 전환될 수 있도록 돕습니다.
+### Cooperate Tool
+<p>
+  <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=Figma&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white"/>
+</p>
+<br>
 
-💬 사용자 상호작용
+# 🙏 Acknowledgements
 
-Mora는 청원에 대한 다양한 의견이 드러날 수 있도록
-좋아요,싫어요 기능과 댓글 기능을 제공합니다.
-이를 통해 사용자는 자신의 의견을 표현하고,
-다른 사용자의 시각을 함께 확인할 수 있습니다.
-상호작용은 단순한 참여 수치가 아닌,
-이슈에 대한 사회적 맥락을 형성하는 요소로 작동합니다.
+> **This was made possible by** </br>
+> <a href="https://we-pard.com/" style="display:flex;flex-direction:column;">
+> <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExampoeG5sZDN4ZHhoNWRpMXRsdDZlcjhzczk4eTE0d2dyajB6YWJjeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SwO3hAK7Jt5nYD0L1z/giphy.gif" width="520" height="140" />
+> <a/>
 
-⭐ 관심 관리 및 스크랩
+---
 
-관심 있는 청원은 스크랩 기능을 통해 저장할 수 있습니다.
-스크랩한 청원은 마이페이지에서 한눈에 확인할 수 있으며,
-사용자는 자신이 어떤 이슈에 지속적으로 관심을 가지고 있는지 스스로 인식할 수 있습니다.
-이를 통해 단발성 참여가 아닌, 지속적인 이슈 추적 경험을 제공합니다.
+### License
 
-👤 개인화 경험
-
-회원가입 과정에서 제공되는 정치 성향 테스트는
-사용자가 자신의 관점을 인식하는 출발점 역할을 합니다.
-성향 결과는 이후 청원 콘텐츠를 해석하는 하나의 맥락으로 작용하며,
-언제든 설문을 다시 진행할 수 있도록 하여
-사용자의 변화 역시 서비스에 반영될 수 있도록 설계했습니다.
-
-
-🔗 데이터 출처 (Data Sources)
-
-Mora는 신뢰할 수 있는 공식 청원 데이터를 기반으로 서비스를 구성합니다.
-외부 커뮤니티나 2차 가공 정보가 아닌, 실제 정책·청원 데이터를 직접 활용하여
-사용자가 정확한 맥락 위에서 판단할 수 있도록 설계되었습니다.
-
-🏛 국회 국민동의청원
-
-진행 중 및 종료된 국회 청원 데이터
-
-청원 상태, 소관위원회, 동의 수, 처리 결과 등 핵심 정보 활용
-
-국회 안건 중심의 정책 이슈 제공
-
-🧾 청원24 (생활안건)
-
-생활 밀착형 청원 데이터 제공
-
-자동차 보험, 주거, 소비자 권리 등 일상과 가까운 이슈 중심
-
-국회 청원과 동일한 구조로 통합하여 일관된 UX 제공
-
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
