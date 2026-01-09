@@ -5,7 +5,7 @@
 ---
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/00_FE/public/logo.svg" width="45%"/>
+    <img src="https://raw.githubusercontent.com/Club-PARD/00_FE/refs/heads/main/public/logo.svg" width="45%"/>
 
 </p>
 
@@ -55,7 +55,7 @@
 
 <p align="center">
   <img 
-    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture1.png"
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/image1.png"
     alt="청원 분석 요약 화면"
     width="80%"
   />
@@ -69,7 +69,7 @@
 
 <p align="center">
   <img 
-    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture2.png"
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/image2.png"
     alt="청원 브릿지 화면"
     width="80%"
   />
@@ -97,7 +97,7 @@
 
 <p align="center">
   <img 
-    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture4.png"
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/image4.png"
     alt="댓글"
     width="80%"
   />
@@ -111,7 +111,7 @@
 
 <p align="center">
   <img 
-    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/capture5.png"
+    src="https://raw.githubusercontent.com/Club-PARD/00_FE/main/public/image5.png"
     alt="카드 뉴스"
     width="80%"
   />
