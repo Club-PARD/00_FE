@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import styles from "@/styles/Congress.module.css";
 import { useLoginToast } from "@/hooks/useLoginToast";
 import LoginToast from "@/components/LoginToast";
+import Footer from "@/components/Footer";
 
 import ListCard, { CongressCardItem } from "@/components/ListCard";
 
@@ -119,7 +120,7 @@ export default function LifePage() {
     setLoading(true);
     try {
       const how = sortOption === "인기순" ? 0 : 1;
-      const statusForServer = activeStatus === "ongoing" ? 0 : 2;
+      const statusForServer = activeStatus === "ongoing" ? 0 : 1;
 
       const data = await getLifePetitions({
         how,
@@ -292,6 +293,8 @@ export default function LifePage() {
           onPageChange={setCurrentPage}
         />
       </main>
+
+      <Footer />
     </>
   );
 }

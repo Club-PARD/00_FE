@@ -25,7 +25,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={notoSansKr.className}>
       <Header />
       <Component {...pageProps} />
-      <Footer />
     </main>
   );
 }
