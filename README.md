@@ -1,40 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+📌 서비스 소개 (Service Overview)
 
-## Getting Started
+Mora는 복잡하고 멀게 느껴지는 청원·정책 정보를
+20대 사용자가 일상적인 언어로 이해하고, 스스로 판단할 수 있도록 돕는 청원 정보 플랫폼입니다.
 
-First, run the development server:
+우리는 청년이 정치에 무관심하다고 보지 않습니다.
+문제는 관심은 있지만,
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+정보는 너무 무겁고(Heavy)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+참여 경로는 복잡하며(Thick)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+참여 이후의 결과를 체감할 수 없는 효능감 부재(No Efficacy) 에 있습니다.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Mora는 이 문제를 해결하기 위해
+청원을 단순히 “보여주는 것”이 아니라,
+이해 → 판단 → 참여로 이어지는 흐름 자체를 다시 설계했습니다.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✨ 핵심 기능
 
-## Learn More
+📄 청원·정책 정보 경량화
 
-To learn more about Next.js, take a look at the following resources:
+Mora는 청원과 정책 정보를 그대로 나열하지 않고,
+사용자가 빠르게 이해할 수 있도록 구조화된 형태로 재구성합니다.
+청원 상세 페이지에서는 배경 설명, 핵심 쟁점, 청원 요약 등을 단계적으로 제공하여
+긴 글을 모두 읽지 않아도 이슈의 흐름과 맥락을 파악할 수 있도록 설계했습니다.
+이를 통해 정책 정보를 이해하는 데 필요한 탐색 비용을 줄이고,
+모바일 환경에서도 부담 없이 정보를 소비할 수 있도록 했습니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+⚖️ 균형 잡힌 관점 제공 (찬·반 구조)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Mora는 특정 입장을 유도하지 않습니다.
+청원 이슈가 20대의 삶에 미치는 영향을 긍정적 측면과 부정적 측면으로 나누어 함께 제시하여,
+사용자가 스스로 장단점을 비교하고 판단할 수 있는 환경을 제공합니다.
+이 구조는 감정적인 찬반 대립이 아닌, 맥락을 이해한 뒤 내리는 선택을 돕는 것을 목표로 합니다.
 
-## Deploy on Vercel
+🔗 참여로 이어지는 흐름 설계 (청원 브릿지)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+정보 제공에서 멈추지 않고, 실제 참여로 이어지는 동선을 설계했습니다.
+사용자는 서비스 내부에서 이슈를 충분히 이해한 뒤
+공식 청원 페이지로 자연스럽게 이동할 수 있으며,
+읽기 중심의 소비 경험이 행동으로 전환될 수 있도록 돕습니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+💬 사용자 상호작용
+
+Mora는 청원에 대한 다양한 의견이 드러날 수 있도록
+좋아요,싫어요 기능과 댓글 기능을 제공합니다.
+이를 통해 사용자는 자신의 의견을 표현하고,
+다른 사용자의 시각을 함께 확인할 수 있습니다.
+상호작용은 단순한 참여 수치가 아닌,
+이슈에 대한 사회적 맥락을 형성하는 요소로 작동합니다.
+
+⭐ 관심 관리 및 스크랩
+
+관심 있는 청원은 스크랩 기능을 통해 저장할 수 있습니다.
+스크랩한 청원은 마이페이지에서 한눈에 확인할 수 있으며,
+사용자는 자신이 어떤 이슈에 지속적으로 관심을 가지고 있는지 스스로 인식할 수 있습니다.
+이를 통해 단발성 참여가 아닌, 지속적인 이슈 추적 경험을 제공합니다.
+
+👤 개인화 경험
+
+회원가입 과정에서 제공되는 정치 성향 테스트는
+사용자가 자신의 관점을 인식하는 출발점 역할을 합니다.
+성향 결과는 이후 청원 콘텐츠를 해석하는 하나의 맥락으로 작용하며,
+언제든 설문을 다시 진행할 수 있도록 하여
+사용자의 변화 역시 서비스에 반영될 수 있도록 설계했습니다.
+
+
+🔗 데이터 출처 (Data Sources)
+
+Mora는 신뢰할 수 있는 공식 청원 데이터를 기반으로 서비스를 구성합니다.
+외부 커뮤니티나 2차 가공 정보가 아닌, 실제 정책·청원 데이터를 직접 활용하여
+사용자가 정확한 맥락 위에서 판단할 수 있도록 설계되었습니다.
+
+🏛 국회 국민동의청원
+
+진행 중 및 종료된 국회 청원 데이터
+
+청원 상태, 소관위원회, 동의 수, 처리 결과 등 핵심 정보 활용
+
+국회 안건 중심의 정책 이슈 제공
+
+🧾 청원24 (생활안건)
+
+생활 밀착형 청원 데이터 제공
+
+자동차 보험, 주거, 소비자 권리 등 일상과 가까운 이슈 중심
+
+국회 청원과 동일한 구조로 통합하여 일관된 UX 제공
+
