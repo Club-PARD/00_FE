@@ -351,6 +351,7 @@ export default function PetitionDetailPage() {
                 good={goodLocal}
                 bad={badLocal}
                 isAuthed={isAuthed}
+                onRequireLoginToast={showLoginToast}
                 onChangeCounts={(g, b) => {
                   setGoodLocal(g);
                   setBadLocal(b);
