@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import localApi from "@/lib/axios";
 
 import { useLoginToast } from "@/hooks/useLoginToast";
@@ -11,6 +10,7 @@ import LoginToast from "@/components/LoginToast";
 type CommentItem = {
   id: number;
   name: string;
+  status?: number;
   body: string;
   check?: boolean;
 };
@@ -36,8 +36,20 @@ function normalizeComments(data: any): CommentItem[] {
       const id = safeNumber(it?.id, NaN);
       const name = safeString(it?.name, "");
       const body = safeString(it?.body, "");
+      const statusRaw = it?.status;
+      const status =
+        typeof statusRaw === "number" || typeof statusRaw === "string"
+          ? safeNumber(statusRaw, undefined as any)
+          : undefined;
+
       if (!Number.isFinite(id) || !body) return null;
-      return { id, name: name || "익명", body, check: !!it?.check };
+      return {
+        id,
+        name: name || "익명",
+        status: Number.isFinite(status as any) ? (status as number) : undefined,
+        body,
+        check: !!it?.check,
+      };
     })
     .filter(Boolean) as CommentItem[];
 }
@@ -61,13 +73,13 @@ function getPageNumbers(current: number, total: number) {
 const profileSrc = (status?: number) => {
   switch (status) {
     case 0:
-      return "/profile_Reformer.svg";
+      return "/profile_reformer.svg";
     case 1:
-      return "/profile_Stabilizer.svg";
+      return "/profile_stabilizer.svg";
     case 2:
-      return "/profile_Pragmatist.svg";
+      return "/profile_pragmatist.svg";
     case 3:
-      return "/profile_Value-driven.svg";
+      return "/profile_value_driven.svg";
     default:
       return "/profile.svg";
   }
@@ -167,6 +179,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
       }
 
       await fetchComments();
+      setPage(1);
     } finally {
       setPosting(false);
     }
@@ -209,7 +222,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
     }
   };
 
-  const avatarSrc = profileSrc(user?.status);
+  const myAvatarSrc = profileSrc((user as any)?.status);
 
   return (
     <>
@@ -220,7 +233,7 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
 
         <div className={styles.inputRow}>
           <div className={styles.avatar}>
-            <Image src={avatarSrc} alt="profile" width={36} height={36} />
+            <img src={myAvatarSrc} alt="profile" width={36} height={36} />
           </div>
 
           <div className={styles.inputCol}>
@@ -262,46 +275,49 @@ export default function CommentsSection({ petitionId, isAuthed }: Props) {
         </div>
 
         <div className={styles.list}>
-          {visibleItems.map((c) => (
-            <div key={c.id} className={styles.item}>
-              <div className={styles.avatar}>
-                <Image src={avatarSrc} alt="profile" width={36} height={36} />
-              </div>
+          {visibleItems.map((c) => {
+            const commentAvatar = profileSrc(c.status);
+            return (
+              <div key={c.id} className={styles.item}>
+                <div className={styles.avatar}>
+                  <img src={commentAvatar} alt="profile" width={36} height={36} />
+                </div>
 
-              <div className={styles.content}>
-                <div className={styles.name}>{c.name}</div>
-                <p className={styles.body}>{c.body}</p>
-              </div>
+                <div className={styles.content}>
+                  <div className={styles.name}>{c.name}</div>
+                  <p className={styles.body}>{c.body}</p>
+                </div>
 
-              <div className={styles.menuWrap} onClick={(e) => e.stopPropagation()}>
-                {c.check ? (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.kebab}
-                      onClick={() => setOpenMenuId((p) => (p === c.id ? null : c.id))}
-                    >
-                      ⋮
-                    </button>
+                <div className={styles.menuWrap} onClick={(e) => e.stopPropagation()}>
+                  {c.check ? (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.kebab}
+                        onClick={() => setOpenMenuId((p) => (p === c.id ? null : c.id))}
+                      >
+                        ⋮
+                      </button>
 
-                    {openMenuId === c.id && (
-                      <div className={styles.menu}>
-                        <button
-                          type="button"
-                          className={styles.menuItem}
-                          onClick={() => onDelete(c.id)}
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className={styles.kebabPlaceholder} />
-                )}
+                      {openMenuId === c.id && (
+                        <div className={styles.menu}>
+                          <button
+                            type="button"
+                            className={styles.menuItem}
+                            onClick={() => onDelete(c.id)}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className={styles.kebabPlaceholder} />
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {totalPages > 1 && (
