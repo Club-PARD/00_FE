@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useAuthStore } from "@/store/authStore";
 import { Noto_Sans_KR } from "next/font/google";
 
@@ -24,6 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={notoSansKr.className}>
       <Header />
       <Component {...pageProps} />
+      <Footer />
     </main>
   );
 }
