@@ -1,11 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// swiper 기능
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 
-// Swiper 필수 스타일
 import "swiper/css";
 import "swiper/css/navigation";
 
